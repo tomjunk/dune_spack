@@ -43,6 +43,8 @@ class Dunesim(CMakePackage):
     # FIXME: Add dependencies if required.
     depends_on("genie-xsec")
     depends_on("genie-phyopt")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

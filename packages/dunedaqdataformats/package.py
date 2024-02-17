@@ -41,7 +41,8 @@ class Dunedaqdataformats(CMakePackage):
     version("4_0_0", sha256="bdc50531cae25797f940c46b95b42f8ce2f285300c972a3baabf2930aa3da51e")
 
     # FIXME: Add dependencies if required.
-    # depends_on("foo")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

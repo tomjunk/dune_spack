@@ -44,6 +44,8 @@ class Dunepdlegacy(CMakePackage):
     depends_on("gallery")
     depends_on("art")
     depends_on("artdaq-core")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

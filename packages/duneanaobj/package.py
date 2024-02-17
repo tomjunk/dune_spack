@@ -43,6 +43,8 @@ class Duneanaobj(CMakePackage):
     # FIXME: Add dependencies if required.
     depends_on("root")
     depends_on("py-srproxy")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

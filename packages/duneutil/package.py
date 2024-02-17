@@ -42,6 +42,8 @@ class Duneutil(CMakePackage):
 
     # FIXME: Add dependencies if required.
     depends_on("art-root-io")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

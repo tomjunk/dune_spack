@@ -44,6 +44,8 @@ class Duneana(CMakePackage):
     depends_on("duneanaobj")
     depends_on("duneopdet")
     depends_on("dunereco")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

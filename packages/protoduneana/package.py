@@ -43,6 +43,8 @@ class Protoduneana(CMakePackage):
     # FIXME: Add dependencies if required.
     depends_on("duneprototypes")
     #depends_on("geant4reweight")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

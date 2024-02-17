@@ -44,6 +44,8 @@ class Duneprototypes(CMakePackage):
     depends_on("dunesim")
     depends_on("dunecalib")
     depends_on("duneopdet")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
 
     def cmake_args(self):

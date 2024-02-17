@@ -41,7 +41,8 @@ class Duneexamples(CMakePackage):
     version("09_81_00d00", sha256="5ca163fe371aee48601d4ee63da447f26901a610d3bb175070aac113f93a5779")
 
     # FIXME: Add dependencies if required.
-    # depends_on("foo")
+    depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than
