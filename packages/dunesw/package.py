@@ -28,7 +28,7 @@ class Dunesw(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunesw/archive/refs/tags/v09_81_00d01.tar.gz"
+    url = "https://github.com/DUNE/dunesw/archive/refs/tags/v09_81_00d00.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -38,7 +38,8 @@ class Dunesw(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
-    version("09_81_00d01", sha256="126477cb91b6fd7a69ef2753505ca8dcd5739f4f509409cbf6f93f0774574862")
+    #version("09_81_00d01", sha256="126477cb91b6fd7a69ef2753505ca8dcd5739f4f509409cbf6f93f0774574862")
+    version("09_81_00d00", sha256="f32da1e3e3ac4482674dcd3559c23a8acd10bc994e95df37ac22778e63fd72cd")
 
     # FIXME: Add dependencies if required.
     depends_on("duneana")

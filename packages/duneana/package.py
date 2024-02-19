@@ -28,7 +28,7 @@ class Duneana(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneana/archive/refs/tags/v09_81_00d01.tar.gz"
+    url = "https://github.com/DUNE/duneana/archive/refs/tags/v09_81_00d00.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -38,7 +38,7 @@ class Duneana(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
-    version("09_81_00d01", sha256="723cf1ea48fe4017f3fbe4ffa37c9c836a401e3e04291c32c14290c05a54061a")
+    version("09_81_00d00", sha256="8c1fc6758232a9b4ba7a39924ea372d8e2698404bf4778c9b209a35d8888dcf4")
 
     # FIXME: Add dependencies if required.
     depends_on("duneanaobj")
