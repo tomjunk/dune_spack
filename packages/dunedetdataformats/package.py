@@ -23,7 +23,7 @@
 from spack.package import *
 
 
-class Dunedetdataformats(CMakePackage):
+class Dunedetdataformats(Package):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
@@ -40,14 +40,5 @@ class Dunedetdataformats(CMakePackage):
 
     version("4_1_0", sha256="479de5f1392b6303c258bced663b9aebd22ccd4a0aab2dd2910a9e1e295808b8")
 
-    # FIXME: Add dependencies if required.
-    # depends_on("foo")
-    depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
-
-    def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
-        return args
+    def install(self, spec, prefix):
+        install_tree(self.stage.source_path, self.spec.prefix)

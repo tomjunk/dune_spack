@@ -23,7 +23,7 @@
 from spack.package import *
 
 
-class Dunedaqdataformats(CMakePackage):
+class Dunedaqdataformats(Package):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
@@ -40,13 +40,5 @@ class Dunedaqdataformats(CMakePackage):
 
     version("4_0_0", sha256="bdc50531cae25797f940c46b95b42f8ce2f285300c972a3baabf2930aa3da51e")
 
-    # FIXME: Add dependencies if required.
-    depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
-
-    def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
-        return args
+    def install(self, spec, prefix):
+        install_tree(self.stage.source_path, self.spec.prefix)
