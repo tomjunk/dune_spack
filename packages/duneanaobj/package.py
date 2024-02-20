@@ -28,7 +28,7 @@ class Duneanaobj(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneanaobj/archive/refs/tags/v02_04_00.tar.gz"
+    url = "https://github.com/DUNE/duneanaobj/archive/refs/tags/v03_03_00.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -38,13 +38,14 @@ class Duneanaobj(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
-    version("02_04_00", sha256="a5d09cf98e30fe14eecb07e78edfa71774f93c6596d0680dd691470c24ae0ce9")
+    version("03_03_00", sha256="4d00eaa72997b8ff6a6f59e9eedadd11806ab06c83d28064d523dfa9f00e15e5")
 
+    patch('v09_81_00d00.patch', when="@03_03_00")
     # FIXME: Add dependencies if required.
     depends_on("root")
     depends_on("py-srproxy")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

@@ -40,10 +40,12 @@ class Dunecalib(CMakePackage):
 
     version("09_81_00d00", sha256="2bdd7f71f6a0596b3bbb34b2956e6a01274773bde9697965dd887ada36f8801a")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("dunecore")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

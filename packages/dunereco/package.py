@@ -40,11 +40,13 @@ class Dunereco(CMakePackage):
 
     version("09_81_00d00", sha256="a7a64f3ed8fa5abd0f85998f065634c16c3db080123afde3faeecfb7dc2ddb46")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("dunecore")
     depends_on("hep-hpc")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

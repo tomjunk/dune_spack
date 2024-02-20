@@ -40,10 +40,12 @@ class Duneutil(CMakePackage):
 
     version("09_81_00d00", sha256="3cd857e366c7ecf1648f0f7aa76c2821ba25fe8b8d702ff47e2d7291d006a3bf")
 
+    patch('v09_81_00d00.patch', when='@9_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("art-root-io")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

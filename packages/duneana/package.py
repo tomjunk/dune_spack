@@ -40,12 +40,14 @@ class Duneana(CMakePackage):
 
     version("09_81_00d00", sha256="8c1fc6758232a9b4ba7a39924ea372d8e2698404bf4778c9b209a35d8888dcf4")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("duneanaobj")
     depends_on("duneopdet")
     depends_on("dunereco")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

@@ -40,11 +40,13 @@ class Protoduneana(CMakePackage):
 
     version("09_81_00d00", sha256="f490a31fe519217539ecd2e46194f70d179fa70a023a163d84e89d9e07f41695")
 
+    patch('v09_81_00d00.patch', when='@1_01_00')
+
     # FIXME: Add dependencies if required.
     depends_on("duneprototypes")
     #depends_on("geant4reweight")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

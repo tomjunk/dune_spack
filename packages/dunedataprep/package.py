@@ -40,10 +40,12 @@ class Dunedataprep(CMakePackage):
 
     version("09_81_00d00", sha256="ac58dad4ac13bb742179b509bf3aab35a8fcbecd79364444342ca2ab69664dd7")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("dunecore")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

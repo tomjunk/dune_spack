@@ -40,6 +40,8 @@ class Dunecore(CMakePackage):
 
     version("09_81_00d00", sha256="4dd8f63fd791167bc55c5fba28f0a9310c2339c0cc3c70bd15e510d36d0ff972")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("dunepdlegacy")
     depends_on("dunedaqdataformats")
@@ -48,7 +50,7 @@ class Dunecore(CMakePackage):
     depends_on("larsoft")
     depends_on("highfive")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

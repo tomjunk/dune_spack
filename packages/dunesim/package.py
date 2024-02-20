@@ -40,11 +40,15 @@ class Dunesim(CMakePackage):
 
     version("09_81_00d00", sha256="60907d1c14a16c2734757950a09834bf4627509f3f02735c26b8bee00a612d21")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
+    depends_on("art")
+    depends_on("art-root-io")
     depends_on("genie-xsec")
     depends_on("genie-phyopt")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
     def cmake_args(self):
         # FIXME: Add arguments other than

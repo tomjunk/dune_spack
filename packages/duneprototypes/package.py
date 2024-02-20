@@ -40,12 +40,14 @@ class Duneprototypes(CMakePackage):
 
     version("09_81_00d00", sha256="99a3e4eb98bfb9c7e7adeb3eb295332b71008c5bf6749587413ec97688532c85")
 
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
+
     # FIXME: Add dependencies if required.
     depends_on("dunesim")
     depends_on("dunecalib")
     depends_on("duneopdet")
     depends_on("cetmodules", type="build")
-    depends_on("cetbuildtools", type="build")
+    depends_on("cmake", type="build")
 
 
     def cmake_args(self):
