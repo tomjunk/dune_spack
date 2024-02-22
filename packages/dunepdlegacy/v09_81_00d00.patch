@@ -1,7 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 old mode 100755
 new mode 100644
-index 0eb2285..8fc5871
+index 0eb2285..519f63a
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -8,14 +8,15 @@
@@ -14,7 +14,8 @@ index 0eb2285..8fc5871
  
 +find_package(cetmodules REQUIRED) ### MIGRATE-ADDED (migrate-3.22.02) - find_package(cetmodules) must precede project()
  project(dunepdlegacy VERSION 1.01.00 LANGUAGES CXX)
- 
+-
++set(dunepdlegacy_FW_DIR "files")
  # cetbuildtools contains our cmake modules
 -find_package(cetbuildtools REQUIRED)
  
@@ -52,12 +53,12 @@ index 0eb2285..8fc5871
  
  # macros for art_dictionary and simple_plugin
  include(ArtDictionary)
-@@ -58,7 +59,6 @@ add_subdirectory(test)
+@@ -58,7 +59,5 @@ add_subdirectory(test)
  add_subdirectory(run)
  
  # ups - table and config files
 -add_subdirectory(ups)
- 
+-
  # packaging utility
 -include(UseCPack)
 +cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
@@ -210,7 +211,7 @@ index 0000000..343f163
 diff --git a/dunepdlegacy/Overlays/CMakeLists.txt b/dunepdlegacy/Overlays/CMakeLists.txt
 old mode 100755
 new mode 100644
-index 0f1fa84..e1c51cc
+index 0f1fa84..9134c58
 --- a/dunepdlegacy/Overlays/CMakeLists.txt
 +++ b/dunepdlegacy/Overlays/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -220,7 +221,12 @@ index 0f1fa84..e1c51cc
  
  art_make(BASENAME_ONLY
                 LIBRARY_NAME dunepdlegacy_Overlays
-@@ -21,7 +21,7 @@ art_make(BASENAME_ONLY
+@@ -17,11 +17,12 @@ art_make(BASENAME_ONLY
+   gallery
+   canvas
+   ${ROOT_BASIC_LIB_LIST}
++  ROOT::Core
+   ${ART_LIB}
    art_Framework_Principal
    pthread
    z

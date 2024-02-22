@@ -40,16 +40,30 @@ class Duneanaobj(CMakePackage):
 
     version("03_03_00", sha256="4d00eaa72997b8ff6a6f59e9eedadd11806ab06c83d28064d523dfa9f00e15e5")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when="@03_03_00")
     # FIXME: Add dependencies if required.
     depends_on("root")
-    depends_on("py-srproxy")
+    depends_on("canvas-root-io")
+    depends_on("py-srproxy@00.43:", when="@03_03_00")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+        ] 
         return args
+
+    def setup_build_environment(self, spack_env):
+        spack_env.set("LD_LIBRARY_PATH", "%s/root" % self.spec["root"].prefix.lib)
+        spack_env.set("ROOT_INC", "%s" % self.spec["root"].prefix.include)
+        spack_env.set("DUNEANAOBJ_DIR", "%s" % self.stage.source_path)
+        spack_env.set("MRB_BUILDDIR", "%s" % self.build_directory)

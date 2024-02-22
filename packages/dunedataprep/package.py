@@ -40,16 +40,29 @@ class Dunedataprep(CMakePackage):
 
     version("09_81_00d00", sha256="ac58dad4ac13bb742179b509bf3aab35a8fcbecd79364444342ca2ab69664dd7")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
     depends_on("dunecore")
+    depends_on("jsonnet")
+    depends_on("jsoncpp")
+    depends_on("wirecell")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+            self.define("IGNORE_ABSOLUTE_TRANSITIVE_DEPENDENCIES", "Bool:True"),
+            self.define("WIRECELL_LIB", "%s" % self.spec["wirecell"].prefix.lib64)
+        ] 
         return args
+

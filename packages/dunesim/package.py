@@ -40,19 +40,41 @@ class Dunesim(CMakePackage):
 
     version("09_81_00d00", sha256="60907d1c14a16c2734757950a09834bf4627509f3f02735c26b8bee00a612d21")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
     depends_on("art")
     depends_on("art-root-io")
+    depends_on("larevt")
+    depends_on("larsim")
+    depends_on("lardataalg")
+    depends_on("lardataobj")
+    depends_on("larcore")
+    depends_on("larcorealg")
+    depends_on("larcoreobj")
+    depends_on("nusimdata")
+    depends_on("nurandom")
+    depends_on("dunecore")
+    depends_on("lardata")
+    depends_on("clhep")
+    depends_on("nugen")
+    depends_on("geant4")
     depends_on("genie-xsec")
     depends_on("genie-phyopt")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+        ] 
         return args
+

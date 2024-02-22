@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 76c01a6..31d5638 100644
+index 76c01a6..ca39755 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,12 +3,13 @@
@@ -19,7 +19,7 @@ index 76c01a6..31d5638 100644
  set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.81.00d00)
  
  include(CetCMakeEnv)
-@@ -22,30 +23,29 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
+@@ -22,30 +23,30 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
    EXTRA_FLAGS -pedantic -Wno-unused-local-typedefs
  )
  
@@ -37,6 +37,7 @@ index 76c01a6..31d5638 100644
 +find_package( canvas_root_io REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(canvas_root_io ...) -> find_package(canvas_root_io REQUIRED ...)
 +find_package( Boost REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
 +find_package(ROOT REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
++find_package(SQLite3 REQUIRED)
  find_package( dunecore REQUIRED )
 -find_ups_product( fftw )
 -find_ups_geant4( )
@@ -53,7 +54,7 @@ index 76c01a6..31d5638 100644
 -find_ups_product( jsoncpp )
 -find_ups_product( spdlog )
 -find_ups_product( eigen )
-+find_package( fftw REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(fftw ...) -> find_package(fftw REQUIRED ...)
++find_package( FFTW3 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(fftw ...) -> find_package(fftw REQUIRED ...)
 +find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
 +find_package( dunecore REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunecore ...) -> find_package(dunecore REQUIRED ...)
 +find_package( larevt REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larevt ...) -> find_package(larevt REQUIRED ...)
@@ -64,14 +65,14 @@ index 76c01a6..31d5638 100644
 +find_package( lardataalg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataalg ...) -> find_package(lardataalg REQUIRED ...)
 +find_package( lardataobj REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataobj ...) -> find_package(lardataobj REQUIRED ...)
 +find_package( larwirecell REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larwirecell ...) -> find_package(larwirecell REQUIRED ...)
-+find_package( wirecell REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(wirecell ...) -> find_package(wirecell REQUIRED ...)
++#find_package( wirecell REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(wirecell ...) -> find_package(wirecell REQUIRED ...)
 +find_package( jsoncpp REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(jsoncpp ...) -> find_package(jsoncpp REQUIRED ...)
 +find_package( spdlog REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(spdlog ...) -> find_package(spdlog REQUIRED ...)
-+find_package( eigen REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(eigen ...) -> find_package(eigen REQUIRED ...)
++find_package( Eigen3 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(eigen ...) -> find_package(eigen REQUIRED ...)
  
  include(MakeDuneToolBuilder)
  include(dunecore::ToolTypes) # Enable simpler building of tools.
-@@ -60,6 +60,5 @@ include(ArtMake)
+@@ -60,6 +61,5 @@ include(ArtMake)
  include(BuildPlugins)
  
  add_subdirectory(dunedataprep)
@@ -198,36 +199,91 @@ index 0000000..2211d75
 +   "version" : 3
 +}
 diff --git a/dunedataprep/CalData/CMakeLists.txt b/dunedataprep/CalData/CMakeLists.txt
-index f10d360..6580759 100644
+index f10d360..8e51579 100644
 --- a/dunedataprep/CalData/CMakeLists.txt
 +++ b/dunedataprep/CalData/CMakeLists.txt
-@@ -28,7 +28,7 @@ art_make( BASENAME_ONLY
-                         ROOT_XMLIO
-                         ROOT_GDML
- 			ROOT_BASIC_LIB_LIST
+@@ -1,34 +1,26 @@
+ 
+ art_make( BASENAME_ONLY
+-          MODULE_LIBRARIES larcorealg_Geometry
+-	                dunecore_Geometry
+-			larcore_Geometry_Geometry_service
+-	                lardata_Utilities
+-			larevt_Filters
+-			lardataobj_RawData
+-			lardataobj_RecoBase
+-			lardata_ArtDataHelper
+-			lardataalg_DetectorInfo
++          MODULE_LIBRARIES larcorealg::Geometry
++	                dunecore::Geometry
++			larcore::Geometry_Geometry_service
++	                lardata::Utilities
++			larevt::Filters
++			lardataobj::RawData
++			lardataobj::RecoBase
++			lardata::ArtDataHelper
++			lardataalg::DetectorInfo
+ 			dunecore::SignalShapingServiceDUNEDPhase_service
+                         dunecore::SignalShapingServiceDUNE_service
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
++			ROOT::Gpad
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+-			
++			art_root_io::tfile_support
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        ROOT_GEOM
+-                        ROOT_XMLIO
+-                        ROOT_GDML
+-			ROOT_BASIC_LIB_LIST
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  # install_headers()
  install_fhicl()
 diff --git a/dunedataprep/DataPrep/Module/CMakeLists.txt b/dunedataprep/DataPrep/Module/CMakeLists.txt
-index a50f4a5..b814fa9 100644
+index a50f4a5..2161246 100644
 --- a/dunedataprep/DataPrep/Module/CMakeLists.txt
 +++ b/dunedataprep/DataPrep/Module/CMakeLists.txt
-@@ -29,7 +29,7 @@ art_make( BASENAME_ONLY
-                         ROOT_XMLIO
-                         ROOT_GDML
- 			ROOT_BASIC_LIB_LIST
+@@ -12,12 +12,7 @@ art_make( BASENAME_ONLY
+ 			lardata_ArtDataHelper
+ 			dunecore::SignalShapingServiceDUNEDPhase_service
+                         dunecore::SignalShapingServiceDUNE_service
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+@@ -25,11 +20,7 @@ art_make( BASENAME_ONLY
+ 			
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        ROOT_GEOM
+-                        ROOT_XMLIO
+-                        ROOT_GDML
+-			ROOT_BASIC_LIB_LIST
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  # install_headers()
  install_fhicl()
 diff --git a/dunedataprep/DataPrep/Service/CMakeLists.txt b/dunedataprep/DataPrep/Service/CMakeLists.txt
-index 9d5e755..e7605b2 100644
+index 9d5e755..84721d6 100644
 --- a/dunedataprep/DataPrep/Service/CMakeLists.txt
 +++ b/dunedataprep/DataPrep/Service/CMakeLists.txt
-@@ -5,7 +5,7 @@
+@@ -5,18 +5,18 @@
  
  # Add plugin for each service.
  
@@ -236,45 +292,1926 @@ index 9d5e755..e7605b2 100644
  
  cet_build_plugin(ConfigurableAdcChannelDataCopyService   art::service
                  art::Utilities canvas
-diff --git a/dunedataprep/DataPrep/TpcTool/CMakeLists.txt b/dunedataprep/DataPrep/TpcTool/CMakeLists.txt
-index 7f3cf44..17b6070 100644
---- a/dunedataprep/DataPrep/TpcTool/CMakeLists.txt
-+++ b/dunedataprep/DataPrep/TpcTool/CMakeLists.txt
-@@ -27,7 +27,7 @@ simple_plugin(Tpc2dDeconvolute   "tool"
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(InterpolatingAdcMitigationService   art::service
                  art::Utilities canvas
                  cetlib::cetlib cetlib_except
-                 ${ROOT_BASIC_LIB_LIST}
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(StandardRawDigitExtractService   art::service
+@@ -24,20 +24,20 @@ cet_build_plugin(StandardRawDigitExtractService   art::service
+                 lardataobj_RawData
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(ThresholdNoiseRemovalService   art::service
+                 larcorealg_Geometry
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(MultiChannelNoiseRemovalService   art::service
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(DuneDPhase3x1x1NoiseRemovalService   art::service
+@@ -45,28 +45,28 @@ cet_build_plugin(DuneDPhase3x1x1NoiseRemovalService   art::service
+                 larcorealg_Geometry
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
+-                ROOT_FFTW
++                ROOT::Core
++                ROOT::FFTW
+                 lardataobj_RawData
+              )
+ 
+ cet_build_plugin(MedianPedestalService   art::service
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++		art::Framework_Services_Registry
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcSuppressSignalFindingService art::service
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(DuneDeconvolutionService art::service
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+                 dunecore::SignalShapingServiceDUNE_service
+              )
+ 
+@@ -74,27 +74,27 @@ cet_build_plugin(DuneDPhaseDeconvolutionService art::service
+ 		lardata_Utilities
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+                 dunecore::SignalShapingServiceDUNEDPhase_service
+              )
+ 
+ cet_build_plugin(KeepAllRoiBuildingService art::service
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(DuneRoiBuildingService art::service
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+                 dunecore::SignalShapingServiceDUNE_service
+              )
+ 
+ cet_build_plugin(DuneDPhaseRoiBuildingService art::service
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+                 dunecore::SignalShapingServiceDUNEDPhase_service
+              )
+ 
+@@ -103,7 +103,7 @@ cet_build_plugin(StandardAdcWireBuildingService art::service
+                 lardata_ArtDataHelper
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(ToolBasedRawDigitPrepService   art::service
+@@ -112,7 +112,7 @@ cet_build_plugin(ToolBasedRawDigitPrepService   art::service
+                 lardataobj_RecoBase
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(TpcToolBasedRawDigitPrepService   art::service
+@@ -122,7 +122,7 @@ cet_build_plugin(TpcToolBasedRawDigitPrepService   art::service
+                 lardataobj_RecoBase
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(StandardRawDigitPrepService   art::service
+@@ -131,7 +131,7 @@ cet_build_plugin(StandardRawDigitPrepService   art::service
+                 lardataobj_RecoBase
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ add_subdirectory(test)
+diff --git a/dunedataprep/DataPrep/Service/test/CMakeLists.txt b/dunedataprep/DataPrep/Service/test/CMakeLists.txt
+index 0fcd93d..01fc7fa 100644
+--- a/dunedataprep/DataPrep/Service/test/CMakeLists.txt
++++ b/dunedataprep/DataPrep/Service/test/CMakeLists.txt
+@@ -13,94 +13,93 @@ cet_test(test_ConfigurableAdcChannelDataCopyService
+   SOURCES
+     test_ConfigurableAdcChannelDataCopyService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_StandardRawDigitExtractService
+   SOURCES
+     test_StandardRawDigitExtractService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    lardataobj_RawData
++    dunecore::ArtSupport
++    lardataobj::RawData
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_InterpolatingAdcMitigationService
+   SOURCES
+     test_InterpolatingAdcMitigationService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_ThresholdNoiseRemovalService
+   SOURCES
+     test_ThresholdNoiseRemovalService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
++    art::Framework_Services_Registry
+     cetlib::cetlib
+-    cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_MultiChannelNoiseRemovalService
+   SOURCES
+     test_MultiChannelNoiseRemovalService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_MedianPedestalService
+   SOURCES
+     test_MedianPedestalService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcSuppressSignalFindingService
+   SOURCES
+     test_AdcSuppressSignalFindingService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_DuneDeconvolutionService
+@@ -108,26 +107,25 @@ cet_test(test_DuneDeconvolutionService
+     test_DuneDeconvolutionService.cxx
+   LIBRARIES
+     dunecore::SignalShapingServiceDUNE_service
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_KeepAllRoiBuildingService
+   SOURCES
+     test_KeepAllRoiBuildingService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
+     art::Utilities
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_DuneRoiBuildingService
+@@ -135,69 +133,68 @@ cet_test(test_DuneRoiBuildingService
+     test_DuneRoiBuildingService.cxx
+   LIBRARIES
+     dunedataprep_DataPrep_Service_DuneRoiBuildingService_service
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_StandardAdcWireBuildingService
+   SOURCES
+     test_StandardAdcWireBuildingService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    lardataobj_RawData
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
++    lardataobj::RawData
+     art::Utilities
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_StandardRawDigitPrepService
+   SOURCES
+     test_StandardRawDigitPrepService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    lardataobj_RawData
++    dunecore::ArtSupport
++    lardataobj::RawData
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_ToolBasedRawDigitPrepService
+   SOURCES
+     test_ToolBasedRawDigitPrepService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    lardataobj_RawData
++    dunecore::ArtSupport
++    lardataobj::RawData
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ROOT_HIST
+-    ART_FRAMEWORK_SERVICES_REGISTRY
++    ROOT::Hist
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_TpcToolBasedRawDigitPrepService
+   SOURCES
+     test_TpcToolBasedRawDigitPrepService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    lardataobj_RawData
++    dunecore::ArtSupport
++    lardataobj::RawData
+     art::Utilities
++    art::Framework_Services_Registry
+     canvas::canvas
+-    ROOT_HIST
+-    ART_FRAMEWORK_SERVICES_REGISTRY
++    ROOT::Hist
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+diff --git a/dunedataprep/DataPrep/Tool/CMakeLists.txt b/dunedataprep/DataPrep/Tool/CMakeLists.txt
+index dd550e9..83f8d73 100644
+--- a/dunedataprep/DataPrep/Tool/CMakeLists.txt
++++ b/dunedataprep/DataPrep/Tool/CMakeLists.txt
+@@ -15,202 +15,183 @@ cet_build_plugin(AdcThresholdSignalFinder dunecore::TpcDataTool
+ 
+ cet_build_plugin(StandardAdcChannelStringTool   art::tool
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcResultDumper   art::tool
+-                dunecore_ArtSupport
++                dunecore::ArtSupport
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelDumper   art::tool
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelTrimmer  art::tool
+-                dunecore_ArtSupport
++                dunecore::ArtSupport
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelSplitter  art::tool
+-                dunecore_ArtSupport
++                dunecore::ArtSupport
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelPlotter  art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcPedestalFitter  art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcCodeMitigator  art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcSampleScaler   art::tool
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcRangeSampleScaler   art::tool
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcTimingMitigator  art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcDataDumper   art::tool
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcTickModViewer   art::tool
+                 dunedataprep_DataPrep_Utility
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
++		ROOT::Tree
+              )
+ 
+ cet_build_plugin(AdcDataPlotter   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcDetectorPlotter   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                dunecore_Geometry
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                dunecore::Geometry
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelMetric   art::tool
+-                dunecore_DuneCommon_Utility
+-                dunecore_ArtSupport
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++                dunecore::DuneCommon_Utility
++                dunecore::ArtSupport
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcEventViewer   art::tool
+-                dunecore_DuneCommon_Utility
+-                dunecore_ArtSupport
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++                dunecore::DuneCommon_Utility
++                dunecore::ArtSupport
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AcdDigitReader   art::tool
+-                dunecore_DuneCommon_Utility
++                dunecore::DuneCommon_Utility
+                 lardataobj_RawData
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AcdWireReader   art::tool
+-                dunecore_DuneCommon_Utility
++                dunecore::DuneCommon_Utility
+                 lardataobj_RecoBase
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcSampleFiller   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(SubtractBaseline   art::tool
+                 canvas::canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(UndershootCorr   art::tool
+                         dunepdlegacy_Services_ChannelMap_PdspChannelMapService_service
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+-                        ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+-                        art::Utilities canvas
++			art::Framework_Services_Registry
++                        art::Utilities canvas::canvas
+                         messagefacility::MF_MessageLogger
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core
+              )
+ 
+ cet_build_plugin(ExpTailRemover   art::tool
+-                dunecore_DuneCommon_Utility
+-                dunecore_ArtSupport
++                dunecore::DuneCommon_Utility
++                dunecore::ArtSupport
+                 dunepdlegacy_Services_ChannelMap_PdspChannelMapService_service
+-                ART_FRAMEWORK_CORE
+-                ART_FRAMEWORK_PRINCIPAL
+-                ART_FRAMEWORK_SERVICES_REGISTRY
+-                ART_ROOT_IO_TFILE_SUPPORT
+                 ROOT::Core
+-                ART_ROOT_IO_TFILESERVICE_SERVICE
+                 art::Utilities canvas
+                 messagefacility::MF_MessageLogger
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(ExpTailPedRemover   art::tool
+-                dunecore_DuneCommon_Utility
+-                dunecore_ArtSupport
++                dunecore::DuneCommon_Utility
++                dunecore::ArtSupport
+                 dunepdlegacy_Services_ChannelMap_PdspChannelMapService_service
+-                ART_FRAMEWORK_CORE
+-                ART_FRAMEWORK_PRINCIPAL
+-                ART_FRAMEWORK_SERVICES_REGISTRY
+-                ART_ROOT_IO_TFILE_SUPPORT
+                 ROOT::Core
+-                ART_ROOT_IO_TFILESERVICE_SERVICE
+                 art::Utilities canvas
+                 messagefacility::MF_MessageLogger
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(VintageDeconvoluter   art::tool
+@@ -218,8 +199,8 @@ cet_build_plugin(VintageDeconvoluter   art::tool
+                 art::Framework_Services_Registry
+                 art::Utilities
+                 canvas::canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(PddpVintageDeconvoluter   art::tool
+@@ -228,208 +209,207 @@ cet_build_plugin(PddpVintageDeconvoluter   art::tool
+                 art::Framework_Services_Registry
+                 art::Utilities
+                 canvas::canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ 
+ cet_build_plugin(AdcUnderflowFlagger   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(FclStickyCodeFlagger   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcKeepAllSignalFinder   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcNoiseSignalFinder   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcRoiShifter   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(DuneAdcSignalFinder   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcRegularSignalFinder   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcRoiViewer   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+ 		canvas::canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcDPhase3x1x1LocalRoiBuilder   art::tool
+-                dunecore_DuneCommon_Utility
++                dunecore::DuneCommon_Utility
+                 lardataobj_RawData
+                 lardataobj_RecoBase
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(FembLinearCalibration   art::tool
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(FloatArrayGainCalibration   art::tool
+-                dunecore_DuneCommon_Utility
+-                dunecore_ArtSupport
++                dunecore::DuneCommon_Utility
++                dunecore::ArtSupport
+ 		canvas::canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(FembMappedAdcModifier   art::tool
+-                dunecore_ArtSupport
++                dunecore::ArtSupport
+ 		canvas::canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelFFT   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcDeconvoluteFFT   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+ 		canvas::canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ cet_build_plugin(Adc2dConvolute   art::tool
+-                dunecore_ArtSupport
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcChannelDftPlotter   art::tool
+                 dunedataprep_DataPrep_Utility
+-                dunecore_DuneCommon_Utility
+-                dunecore_ArtSupport
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::DuneCommon_Utility
++                dunecore::ArtSupport
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcDPhase3x1x1RoiBuilder   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 lardataobj_RawData
+                 lardataobj_RecoBase
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcMultiThreshSignalFinder   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(PdspNoiseRemoval   art::tool
+-               dunecore_ArtSupport
++               dunecore::ArtSupport
+                larcorealg_Geometry
+-               dunecore_DuneCommon_Utility
++               dunecore::DuneCommon_Utility
+                lardataobj_RawData
+                lardataobj_RecoBase
+-               ART_FRAMEWORK_SERVICES_REGISTRY
+                art::Utilities canvas
+-               cetlib::cetlib cetlib_except
++               cetlib::cetlib cetlib_except::cetlib_except
+                dunepdlegacy_Services_ChannelMap_PdspChannelMapService_service
+-               ROOT_BASIC_LIB_LIST
+-               ROOT_SPECTRUM
++               ROOT::Core
++               ROOT::Spectrum
+              )
+ 
+ cet_build_plugin(RemoveBadChannels   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-		ART_FRAMEWORK_SERVICES_REGISTRY
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcRoiSlicer   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 art::Utilities canvas
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(BaselineDetrend   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcRoiToTree   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++		ROOT::Core ROOT::Tree
+              )
+ 
+ cet_build_plugin(CnrByGroup   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(CnrGroupWeighted   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(AdcSumSignalFinder   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(IsoRoiByGroup   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(IsoRoiMatcher   art::tool
+-                dunecore_ArtSupport
+-                dunecore_DuneCommon_Utility
++                dunecore::ArtSupport
++                dunecore::DuneCommon_Utility
+                 dunedataprep_DataPrep_Utility
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
++                ROOT::Core
++		ROOT::Tree
+              )
+ 
+ add_subdirectory(test)
+diff --git a/dunedataprep/DataPrep/Tool/test/CMakeLists.txt b/dunedataprep/DataPrep/Tool/test/CMakeLists.txt
+index 5d70fff..4c13c8c 100644
+--- a/dunedataprep/DataPrep/Tool/test/CMakeLists.txt
++++ b/dunedataprep/DataPrep/Tool/test/CMakeLists.txt
+@@ -11,60 +11,60 @@ cet_test(test_StandardAdcChannelStringTool
+   SOURCES
+     test_StandardAdcChannelStringTool.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcResultDumper
+   SOURCES
+     test_AdcResultDumper.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcChannelDumper
+   SOURCES
+     test_AdcChannelDumper.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcChannelPlotter
+   SOURCES
+     test_AdcChannelPlotter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcTickModViewer
+@@ -72,215 +72,217 @@ cet_test(test_AdcTickModViewer
+     test_AdcTickModViewer.cxx
+   LIBRARIES
+     dunedataprep_DataPrep_Utility
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcChannelTrimmer
+   SOURCES
+      test_AdcChannelTrimmer.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcChannelSplitter
+   SOURCES
+     test_AdcChannelSplitter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcPedestalFitter
+   SOURCES
+     test_AdcPedestalFitter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcCodeMitigator
+   SOURCES
+     test_AdcCodeMitigator.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_ExpTailRemover
+   SOURCES
+     test_ExpTailRemover.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    dunecore_DuneCommon_Utility
++    dunecore::ArtSupport
++    dunecore::DuneCommon_Utility
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_ExpTailPedRemover
+   SOURCES
+     test_ExpTailPedRemover.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    dunecore_DuneCommon_Utility
++    dunecore::ArtSupport
++    dunecore::DuneCommon_Utility
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_VintageDeconvoluter
+   SOURCES
+     test_VintageDeconvoluter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcSampleScaler
+   SOURCES
+     test_AdcSampleScaler.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcRangeSampleScaler
+   SOURCES
+     test_AdcRangeSampleScaler.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcDataDumper
+   SOURCES
+     test_AdcDataDumper.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcEventViewer
+   SOURCES
+ test_AdcEventViewer.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
++    ROOT::MathCore
+ )
+ 
+ cet_test(test_AdcDataPlotter
+   SOURCES
+     test_AdcDataPlotter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
++    ROOT::MathCore
+ )
+ 
+ cet_test(test_AdcDetectorPlotter
+   SOURCES
+     test_AdcDetectorPlotter.cxx
+   LIBRARIES
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    dunecore_ArtSupport
+-    dunecore_Geometry
++    art::Framework_Services_Registry
++    dunecore::ArtSupport
++    dunecore::Geometry
+     larcorealg_Geometry
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ 
+ )
+ 
+@@ -288,17 +290,17 @@ cet_test(test_AdcChannelMetric
+   SOURCES
+     test_AdcChannelMetric.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    dunecore_Geometry
++    dunecore::ArtSupport
++    dunecore::Geometry
+     larcorealg_Geometry
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AcdDigitReader
+@@ -306,152 +308,152 @@ cet_test(test_AcdDigitReader
+     test_AcdDigitReader.cxx
+   LIBRARIES
+     lardataobj_RawData
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcSampleFiller
+   SOURCES
+     test_AdcSampleFiller.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_FclStickyCodeFlagger
+   SOURCES
+     test_FclStickyCodeFlagger.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcKeepAllSignalFinder
+   SOURCES
+     test_AdcKeepAllSignalFinder.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcThresholdSignalFinder
+   SOURCES
+     test_AdcThresholdSignalFinder.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcNoiseSignalFinder
+   SOURCES
+     test_AdcNoiseSignalFinder.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcRoiShifter
+   SOURCES
+     test_AdcRoiShifter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcRegularSignalFinder
+   SOURCES
+     test_AdcRegularSignalFinder.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_DuneAdcSignalFinder
+   SOURCES
+     test_DuneAdcSignalFinder.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AcdWireReader
+   SOURCES
+     test_AcdWireReader.cxx
+   LIBRARIES
+-    ART_FRAMEWORK_SERVICES_REGISTRY
++    art::Framework_Services_Registry
+     lardataobj_RawData
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcRoiViewer
+@@ -459,14 +461,15 @@ cet_test(test_AdcRoiViewer
+     test_AdcRoiViewer.cxx
+   LIBRARIES
+     lardataobj_RawData
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
++    ROOT::Core
++    ROOT::MathCore
++    SQLite::SQLite3
+     Boost::filesystem
+ )
+ 
+@@ -474,76 +477,76 @@ cet_test(test_FembLinearCalibration
+   SOURCES
+     test_FembLinearCalibration.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_FloatArrayGainCalibration
+   SOURCES
+     test_FloatArrayGainCalibration.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcChannelFFT
+   SOURCES
+     test_AdcChannelFFT.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_Adc2dConvolute
+   SOURCES
+     test_Adc2dConvolute.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    dunecore_DuneCommon_Utility
++    dunecore::ArtSupport
++    dunecore::DuneCommon_Utility
+     art::Utilities
+     canvas::canvas
+-    fhiclcpp
+-    cetlib::cetlib cetlib_except
++    fhiclcpp::fhiclcpp
++    cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcDeconvoluteFFT
+   SOURCES
+     test_AdcDeconvoluteFFT.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    dunecore_DuneCommon_Utility
++    dunecore::ArtSupport
++    dunecore::DuneCommon_Utility
+     art::Utilities
+     canvas::canvas
+-    fhiclcpp
+-    ROOT_BASIC_LIB_LIST
+-    cetlib::cetlib cetlib_except
++    fhiclcpp::fhiclcpp
++    ROOT::Core
++    cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+ )
+ 
+@@ -551,90 +554,92 @@ cet_test(test_AdcChannelDftPlotter
+   SOURCES
+     test_AdcChannelDftPlotter.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    fhiclcpp
+-    cetlib::cetlib cetlib_except
++    fhiclcpp::fhiclcpp
++    cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_FembMappedAdcModifier
+   SOURCES
+     test_FembMappedAdcModifier.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    fhiclcpp
+-    cetlib::cetlib cetlib_except
++    fhiclcpp::fhiclcpp
++    cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcRoiSlicer
+   SOURCES
+     test_AdcRoiSlicer.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    fhiclcpp
+-    cetlib::cetlib cetlib_except
++    fhiclcpp::fhiclcpp
++    cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_AdcRoiToTree
+   SOURCES
+     test_AdcRoiToTree.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_CnrByGroup
+   SOURCES
+     test_CnrByGroup.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+-    fhiclcpp
+-    cetlib::cetlib cetlib_except
++    fhiclcpp::fhiclcpp
++    cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
++    ROOT::MathCore
+ )
+ 
+ cet_test(test_CnrGroupWeighted
+   SOURCES
+     test_CnrGroupWeighted.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    art_Utilities
+-    canvas
+-    fhiclcpp
+-    cetlib cetlib_except
+-    cetlib_except
+-    SQLITE3
+-    ${Boost_FILESYSTEM_LIBRARY}
+-    ROOT_BASIC_LIB_LIST
++    dunecore::ArtSupport
++    art::Utilities
++    canvas::canvas
++    fhiclcpp::fhiclcpp
++    cetlib::cetlib
++    cetlib_except::cetlib_except
++    SQLite::SQLite3
++    Boost::filesystem
++    ROOT::Core
++    ROOT::MathCore
+ )
+ 
+ cet_enable_asserts()
+diff --git a/dunedataprep/DataPrep/TpcTool/CMakeLists.txt b/dunedataprep/DataPrep/TpcTool/CMakeLists.txt
+index 7f3cf44..c3c448a 100644
+--- a/dunedataprep/DataPrep/TpcTool/CMakeLists.txt
++++ b/dunedataprep/DataPrep/TpcTool/CMakeLists.txt
+@@ -11,23 +11,23 @@ cet_build_plugin(AdcToRoi2d   art::tool
+                 dunecore_DuneInterface_Data
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(Roi2dToAdc   art::tool
+                 dunecore_DuneInterface_Data
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+-simple_plugin(Tpc2dDeconvolute   "tool"
++cet_build_plugin(Tpc2dDeconvolute   art::tool
+                 dunecore_DuneInterface_Data
+                 dunecore_DuneCommon_Utility
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ${ROOT_BASIC_LIB_LIST}
 -             )
++                ROOT::Core
 +             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
  
  add_subdirectory(test)
  install_source()
+diff --git a/dunedataprep/DataPrep/TpcTool/test/CMakeLists.txt b/dunedataprep/DataPrep/TpcTool/test/CMakeLists.txt
+index 1bc1b02..3438828 100644
+--- a/dunedataprep/DataPrep/TpcTool/test/CMakeLists.txt
++++ b/dunedataprep/DataPrep/TpcTool/test/CMakeLists.txt
+@@ -9,37 +9,37 @@ include(CetTest)
+ 
+ cet_test(test_AdcToRoi2d SOURCES test_AdcToRoi2d.cxx
+   LIBRARIES
+-    dunecore_DuneInterface_Data
+-    dunecore_ArtSupport
++    dunecore::DuneInterface_Data
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_Roi2dToAdc SOURCES test_Roi2dToAdc.cxx
+   LIBRARIES
+-    dunecore_DuneInterface_Data
+-    dunecore_ArtSupport
++    dunecore::DuneInterface_Data
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_Tpc2dDeconvolute SOURCES test_Tpc2dDeconvolute.cxx
+   LIBRARIES
+-    dunecore_DuneCommon_Utility
+-    dunecore_DuneInterface_Data
+-    dunecore_ArtSupport
++    dunecore::DuneCommon_Utility
++    dunecore::DuneInterface_Data
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+@@ -47,7 +47,7 @@ cet_test(test_Tpc2dDeconvolute SOURCES test_Tpc2dDeconvolute.cxx
+     cetlib_except::cetlib_except
+     SQLite::SQLite3
+     Boost::filesystem
+-    ${ROOT_BASIC_LIB_LIST}
++    ROOT::Core
+ )
+ 
+ cet_enable_asserts()
 diff --git a/dunedataprep/DataPrep/Utility/CMakeLists.txt b/dunedataprep/DataPrep/Utility/CMakeLists.txt
-index 602bb8e..438c7d2 100644
+index 602bb8e..ca357db 100644
 --- a/dunedataprep/DataPrep/Utility/CMakeLists.txt
 +++ b/dunedataprep/DataPrep/Utility/CMakeLists.txt
-@@ -1,6 +1,6 @@
+@@ -1,11 +1,11 @@
  # dunetpc/dune/DataPrep/Utility/CMakeLists.txt
  
 -cet_find_library( WIRECELL_AUX_LIB     NAMES WireCellAux     PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH )
-+cet_find_library( WIRECELL_AUX_LIB     NAMES WireCellAux     PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
++find_library( WIRECELL_AUX_LIB     NAMES WireCellAux     PATHS ${WIRECELL_LIB} NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
  
  art_make(BASENAME_ONLY
           LIB_LIBRARIES
-@@ -17,7 +17,7 @@ art_make(BASENAME_ONLY
-          ROOT_BASIC_LIB_LIST
-          WIRECELL_AUX_LIB
+-         dunecore_ArtSupport
+-         dunecore_DuneCommon_Utility
++         dunecore::ArtSupport
++         dunecore::DuneCommon_Utility
+ 	 larcorealg::Geometry
+ 	 larcore::Geometry_Geometry_service	
+          art::Utilities
+@@ -13,11 +13,10 @@ art_make(BASENAME_ONLY
+          canvas::canvas
+          cetlib::cetlib
+ 	 cetlib_except::cetlib_except
+-	 fhiclcpp
+-         ROOT_BASIC_LIB_LIST
+-         WIRECELL_AUX_LIB
++	 fhiclcpp::fhiclcpp
++         ${WIRECELL_AUX_LIB}
           NO_PLUGINS
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_source()
  install_headers()
+diff --git a/dunedataprep/DataPrep/Utility/test/CMakeLists.txt b/dunedataprep/DataPrep/Utility/test/CMakeLists.txt
+index b87efdd..cbcf038 100644
+--- a/dunedataprep/DataPrep/Utility/test/CMakeLists.txt
++++ b/dunedataprep/DataPrep/Utility/test/CMakeLists.txt
+@@ -14,8 +14,8 @@ cet_test(test_StickyCodeMetrics SOURCES test_StickyCodeMetrics.cxx
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
 diff --git a/dunedataprep/DataPrep/WctTool/CMakeLists.txt b/dunedataprep/DataPrep/WctTool/CMakeLists.txt
-index 838c210..d5aeb59 100644
+index 838c210..71e00de 100644
 --- a/dunedataprep/DataPrep/WctTool/CMakeLists.txt
 +++ b/dunedataprep/DataPrep/WctTool/CMakeLists.txt
-@@ -7,11 +7,11 @@
+@@ -7,11 +7,10 @@
  #                 WireCellSigProc
  #                )
  
@@ -283,16 +2220,16 @@ index 838c210..d5aeb59 100644
 -cet_find_library( WIRECELL_UTIL_LIB NAMES WireCellUtil PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH )
 -cet_find_library( WIRECELL_APPS_LIB NAMES WireCellApps PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH )
 -cet_find_library( JSONCPP_LIBS NAMES jsoncpp PATHS ENV JSONCPP_LIB NO_DEFAULT_PATH )
-+cet_find_library( WIRECELL_SIGPROC_LIB NAMES WireCellSigProc PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
-+cet_find_library( WIRECELL_IFACE_LIB NAMES WireCellIface PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
-+cet_find_library( WIRECELL_UTIL_LIB NAMES WireCellUtil PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
-+cet_find_library( WIRECELL_APPS_LIB NAMES WireCellApps PATHS ENV WIRECELL_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
-+cet_find_library( JSONCPP_LIBS NAMES jsoncpp PATHS ENV JSONCPP_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
- set(WIRECELL_LIBS ${WIRECELL_APPS_LIB} ${WIRECELL_SIGPROC_LIB} ${WIRECELL_IFACE_LIB} ${WIRECELL_UTIL_LIB} ${JSON_CPP_LIBS})
+-set(WIRECELL_LIBS ${WIRECELL_APPS_LIB} ${WIRECELL_SIGPROC_LIB} ${WIRECELL_IFACE_LIB} ${WIRECELL_UTIL_LIB} ${JSON_CPP_LIBS})
++find_library( WIRECELL_SIGPROC_LIB NAMES WireCellSigProc PATHS ${WIRECELL_LIB} NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
++find_library( WIRECELL_IFACE_LIB NAMES WireCellIface PATHS ${WIRECELL_LIB} NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
++find_library( WIRECELL_UTIL_LIB NAMES WireCellUtil PATHS ${WIRECELL_LIB} NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
++find_library( WIRECELL_APPS_LIB NAMES WireCellApps PATHS ${WIRECELL_LIB} NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.22.02) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
++set(WIRECELL_LIBS ${WIRECELL_APPS_LIB} ${WIRECELL_SIGPROC_LIB} ${WIRECELL_IFACE_LIB} ${WIRECELL_UTIL_LIB} jsoncpp::jsoncpp)
  
  add_subdirectory(test)
 diff --git a/dunedataprep/DataPrep/WctTool/test/CMakeLists.txt b/dunedataprep/DataPrep/WctTool/test/CMakeLists.txt
-index 66e3bfa..43c8f21 100644
+index 66e3bfa..dfbcfbb 100644
 --- a/dunedataprep/DataPrep/WctTool/test/CMakeLists.txt
 +++ b/dunedataprep/DataPrep/WctTool/test/CMakeLists.txt
 @@ -11,7 +11,7 @@ foreach (_variableName ${_variableNames})
@@ -304,6 +2241,30 @@ index 66e3bfa..43c8f21 100644
  
  include(CetTest)
  
+@@ -20,17 +20,18 @@ cet_test(test_wirecell
+   SOURCES
+     test_wirecell.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
++    dunecore::ArtSupport
+     art::Utilities
+     canvas::canvas
+     fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+-    ROOT_BASIC_LIB_LIST
+-    WIRECELL_LIBS
+-    JSONCPP_LIBS
++    ROOT::Core
++    ${WIRECELL_LIBS}
++    jsoncpp::jsoncpp
++    Eigen3::Eigen
+ )
+ 
+ get_target_property(myincs test_wirecell INCLUDE_DIRECTORIES)
 diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
 deleted file mode 100644
 index fe33cc7..0000000

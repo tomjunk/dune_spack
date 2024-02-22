@@ -1,61 +1,133 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ece399..3dc1138 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,17 +4,18 @@
+ 
+ 
+ # use cmake 3.14 or later
+-cmake_minimum_required (VERSION 3.12...3.14 FATAL_ERROR)
++cmake_minimum_required (VERSION 3.20 FATAL_ERROR) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION 3.12...3.14 -> 3.20
++# cmake_policy(VERSION 3.14) ### MIGRATE-ACTION-COMPATIBILITY (migrate-3.22.02) - Uncomment to preserve compatibility with older CMake versions
+ 
+-project(dunereco LANGUAGES CXX)
++find_package(cetmodules REQUIRED) ### MIGRATE-ADDED (migrate-3.22.02) - find_package(cetmodules) must precede project()
++project(dunereco LANGUAGES CXX) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION -> set(CMAKE_PROJECT_VERSION_STRING ...)
+ set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.81.00d00)
+ 
+ # cetbuildtools contains our cmake modules
+-find_package(cetbuildtools REQUIRED)
+ 
+ # Project variable defaults (_INIT) and overrides.
+ set(${PROJECT_NAME}_SCRIPTS_DIR_INIT scripts)
+-
++set(${PROJECT_NAME}_WP_DIR wire-cell-cfg)
+ include(CetCMakeEnv)
+ cet_cmake_env()
+ 
+@@ -26,51 +27,49 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
+               $<$<CXX_COMPILER_ID:GNU>:-Wno-maybe-uninitialized>
+ )
+ 
+-find_ups_boost( )
++find_package( Boost REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
+ 
+-cet_report_compiler_flags()
++cet_report_compiler_flags() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - add args: REPORT_THRESHOLD VERBOSE
+ 
+ cet_cmake_module_directories(Modules BINARY)
+ 
+ add_subdirectory(Modules)
+ 
+-find_ups_product( eigen )
+-include_directories( $ENV{EIGEN_INC} )
++find_package( Eigen3 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(eigen ...) -> find_package(eigen REQUIRED ...)
+ # testing use of rstartree ups product
+-find_ups_product( rstartree )
+-find_ups_product( art )
+-find_ups_product( art_root_io )
+-find_ups_product( canvas_root_io )
+-find_ups_root()
+-find_ups_product( cetbuildtools )
+-find_ups_product( dunecore )
+-find_ups_product( larcore )
+-find_ups_product( larcoreobj )
+-find_ups_product( larcorealg )
+-find_ups_product( larreco )
+-find_ups_product( larevt )
+-find_ups_product( lardataobj )
+-find_ups_product( lardataalg )
+-find_ups_product( lardata )
+-find_ups_product( larrecodnn )
+-find_ups_product( larpandora )
+-find_ups_product( clhep )
++#find_package( rstartree REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(rstartree ...) -> find_package(rstartree REQUIRED ...)
++find_package( art REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art ...) -> find_package(art REQUIRED ...)
++find_package( art_root_io REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art_root_io ...) -> find_package(art_root_io REQUIRED ...)
++find_package( canvas_root_io REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(canvas_root_io ...) -> find_package(canvas_root_io REQUIRED ...)
++find_package(ROOT REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
++find_package( dunecore REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunecore ...) -> find_package(dunecore REQUIRED ...)
++find_package( larcore REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcore ...) -> find_package(larcore REQUIRED ...)
++find_package( larcoreobj REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcoreobj ...) -> find_package(larcoreobj REQUIRED ...)
++find_package( larcorealg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcorealg ...) -> find_package(larcorealg REQUIRED ...)
++find_package( larreco REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larreco ...) -> find_package(larreco REQUIRED ...)
++find_package( larevt REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larevt ...) -> find_package(larevt REQUIRED ...)
++find_package( lardataobj REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataobj ...) -> find_package(lardataobj REQUIRED ...)
++find_package( lardataalg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataalg ...) -> find_package(lardataalg REQUIRED ...)
++find_package( lardata REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardata ...) -> find_package(lardata REQUIRED ...)
++find_package( larrecodnn REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larrecodnn ...) -> find_package(larrecodnn REQUIRED ...)
++find_package( larpandora REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larpandora ...) -> find_package(larpandora REQUIRED ...)
++find_package( CLHEP REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep ...) -> find_package(clhep REQUIRED ...)
+ find_package(GENIE REQUIRED EXPORT)
+-find_ups_product( gsl )
+-find_ups_product( hep_hpc )
+-find_ups_geant4( )
+-if(DEFINED ENV{CAFFE_LIB} )
+-  find_ups_product(caffe)
++find_package( GSL REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(gsl ...) -> find_package(gsl REQUIRED ...)
++find_package( hep_hpc REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(hep_hpc ...) -> find_package(hep_hpc REQUIRED ...)
++find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
++if(DEFINED CAFFE_LIB)
++  find_package(caffe REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(caffe ...) -> find_package(caffe REQUIRED ...)
+ endif()
+-if(DEFINED ENV{LAPACK_LIB} )
+-  find_ups_product( lapack )
++if(DEFINED LAPACK_LIB)
++  find_package( lapack REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lapack ...) -> find_package(lapack REQUIRED ...)
+ endif()
+-find_package(TRITON QUIET EXPORT)
+-find_ups_product( larrecodnn )
+-find_package(TensorFlow 2.6.0 QUIET EXPORT)
+-
+-if ( DEFINED ENV{LIBTORCH_DIR})
+-  find_ups_product( libtorch )
++find_package(TritonCommon EXPORT QUIET)
++find_package(TritonClient EXPORT QUIET)
++find_package( larrecodnn REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larrecodnn ...) -> find_package(larrecodnn REQUIRED ...)
++find_package(TensorFlow EXPORT QUIET)
++if(DEFINED LIBTORCH_DIR)
++  find_package( libtorch REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(libtorch ...) -> find_package(libtorch REQUIRED ...)
+   find_package(Torch REQUIRED)
+ endif()
+ 
+@@ -82,6 +81,5 @@ include(ArtMake)
+ include(BuildPlugins)
+ 
+ add_subdirectory(dunereco)
+-add_subdirectory(ups)
+ 
+-include(UseCPack)
++cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
 diff --git a/CMakePresets.json b/CMakePresets.json
 new file mode 100644
-index 0000000..363805c
+index 0000000..7e76e2c
 --- /dev/null
 +++ b/CMakePresets.json
-@@ -0,0 +1,168 @@
+@@ -0,0 +1,120 @@
 +{
 +   "configurePresets" : [
 +      {
 +         "cacheVariables" : {
-+            "CETB_COMPAT_bin_dir" : {
-+               "type" : "STRING",
-+               "value" : "BIN_DIR"
-+            },
-+            "CETB_COMPAT_cmakemodule_dir" : {
-+               "type" : "STRING",
-+               "value" : "CMAKE_MODULES_DIR"
-+            },
-+            "CETB_COMPAT_fcl_dir" : {
-+               "type" : "STRING",
-+               "value" : "FHICL_DIR"
-+            },
-+            "CETB_COMPAT_fw_dir" : {
-+               "type" : "STRING",
-+               "value" : "FW_DIR"
-+            },
-+            "CETB_COMPAT_gdml_dir" : {
-+               "type" : "STRING",
-+               "value" : "GDML_DIR"
-+            },
-+            "CETB_COMPAT_inc_dir" : {
-+               "type" : "STRING",
-+               "value" : "INCLUDE_DIR"
-+            },
-+            "CETB_COMPAT_lib_dir" : {
-+               "type" : "STRING",
-+               "value" : "LIBRARY_DIR"
-+            },
-+            "CETB_COMPAT_perllib" : {
-+               "type" : "STRING",
-+               "value" : "PERLLIB_DIR"
-+            },
-+            "CETB_COMPAT_set_fw_dir" : {
-+               "type" : "STRING",
-+               "value" : "FW_SEARCH_PATH"
-+            },
-+            "CETB_COMPAT_set_wp_dir" : {
-+               "type" : "STRING",
-+               "value" : "WIRECELL_PATH"
-+            },
-+            "CETB_COMPAT_test_dir" : {
-+               "type" : "STRING",
-+               "value" : "TEST_DIR"
-+            },
-+            "CETB_COMPAT_wp_dir" : {
-+               "type" : "STRING",
-+               "value" : "WP_DIR"
-+            },
 +            "CMAKE_BUILD_TYPE" : {
 +               "type" : "STRING",
 +               "value" : "RelWithDebInfo"
@@ -134,7 +206,7 @@ index 0000000..363805c
 +            },
 +            "dunereco_UPS_BUILD_ONLY_DEPENDENCIES_INIT" : {
 +               "type" : "STRING",
-+               "value" : "cetbuildtools"
++               "value" : "cetmodules"
 +            },
 +            "dunereco_UPS_PRODUCT_FLAVOR_INIT" : {
 +               "type" : "STRING",
@@ -172,3 +244,2352 @@ index 0000000..363805c
 +   ],
 +   "version" : 3
 +}
+diff --git a/dunereco/AnaUtils/CMakeLists.txt b/dunereco/AnaUtils/CMakeLists.txt
+index f351738..69b4c8a 100644
+--- a/dunereco/AnaUtils/CMakeLists.txt
++++ b/dunereco/AnaUtils/CMakeLists.txt
+@@ -8,12 +8,7 @@ art_make(
+     lardataobj_AnalysisBase
+     lardata_Utilities
+     nusimdata::SimulationBase
+-    ART_FRAMEWORK_CORE
+-    ART_FRAMEWORK_PRINCIPAL
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    ART_ROOT_IO_TFILE_SUPPORT
+     ROOT::Core
+-    ART_ROOT_IO_TFILESERVICE_SERVICE
+     art::Persistency_Common
+     art::Persistency_Provenance
+     art::Utilities
+@@ -21,11 +16,9 @@ art_make(
+     messagefacility::MF_MessageLogger
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib cetlib_except
+-    
+-    ROOT_BASIC_LIB_LIST
+     dunereco_CVN_func
+     dunereco_TrackPID_products
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/CVN/CMakeLists.txt b/dunereco/CVN/CMakeLists.txt
+index 122a46f..28eefc0 100644
+--- a/dunereco/CVN/CMakeLists.txt
++++ b/dunereco/CVN/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ add_subdirectory(levelDB)
+ # not ready for c2 yet
+-if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
++if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
+   add_subdirectory(art)
+   add_subdirectory(adcutils)
+   add_subdirectory(tf)
+diff --git a/dunereco/CVN/adcutils/CMakeLists.txt b/dunereco/CVN/adcutils/CMakeLists.txt
+index 8866b40..f153b1a 100644
+--- a/dunereco/CVN/adcutils/CMakeLists.txt
++++ b/dunereco/CVN/adcutils/CMakeLists.txt
+@@ -1,13 +1,11 @@
+ 
+-if( DEFINED ENV{TENSORFLOW_DIR} )
++if( DEFINED TENSORFLOW_DIR )
+ 
+ art_make_library( 
+   LIBRARY_NAME     GlobImage
+   LIBRARY_NAME_VAR GLOBIMAGE
+   SOURCE EventImageData.h EventImageData.cxx
+   LIBRARIES    dunereco_CVN_func
+-               ART_ROOT_IO_TFILESERVICE_SERVICE
+-               ART_ROOT_IO_TFILE_SUPPORT
+   )
+ 
+ cet_build_plugin(SPMultiTpcDump art::module
+@@ -19,19 +17,13 @@ cet_build_plugin(SPMultiTpcDump art::module
+ 			larrecodnn_ImagePatternAlgs_Tensorflow_PointIdAlg
+ 			larreco_RecoAlg_PMAlg
+ 			nusimdata::SimulationBase
+-			ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
+  			art::Persistency_Common
+ 			art::Persistency_Provenance
+ 			art::Utilities
+ 			canvas::canvas
+ 			messagefacility::MF_MessageLogger
+-			
+ 			cetlib::cetlib cetlib_except
+-			ROOT_BASIC_LIB_LIST
+       GLOBIMAGE
+ )
+ endif()
+diff --git a/dunereco/CVN/art/CMakeLists.txt b/dunereco/CVN/art/CMakeLists.txt
+index 88b0c9d..e625de6 100644
+--- a/dunereco/CVN/art/CMakeLists.txt
++++ b/dunereco/CVN/art/CMakeLists.txt
+@@ -1,14 +1,14 @@
+ # Tensorflow stuff
+-if (DEFINED ENV{TENSORFLOW_DIR})
++if (DEFINED TENSORFLOW_DIR)
+ # For some reason we apparently need to care if larreco is checked out.
+ #if (larreco_not_in_ups)
+ #set (LARRECO_RECOALG_IMAGEPATTERNALGS_TF larrecodnn_ImagePatternAlgs_Tensorflow_TF)
+ #else (larreco_not_in_ups)
+ #cet_find_library( LARRECO_RECOALG_IMAGEPATTERNALGS_TF NAMES larrecodnn_ImagePatternAlgs_Tensorflow_TF PATHS ENV LARRECO_LIB NO_DEFAULT_PATH)
+ #endif (larreco_not_in_ups)
+-else(DEFINED ENV{TENSORFLOW_DIR})
++else(DEFINED TENSORFLOW_DIR)
+ set (EXCLUDE_TF TFNetHandler.cxx)
+-endif (DEFINED ENV{TENSORFLOW_DIR})
++endif (DEFINED TENSORFLOW_DIR)
+ 
+ art_make(BASENAME_ONLY
+ #  LIBRARY_NAME      CVNArt
+@@ -35,7 +35,7 @@ art_make(BASENAME_ONLY
+   lardata::Utilities
+   nusimdata::SimulationBase
+   larsim_MCCheater_ParticleInventoryService_service
+-  gsl
++  GSL::gsl
+   hep_hpc_hdf5
+   hep_hpc_Utilities
+   HDF5::HDF5
+@@ -46,7 +46,7 @@ art_make(BASENAME_ONLY
+   dunereco::CVN_tf
+   dunereco::CVN_art
+   stdc++fs
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ install_headers()
+diff --git a/dunereco/CVN/func/CMakeLists.txt b/dunereco/CVN/func/CMakeLists.txt
+index 735d293..1e5cc04 100644
+--- a/dunereco/CVN/func/CMakeLists.txt
++++ b/dunereco/CVN/func/CMakeLists.txt
+@@ -1,31 +1,28 @@
+ #for classes_def.xml
+ 
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( BASENAME_ONLY
+ #  LIBRARY_NAME     CVNFunc
+   LIB_LIBRARIES    nusimdata::SimulationBase
+-  larcorealg_Geometry
+-  larcorealg_GeoAlgo
+-  lardataobj_RecoBase
+-  larsim_MCCheater_BackTrackerService_service 
+-  larsim_MCCheater_ParticleInventoryService_service
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
++  larcorealg::Geometry
++  larcorealg::GeoAlgo
++  lardataobj::RecoBase
++  larsim::MCCheater_BackTrackerService_service 
++  larsim::MCCheater_ParticleInventoryService_service
+   art::Persistency_Provenance
++  art::Framework_Principal
+   messagefacility::MF_MessageLogger
+-  art::Persistency_Common canvas
+-  art::Persistency_Provenance canvas
+-  art::Utilities canvas
++  art::Persistency_Common
++  art::Persistency_Provenance
++  art::Utilities
+   cetlib::cetlib cetlib_except
+   canvas::canvas
+   Boost::filesystem            
+-  
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Hist  
+   DICT_LIBRARIES   lardataobj_RecoBase
+   dunereco_CVN_func
+-  )
++  ) ### MIGRATE ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_source()
+diff --git a/dunereco/CVN/levelDB/CMakeLists.txt b/dunereco/CVN/levelDB/CMakeLists.txt
+index a083f55..20f070c 100644
+--- a/dunereco/CVN/levelDB/CMakeLists.txt
++++ b/dunereco/CVN/levelDB/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-art_make_exec( cvnCreateZlibImages       
++cet_make_exec( cvnCreateZlibImages       
+                SOURCE    cvnCreateZlibImages.cc
+                LIBRARIES art::Framework_Core
+                          art::Framework_Principal
+@@ -6,6 +6,7 @@ art_make_exec( cvnCreateZlibImages
+                          art_root_io::tfile_support
+                          art_root_io::TFileService_service
+                          ROOT::Core
++			 ROOT::Tree
+                          art::Persistency_Common
+                          canvas::canvas
+                          art::Persistency_Provenance
+@@ -13,10 +14,8 @@ art_make_exec( cvnCreateZlibImages
+                          art::Utilities
+                          Boost::program_options
+                          fhiclcpp::fhiclcpp
+-                         CETLIB
+-                         ROOT_BASIC_LIB_LIST
+                          dunereco::CVN_func
+-               )
++               ) ### MIGRATE-CHANGED (migrate-3.22.02) - art_make_exec() -> cet_make_exec()
+ 
+ 
+ install_source()
+diff --git a/dunereco/CVN/tf/CMakeLists.txt b/dunereco/CVN/tf/CMakeLists.txt
+index 990aa9d..c60d2ef 100644
+--- a/dunereco/CVN/tf/CMakeLists.txt
++++ b/dunereco/CVN/tf/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories ( $ENV{TENSORFLOW_INC}/absl )
++include_directories ( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ cet_add_compiler_flags(CXX -Wno-pedantic)
+ 
+@@ -7,7 +7,7 @@ art_make(BASENAME_ONLY
+   pthread
+   TensorFlow::cc
+   TensorFlow::framework
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/ClusterFinderDUNE/CMakeLists.txt b/dunereco/ClusterFinderDUNE/CMakeLists.txt
+index 4cf759f..ed822aa 100644
+--- a/dunereco/ClusterFinderDUNE/CMakeLists.txt
++++ b/dunereco/ClusterFinderDUNE/CMakeLists.txt
+@@ -19,7 +19,6 @@
+ #                           art::Framework_Core
+ #                           art::Framework_Principal
+ #                           art::Framework_Services_Registry
+-#                           ${ART_FRAMEWORK_SERVICES_BASIC}
+ #                           art_root_io::tfile_support ROOT::Core
+ #                           art_root_io::TFileService_service
+ #                           art::Persistency_Common canvas
+diff --git a/dunereco/DUNEPandora/CMakeLists.txt b/dunereco/DUNEPandora/CMakeLists.txt
+index abe8280..091dffa 100644
+--- a/dunereco/DUNEPandora/CMakeLists.txt
++++ b/dunereco/DUNEPandora/CMakeLists.txt
+@@ -1,9 +1,7 @@
+ # where should the scripts/..xml file be installed?  Perhaps in bin?
+ 
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+-include_directories( $ENV{PANDORA_INC} )
+-include_directories( $ENV{LARPANDORACONTENT_INC} )
+ 
+ art_make( BASENAME_ONLY
+           LIBRARY_NAME  DUNEPandora
+@@ -12,28 +10,21 @@ art_make( BASENAME_ONLY
+                         larcorealg_Geometry
+                         larcore_Geometry_Geometry_service
+                         larsim_Simulation nug4::ParticleNavigation lardataobj_Simulation
+-			LARPANDORACONTENT
+-                        PANDORASDK
+-                        PANDORAMONITORING
++			larpandoracontent::LArPandoraContent
++                        PandoraPFA::PandoraSDK
++                        PandoraPFA::PandoraMonitoring
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+                         art::Persistency_Common canvas
+                         art::Persistency_Provenance canvas
+                         art::Utilities canvas
+                         messagefacility::MF_MessageLogger
+-                        
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+-                        ROOT_GEOM
++                        ROOT::Geom
+ 			
+           MODULE_LIBRARIES DUNEPandora
+-          )
++          ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/FDSelections/CMakeLists.txt b/dunereco/FDSelections/CMakeLists.txt
+index 514a068..0bc39de 100644
+--- a/dunereco/FDSelections/CMakeLists.txt
++++ b/dunereco/FDSelections/CMakeLists.txt
+@@ -2,7 +2,7 @@ add_subdirectory(pandrizzle)
+ add_subdirectory(pandizzle)
+ add_subdirectory(FDSelectionData)
+ 
+-if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
++if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
+   
+ art_make( LIBRARY_NAME FDSelection
+ 	  LIB_LIBRARIES larcorealg_Geometry
+@@ -20,33 +20,17 @@ art_make( LIBRARY_NAME FDSelection
+          			larreco_Calorimetry
+ 	  	        larpandora_LArPandoraInterface
+           	        nusimdata_SimulationBase
+-          	        ${LARRECO_LIB}
+-          	        ${LARDATA_LIB}
+-	  	        ${MF_MESSAGELOGGER}
+-	  	        ${MF_UTILITIES}
+-	  	        ${FHICLCPP}
+-	  	        cetlib cetlib_except
+-          	        ${ROOT_GEOM}
+-          	        ${ROOT_XMLIO}
+-          	        ${ROOT_GDML}
+-	  	        ${ROOT_BASIC_LIB_LIST}
+-            ${ROOT_TMVA}
+             larsim_Utils
+             NeutrinoEnergyRecoAlg
+             PandrizzleAlg
+             PandizzleAlg
+ 
+ MODULE_LIBRARIES FDSelection
+-          	           ${ART_FRAMEWORK_CORE}
+-	  	           ${ART_FRAMEWORK_PRINCIPAL}
+-		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+-	  	       	   ${ART_FRAMEWORK_SERVICES_OPTIONAL}
+-			   ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
+ 	  	           art_Persistency_Common canvas
+ 	  	           art_Persistency_Provenance canvas
+ 	  	           art_Utilities canvas
+                    dunereco_TrackPID_algorithms
+-        )
++        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+     endif ()
+     
+diff --git a/dunereco/FDSelections/FDSelectionData/CMakeLists.txt b/dunereco/FDSelections/FDSelectionData/CMakeLists.txt
+index 63c9759..a0dda54 100644
+--- a/dunereco/FDSelections/FDSelectionData/CMakeLists.txt
++++ b/dunereco/FDSelections/FDSelectionData/CMakeLists.txt
+@@ -4,6 +4,6 @@ art_make(
+      ${ROOT_GENVECTOR} #LorentzVector
+   DICT_LIBRARIES
+      lardataobj_RecoBase #just for associations
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_source()
+ install_headers()
+diff --git a/dunereco/FDSelections/pandizzle/CMakeLists.txt b/dunereco/FDSelections/pandizzle/CMakeLists.txt
+index 69db092..4f43bd1 100644
+--- a/dunereco/FDSelections/pandizzle/CMakeLists.txt
++++ b/dunereco/FDSelections/pandizzle/CMakeLists.txt
+@@ -1,45 +1,28 @@
+-art_make( LIBRARY_NAME PandizzleAlg
+-	  LIB_LIBRARIES larcorealg_Geometry
+-	  	        larcore_Geometry_Geometry_service
+-		          larsim_Simulation nug4_ParticleNavigation lardataobj_Simulation
+- 	  	       larsim_MCCheater_BackTrackerService_service
+-         	  larsim_MCCheater_ParticleInventoryService_service
+-	  	        lardata_Utilities
+-	  	        larevt_Filters
+-	  	        lardataobj_RawData
+-	  	        lardataobj_RecoBase
+-	  	        lardata_RecoObjects 
+-	  	        larreco_RecoAlg
+-         			larreco_Calorimetry
+-	  	        larpandora_LArPandoraInterface
+-          	        nusimdata_SimulationBase
+-          	        ${LARRECO_LIB}
+-          	        ${LARDATA_LIB}
+-	  	        ${MF_MESSAGELOGGER}
+-	  	        ${MF_UTILITIES}
+-	  	        ${FHICLCPP}
+-	  	        cetlib cetlib_except
+-          	        ${ROOT_GEOM}
+-          	        ${ROOT_XMLIO}
+-          	        ${ROOT_GDML}
+-	  	        ${ROOT_BASIC_LIB_LIST}
+-            ${ROOT_TMVA}
+-            larsim_Utils
+-            NeutrinoEnergyRecoAlg
+-MODULE_LIBRARIES PandizzleAlg
+-#dune_TrackPID
+-dune_TrackPID_algorithms
+-dune_TrackPID_products
+-
+-          	           ${ART_FRAMEWORK_CORE}
+-	  	           ${ART_FRAMEWORK_PRINCIPAL}
+-		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+-	  	       	   ${ART_FRAMEWORK_SERVICES_OPTIONAL}
+-			   ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
+-	  	           art_Persistency_Common canvas
+-	  	           art_Persistency_Provenance canvas
+-	  	           art_Utilities canvas
+-        )
++art_make(LIBRARY_NAME     PandizzleAlg
++         LIB_LIBRARIES    larcorealg::Geometry
++                          larcore::Geometry_Geometry_service
++                          larsim::Simulation nug4::ParticleNavigation lardataobj::Simulation
++                          larsim::MCCheater_BackTrackerService_service
++                          larsim::MCCheater_ParticleInventoryService_service
++                          lardata::Utilities
++                          larevt::Filters
++                          lardataobj::RawData
++                          lardataobj::RecoBase
++                          lardata::RecoObjects 
++                          larreco::RecoAlg
++                          larreco::Calorimetry
++                          larpandora::LArPandoraInterface
++                          nusimdata::SimulationBase
++                          larsim::Utils
++                          NeutrinoEnergyRecoAlg
++         MODULE_LIBRARIES PandizzleAlg
++                          #dune_TrackPID
++                          dune_TrackPID_algorithms
++                          dune_TrackPID_products
++                          art::Persistency_Common
++                          art::Persistency_Provenance
++                          art::Utilities
++        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/FDSelections/pandrizzle/CMakeLists.txt b/dunereco/FDSelections/pandrizzle/CMakeLists.txt
+index a4826e4..0c66dd8 100644
+--- a/dunereco/FDSelections/pandrizzle/CMakeLists.txt
++++ b/dunereco/FDSelections/pandrizzle/CMakeLists.txt
+@@ -1,46 +1,29 @@
+ art_make( LIBRARY_NAME PandrizzleAlg
+-	  LIB_LIBRARIES larcorealg_Geometry
+-	  	        larcore_Geometry_Geometry_service
+-		        larsim_Simulation nug4_ParticleNavigation lardataobj_Simulation
+- 	  	        larsim_MCCheater_BackTrackerService_service
+-         	    larsim_MCCheater_ParticleInventoryService_service
+-	  	        lardata_Utilities
+-	  	        larevt_Filters
+-	  	        lardataobj_RawData
+-	  	        lardataobj_RecoBase
+-	  	        lardata_RecoObjects 
+-#larreco_Deprecated
+-	  	        larreco_RecoAlg
+-         			larreco_Calorimetry
+-	  	        larpandora_LArPandoraInterface
+-          	        nusimdata_SimulationBase
+-          	        ${LARRECO_LIB}
+-          	        ${LARDATA_LIB}
+-	  	        ${MF_MESSAGELOGGER}
+-	  	        ${MF_UTILITIES}
+-	  	        ${FHICLCPP}
+-	  	        cetlib cetlib_except
+-          	        ${ROOT_GEOM}
+-          	        ${ROOT_XMLIO}
+-          	        ${ROOT_GDML}
+-	  	        ${ROOT_BASIC_LIB_LIST}
+-            ${ROOT_TMVA}
+-            larsim_Utils
+-            NeutrinoEnergyRecoAlg
++          LIB_LIBRARIES larcorealg::Geometry
++                        larcore::Geometry_Geometry_service
++                        larsim::Simulation nug4::ParticleNavigation lardataobj::Simulation
++                        larsim::MCCheater_BackTrackerService_service
++                        larsim::MCCheater_ParticleInventoryService_service
++                        lardata::Utilities
++                        larevt::Filters
++                        lardataobj::RawData
++                        lardataobj::RecoBase
++                        lardata::RecoObjects 
++                        ROOT::Tree
++                        larreco::RecoAlg
++                        larreco::Calorimetry
++                        larpandora::LArPandoraInterface
++                        nusimdata::SimulationBase
++                        larsim::Utils
++                        NeutrinoEnergyRecoAlg
+ 
+-MODULE_LIBRARIES PandrizzleAlg
+-#dune_TrackPID
+-dune_TrackPID_algorithms
+-dune_TrackPID_products
+-          	           ${ART_FRAMEWORK_CORE}
+-	  	           ${ART_FRAMEWORK_PRINCIPAL}
+-		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+-	  	       	   ${ART_FRAMEWORK_SERVICES_OPTIONAL}
+-			   ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
+-	  	           art_Persistency_Common canvas
+-	  	           art_Persistency_Provenance canvas
+-	  	           art_Utilities canvas
+-        )
++       MODULE_LIBRARIES PandrizzleAlg
++                        dune_TrackPID_algorithms
++                        dune_TrackPID_products
++                        art::Persistency_Common
++                        art::Persistency_Provenance
++                        art::Utilities
++        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/FDSelections/tools/CMakeLists.txt b/dunereco/FDSelections/tools/CMakeLists.txt
+index 3b42b59..55962f9 100644
+--- a/dunereco/FDSelections/tools/CMakeLists.txt
++++ b/dunereco/FDSelections/tools/CMakeLists.txt
+@@ -2,23 +2,15 @@ simple_plugin(LongestRecoVertexTrackSelector "tool"
+ dunereco_AnaUtils
+     	  	        lardataobj_RecoBase
+     	  	        larpandora_LArPandoraInterface
+-                ${ROOT_BASIC_LIB_LIST}
+-                ${ART_FRAMEWORK_PRINCIPAL}
+-                ${ART_FRAMEWORK_CORE}
+-		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+  	  	           art_Persistency_Common canvas
+  	  	           art_Persistency_Provenance canvas
+ 
+  	  	           art_Utilities canvas
+-             )
++             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+ 
+ simple_plugin(HighestPandrizzleScoreRecoVertexShowerSelector "tool"
+     	  	        lardataobj_RecoBase
+     	  	        larpandora_LArPandoraInterface
+-                ${ROOT_BASIC_LIB_LIST}
+-                ${ART_FRAMEWORK_PRINCIPAL}
+-                ${ART_FRAMEWORK_CORE}
+-		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+  	  	           art_Persistency_Common canvas
+  	  	           art_Persistency_Provenance canvas
+ 
+@@ -26,22 +18,18 @@ simple_plugin(HighestPandrizzleScoreRecoVertexShowerSelector "tool"
+ 
+                    PandrizzleAlg    
+                 #dune_FDSelections_pandizzle
+-             )
++             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ simple_plugin(HighestPandizzleScoreRecoVertexTrackSelector "tool"
+     	  	        lardataobj_RecoBase
+     	  	        larpandora_LArPandoraInterface
+-                ${ROOT_BASIC_LIB_LIST}
+-                ${ART_FRAMEWORK_PRINCIPAL}
+-                ${ART_FRAMEWORK_CORE}
+-		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
+  	  	           art_Persistency_Common canvas
+  	  	           art_Persistency_Provenance canvas
+ 
+  	  	           art_Utilities canvas
+                    PandizzleAlg
+-             )
++             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+ 
+ simple_plugin(HighestEnergyRecoVertexShowerSelector "tool"
+     	  	        lardataobj_RecoBase
+@@ -50,14 +38,8 @@ simple_plugin(HighestEnergyRecoVertexShowerSelector "tool"
+                 larreco_RecoAlg
+     	  	        larpandora_LArPandoraInterface
+ dunereco_AnaUtils
+-                ${ROOT_BASIC_LIB_LIST}
+-                ${ART_FRAMEWORK_PRINCIPAL}
+-                ${ART_FRAMEWORK_CORE}
+-		       	${ART_FRAMEWORK_SERVICES_REGISTRY}
+-	  	       	${ART_FRAMEWORK_SERVICES_OPTIONAL}
+-			    ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
+  	  	           art_Persistency_Common canvas
+  	  	           art_Persistency_Provenance canvas
+ 
+  	  	           art_Utilities canvas
+-             )
++             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+diff --git a/dunereco/FDSensOpt/CMakeLists.txt b/dunereco/FDSensOpt/CMakeLists.txt
+index 210d40a..bf9fe6e 100644
+--- a/dunereco/FDSensOpt/CMakeLists.txt
++++ b/dunereco/FDSensOpt/CMakeLists.txt
+@@ -26,6 +26,7 @@ cet_build_plugin(NueAna   art::module
+                         art_root_io::tfile_support
+                         art_root_io::TFileService_service
+                         ROOT::Core
++                        ROOT::Tree
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities 
+@@ -33,7 +34,6 @@ cet_build_plugin(NueAna   art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+               BASENAME_ONLY
+ )
+ 
+@@ -54,8 +54,7 @@ cet_build_plugin(MVASelect   art::module
+                         canvas::canvas
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+-                        ${GENIE_LIB_LIST}
++			${GENIE_LIB_LIST}
+               BASENAME_ONLY
+ )
+ 
+@@ -88,7 +87,6 @@ cet_build_plugin(IniSegReco art::module
+                       messagefacility::MF_MessageLogger
+                       cetlib::cetlib 
+                       cetlib_except::cetlib_except
+-                      ROOT_BASIC_LIB_LIST
+               BASENAME_ONLY
+ )
+ 
+@@ -122,7 +120,6 @@ cet_build_plugin(ShSeg   art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+                         BASENAME_ONLY
+ )
+ 
+@@ -150,9 +147,7 @@ cet_build_plugin(EnergyReco   art::module
+                         art::Utilities 
+                         canvas::canvas
+                         messagefacility::MF_MessageLogger
+-                        CETLIB
+-                        ROOT_BASIC_LIB_LIST
+-                         ${GENIE_LIB_LIST}
++			${GENIE_LIB_LIST}
+               BASENAME_ONLY
+ )
+ 
+@@ -166,6 +161,7 @@ cet_build_plugin(CheckRecoEnergy   art::module
+                         art_root_io::tfile_support
+                         art_root_io::TFileService_service
+                         ROOT::Core
++			ROOT::Hist
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities 
+@@ -173,8 +169,7 @@ cet_build_plugin(CheckRecoEnergy   art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+-                        ${GENIE_LIB_LIST}
++			${GENIE_LIB_LIST}
+               BASENAME_ONLY
+ )
+ 
+diff --git a/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt b/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt
+index 749bb95..b9ff355 100644
+--- a/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt
++++ b/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt
+@@ -1,9 +1,9 @@
+ # this will create both the library and the dictionary
+ art_make(
+   LIB_LIBRARIES
+-     ROOT_GENVECTOR #LorentzVector
++     ROOT::GenVector #LorentzVector
+   DICT_LIBRARIES
+-     lardataobj_RecoBase #just for associations
+-  )
++     lardataobj::RecoBase #just for associations
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_source()
+ install_headers()
+diff --git a/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt b/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt
+index 009cf98..dc4fa52 100644
+--- a/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt
++++ b/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++include_directories(${CMAKE_CURRENT_SOURCE_DIR}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( BASENAME_ONLY
+           LIBRARY_NAME  IniSegAlg
+@@ -11,23 +11,17 @@ art_make( BASENAME_ONLY
+ 			larreco_RecoAlg_PMAlg
+                         lardata_Utilities
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+                         art::Persistency_Common canvas
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+                         art::Persistency_Common canvas
+                         art::Persistency_Provenance canvas
++			art_root_io::tfile_support
+                         art::Utilities canvas
+                         fhiclcpp::fhiclcpp
+ 			messagefacility::MF_MessageLogger
+-			
+                         cetlib::cetlib cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+ 			
+-          )
++          ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ install_headers()
+diff --git a/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt b/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt
+index dbf28ef..02a53fd 100644
+--- a/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt
++++ b/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt
+@@ -1,40 +1,32 @@
+-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++include_directories(${CMAKE_CURRENT_SOURCE_DIR}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( BASENAME_ONLY
+   LIBRARY_NAME  MVAAlg
+-  LIB_LIBRARIES larcorealg_Geometry
+-  larcore_Geometry_Geometry_service
+-  larsim_Simulation nug4::ParticleNavigation lardataobj_Simulation
+-  lardataalg_DetectorInfo
+-  lardataobj_RawData
+-  lardataobj_RecoBase
+-  lardata_ArtDataHelper
+-  larreco_RecoAlg
+-  larreco_RecoAlg_PMAlg
+-  lardata_Utilities
+-  larreco_Calorimetry
++  LIB_LIBRARIES larcorealg::Geometry
++  larcore::Geometry_Geometry_service
++  larsim::Simulation nug4::ParticleNavigation lardataobj::Simulation
++  lardataalg::DetectorInfo
++  lardataobj::RawData
++  lardataobj::RecoBase
++  lardata::ArtDataHelper
++  larreco::RecoAlg
++  larreco::RecoAlg_PMAlg
++  lardata::Utilities
++  larreco::Calorimetry
+   IniSegAlg
+-  larsim_MCCheater_BackTrackerService_service
+-  larsim_MCCheater_ParticleInventoryService_service
++  larsim::MCCheater_BackTrackerService_service
++  larsim::MCCheater_ParticleInventoryService_service
+   nusimdata::SimulationBase
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  art::Persistency_Common canvas
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Persistency_Common
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
+-  art::Persistency_Common canvas
+-  art::Persistency_Provenance canvas
+-  art::Utilities canvas
++  art::Persistency_Common
++  art::Persistency_Provenance
++  art::Utilities
++  art::Framework_Principal
+   fhiclcpp::fhiclcpp
+   messagefacility::MF_MessageLogger
+-  
+-  cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
+-  
+-  ROOT_TMVA
+-  )
++  cetlib::cetlib
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ install_headers()
+diff --git a/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt b/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt
+index 1afbf87..376eedd 100644
+--- a/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt
++++ b/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++include_directories(${CMAKE_CURRENT_SOURCE_DIR}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( BASENAME_ONLY
+   LIBRARY_NAME  NeutrinoEnergyRecoAlg
+@@ -18,25 +18,15 @@ art_make( BASENAME_ONLY
+   larsim_MCCheater_BackTrackerService_service
+   larsim_MCCheater_ParticleInventoryService_service
+   nusimdata::SimulationBase
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+   art::Persistency_Common canvas
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   fhiclcpp::fhiclcpp
+   messagefacility::MF_MessageLogger
+-  
+-  ROOT_EG
+   cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
+-  
+-  ROOT_TMVA
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ install_headers()
+diff --git a/dunereco/HitFinderDUNE/CMakeLists.txt b/dunereco/HitFinderDUNE/CMakeLists.txt
+index d70bd82..e1c76c2 100644
+--- a/dunereco/HitFinderDUNE/CMakeLists.txt
++++ b/dunereco/HitFinderDUNE/CMakeLists.txt
+@@ -1,61 +1,45 @@
+ 
+ art_make( BASENAME_ONLY
+           LIBRARY_NAME     HitFinderDUNE
+-          LIB_LIBRARIES    lardataobj_RecoBase
+-                           lardataalg_DetectorInfo
+-	  		   larreco_RecoAlg
+-			   larreco_RecoAlg_PMAlg
+-			   larevt_Filters
+-                           larcorealg_Geometry
+-                           larcore_Geometry_Geometry_service
+-                           lardata_RecoObjects
+-			   larsim_MCCheater_BackTrackerService_service
+-           larsim_MCCheater_ParticleInventoryService_service
+-                           lardata_Utilities
+-			   nusimdata::SimulationBase
+-                           ART_FRAMEWORK_CORE
+-   			   ART_FRAMEWORK_PRINCIPAL
+-			   ART_FRAMEWORK_SERVICES_REGISTRY
+-			   ART_ROOT_IO_TFILE_SUPPORT
+-			   ROOT::Core
+-			   ART_ROOT_IO_TFILESERVICE_SERVICE
+-                           ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+-			   art::Persistency_Common canvas
+-		       	   art::Persistency_Provenance canvas
+-			   art::Utilities canvas
+-			   messagefacility::MF_MessageLogger
+-			   
+-	                   fhiclcpp::fhiclcpp
+-			   cetlib::cetlib cetlib_except
+-                           CLHEP
+-			   
+-			   ROOT_BASIC_LIB_LIST
+-                           ROOT_GEOM
+-         MODULE_LIBRARIES HitFinderDUNE
+-                           lardataobj_RecoBase
+-                           lardata_ArtDataHelper
+-                           larcorealg_Geometry
+-                           larcore_Geometry_Geometry_service
+-			   larsim_MCCheater_BackTrackerService_service
+-           larsim_MCCheater_ParticleInventoryService_service
+-                           lardata_Utilities
+-			   nurandom::RandomUtils_NuRandomService_service
+-			   nusimdata::SimulationBase
+- 			   ART_FRAMEWORK_CORE
+-			   ART_FRAMEWORK_PRINCIPAL
+-			   ART_FRAMEWORK_SERVICES_REGISTRY
+-			   ART_ROOT_IO_TFILE_SUPPORT
+-			   ROOT::Core
+-			   ART_ROOT_IO_TFILESERVICE_SERVICE
+-			   art::Persistency_Common canvas
+-			   art::Utilities canvas
+-			   messagefacility::MF_MessageLogger
+-			   
+-	                   fhiclcpp::fhiclcpp
+-			   cetlib::cetlib cetlib_except
+-                           ROOT_BASIC_LIB_LIST
+-                           ROOT_GEOM
+-         )
++          LIB_LIBRARIES    lardataobj::RecoBase
++                           lardataalg::DetectorInfo
++                           larreco::RecoAlg
++                           larreco::RecoAlg_PMAlg
++                           larevt::Filters
++                           larcorealg::Geometry
++                           larcore::Geometry_Geometry_service
++                           lardata::RecoObjects
++                           larsim::MCCheater_BackTrackerService_service
++                           larsim::MCCheater_ParticleInventoryService_service
++                           lardata::Utilities
++                           nusimdata::SimulationBase
++                           ROOT::Core
++			   ROOT::Hist
++                           art::Persistency_Common
++                           art::Persistency_Provenance
++                           art::Utilities
++			   art::Framework_Services_Registry
++                           messagefacility::MF_MessageLogger
++                           fhiclcpp::fhiclcpp
++                           cetlib::cetlib
++                           CLHEP::CLHEP
++         MODULE_LIBRARIES  HitFinderDUNE
++                           lardataobj::RecoBase
++                           lardata::ArtDataHelper
++                           larcorealg::Geometry
++                           larcore::Geometry_Geometry_service
++                           larsim::MCCheater_BackTrackerService_service
++                           larsim::MCCheater_ParticleInventoryService_service
++                           lardata::Utilities
++                           nurandom::RandomUtils_NuRandomService_service
++                           nusimdata::SimulationBase
++                           ROOT::Core
++                           art::Persistency_Common canvas
++                           art::Utilities canvas
++                           messagefacility::MF_MessageLogger
++                           fhiclcpp::fhiclcpp
++                           cetlib::cetlib cetlib_except
++         ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/InfillChannels/art/CMakeLists.txt b/dunereco/InfillChannels/art/CMakeLists.txt
+index fff7ec1..9378665 100644
+--- a/dunereco/InfillChannels/art/CMakeLists.txt
++++ b/dunereco/InfillChannels/art/CMakeLists.txt
+@@ -1,8 +1,8 @@
+-find_ups_product(libtorch)
++find_package(libtorch REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(libtorch ...) -> find_package(libtorch REQUIRED ...)
+ find_package(Torch REQUIRED)
+ 
+ # using SYSTEM to prevent multiple "error: extra ‘;’ [-Werror=pedantic]" errors 
+-include_directories(SYSTEM ${TORCH_INCLUDE_DIRS})
++include_directories(SYSTEM ${TORCH_INCLUDE_DIRS}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make(
+         MODULE_LIBRARIES
+@@ -12,33 +12,18 @@ art_make(
+                 larcorealg_Geometry
+                 lardataalg_DetectorInfo
+                 dunepdlegacy_Overlays
+-
+                 art::Persistency_Common canvas
+                 art::Persistency_Provenance canvas
+                 art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ART_FRAMEWORK_CORE
+-                ART_FRAMEWORK_PRINCIPAL
+-                ART_FRAMEWORK_SERVICES_REGISTRY
+-                ART_ROOT_IO_TFILE_SUPPORT
+                 ROOT::Core
+-                ART_ROOT_IO_TFILESERVICE_SERVICE
+                 messagefacility::MF_MessageLogger
+                 fhiclcpp::fhiclcpp
+-                CLHEP
+-
++                CLHEP::CHLEP
+                 torch
+                 torch_cpu
+                 c10
+-
+-                ROOT_GEOM
+-                ROOT_XMLIO
+-                ROOT_GDML
+-                ROOT_BASIC_LIB_LIST
+-                ROOT_SPECTRUM
+-                ROOT_ROOFIT
+-                ROOT_ROOFITCORE
+-        )
++        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/PointResTree/CMakeLists.txt b/dunereco/PointResTree/CMakeLists.txt
+index 1c3c24f..b1be7f9 100644
+--- a/dunereco/PointResTree/CMakeLists.txt
++++ b/dunereco/PointResTree/CMakeLists.txt
+@@ -1,30 +1,23 @@
+ 
+ simple_plugin(PointResTree "module"
+-		larcore_Geometry_Geometry_service
+-		larcorealg_Geometry
+-		larsim_Simulation
+-		lardataobj_RawData
+-		lardataobj_RecoBase
+-		lardataalg_DetectorInfo
+-		larreco_Calorimetry
+-		larsim_MCCheater_BackTrackerService_service
+-		larsim_MCCheater_ParticleInventoryService_service
+-		nusimdata_SimulationBase
+-		${ART_FRAMEWORK_CORE}
+-		${ART_FRAMEWORK_PRINCIPAL}
+-		${ART_FRAMEWORK_SERVICES_REGISTRY}
+-		${ART_ROOT_IO_TFILE_SUPPORT} ${ROOT_CORE}
+-		${ART_ROOT_IO_TFILESERVICE_SERVICE}
+-		art_Persistency_Common canvas
+-		art_Persistency_Provenance canvas
+-		art_Utilities canvas
+-		${MF_MESSAGELOGGER}
+-		${MF_UTILITIES}
+-		${CETLIB}
+-		${ROOT_BASIC_LIB_LIST}
+-    dunereco_AnaUtils
++		larcore::Geometry_Geometry_service
++		larcorealg::Geometry
++		larsim::Simulation
++		lardataobj::RawData
++		lardataobj::RecoBase
++		lardataalg::DetectorInfo
++		larreco::Calorimetry
++		larsim::MCCheater_BackTrackerService_service
++		larsim::MCCheater_ParticleInventoryService_service
++		nusimdata::SimulationBase
++		art::Persistency_Common
++		art::Persistency_Provenance
++		art::Utilities
++		art_root_io::tfile_support
++		ROOT::Tree
++		dunereco_AnaUtils
+ 
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/RecoAlgDUNE/CMakeLists.txt b/dunereco/RecoAlgDUNE/CMakeLists.txt
+index d8886ba..8f70e8e 100644
+--- a/dunereco/RecoAlgDUNE/CMakeLists.txt
++++ b/dunereco/RecoAlgDUNE/CMakeLists.txt
+@@ -21,27 +21,17 @@ art_make(
+ 			larreco_RecoAlg_CMTool_CMToolApp
+ 			larreco_RecoAlg_PMAlg
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+-			
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        CLHEP
+-			ROOT_BASIC_LIB_LIST
+-                        ROOT_MINUIT
+-			ROOT_MINUIT2	
++			CLHEP::CLHEP
+                         Boost::filesystem
+                         
+-        )
++        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ #add_subdirectory(Cluster3DAlgs)
+ 
+diff --git a/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt b/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt
+index f6c46bf..2b91b23 100644
+--- a/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt
++++ b/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt
+@@ -10,27 +10,17 @@ art_make(
+                         lardata_RecoObjects
+                         lardataobj_AnalysisBase
+                         lardata_Utilities
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+-			
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        CLHEP
+-			ROOT_BASIC_LIB_LIST
+-                        ROOT_MINUIT
+-			ROOT_MINUIT2	
++			CLHEP::CLHEP
+                         Boost::filesystem
+                         
+-        )
++        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/RegCNN/CMakeLists.txt b/dunereco/RegCNN/CMakeLists.txt
+index 7352355..a18dd5a 100644
+--- a/dunereco/RegCNN/CMakeLists.txt
++++ b/dunereco/RegCNN/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
++if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
+   add_subdirectory(art)
+   add_subdirectory(func)
+ endif()
+diff --git a/dunereco/RegCNN/art/CMakeLists.txt b/dunereco/RegCNN/art/CMakeLists.txt
+index ae530d6..0161c89 100644
+--- a/dunereco/RegCNN/art/CMakeLists.txt
++++ b/dunereco/RegCNN/art/CMakeLists.txt
+@@ -20,13 +20,7 @@ art_make(BASENAME_ONLY
+   LIBRARY_NAME      RegCNNArt
+   EXCLUDE ${EXCLUDE_TF}
+   LIB_LIBRARIES RegCNNFunc
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
+-  ART_PERSISTENCY_COMMON
+   canvas::canvas
+   art::Persistency_Provenance
+   art::Utilities
+@@ -36,7 +30,6 @@ art_make(BASENAME_ONLY
+   messagefacility::MF_MessageLogger
+   fhiclcpp::fhiclcpp
+   cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
+   lardataobj_RecoBase
+   lardata_Utilities
+   larpandora_LArPandoraInterface
+@@ -49,7 +42,7 @@ art_make(BASENAME_ONLY
+   larcore_Geometry_Geometry_service
+   MODULE_LIBRARIES  RegCNNFunc
+   RegCNNArt
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ # use add or remove
+ ##cet_set_compiler_flags(DIAGS CAUTIOUS
+diff --git a/dunereco/RegCNN/func/CMakeLists.txt b/dunereco/RegCNN/func/CMakeLists.txt
+index f84a62d..d76dfac 100644
+--- a/dunereco/RegCNN/func/CMakeLists.txt
++++ b/dunereco/RegCNN/func/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ #for classes_def.xml
+ # not ready for c2 yet
+ 
+-include_directories( $ENV{TENSORFLOW_INC}/absl )
++include_directories( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ cet_add_compiler_flags(CXX -Wno-pedantic)
+ 
+@@ -11,16 +11,14 @@ art_make( BASENAME_ONLY
+   lardataobj_RecoBase
+   larsim_MCCheater_BackTrackerService_service
+   larsim_MCCheater_ParticleInventoryService_service
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib cetlib_except
+   Boost::filesystem
+-  ROOT_BASIC_LIB_LIST
+   TensorFlow::framework
+   TensorFlow::cc
+   DICT_LIBRARIES   lardataobj_RecoBase
+   RegCNNFunc
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_source()
+diff --git a/dunereco/RegCNN/macro/CMakeLists.txt b/dunereco/RegCNN/macro/CMakeLists.txt
+index be4bb42..9eec255 100644
+--- a/dunereco/RegCNN/macro/CMakeLists.txt
++++ b/dunereco/RegCNN/macro/CMakeLists.txt
+@@ -1,31 +1,25 @@
+ 
+ art_make(MODULE_LIBRARIES
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
+-  ART_PERSISTENCY_COMMON
+   dunereco_AnaUtils
+   canvas::canvas
+   art::Persistency_Provenance
+-  ART_UTILITIES
++  art_root_io::tfile_support
++  ROOT::Tree
+   messagefacility::MF_MessageLogger
+   fhiclcpp::fhiclcpp
+-  cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
+-  lardataobj_RecoBase
+-  lardata_Utilities
++  cetlib::cetlib
++  lardataobj::RecoBase
++  lardata::Utilities
+   nusimdata::SimulationBase
+-  larsim_MCCheater_BackTrackerService_service           
+-  larsim_MCCheater_ParticleInventoryService_service
+-  larreco_RecoAlg
+-  larreco_Calorimetry
+-  larcorealg_Geometry
+-  larcore_Geometry_Geometry_service
+-  larpandora_LArPandoraInterface
+-  )
++  larsim::MCCheater_BackTrackerService_service           
++  larsim::MCCheater_ParticleInventoryService_service
++  larreco::RecoAlg
++  larreco::Calorimetry
++  larcorealg::Geometry
++  larcore::Geometry_Geometry_service
++  larpandora::LArPandoraInterface
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ install_headers()
+diff --git a/dunereco/SNSlicer/CMakeLists.txt b/dunereco/SNSlicer/CMakeLists.txt
+index 3d3ad55..bc3a4e4 100644
+--- a/dunereco/SNSlicer/CMakeLists.txt
++++ b/dunereco/SNSlicer/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # for classes_def.xml!!
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ cet_build_plugin(SNSlicer art::module
+                         larcore_Geometry_Geometry_service
+@@ -13,19 +13,11 @@ cet_build_plugin(SNSlicer art::module
+ 			nusimdata::SimulationBase
+                         nug4::ParticleNavigation
+                         lardata_DetectorInfoServices_DetectorPropertiesServiceStandard_service
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+                         art::Persistency_Common canvas_Persistency_Common
+                         art::Persistency_Provenance canvas_Persistency_Provenance
+                         art::Utilities canvas_Utilities
+                         messagefacility::MF_MessageLogger
+-                        
+-                        CETLIB
+-                        ROOT_BASIC_LIB_LIST
+ )
+ 
+ cet_make( LIBRARIES lardataobj_RawData
+@@ -33,10 +25,8 @@ cet_make( LIBRARIES lardataobj_RawData
+                     canvas_Persistency_Provenance
+                     canvas_Utilities
+                     messagefacility::MF_MessageLogger
+-                    
+                     cetlib::cetlib
+-                    ROOT_BASIC_LIB_LIST
+-                    NO_DICTIONARY )
++                    NO_DICTIONARY ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_make_library(), build_dictonary(), cet_plugin() with explicit source lists and plugin base types
+ 
+ 
+ art_dictionary( DICTIONARY_LIBRARIES ) # dunereco_SNSlicer )
+diff --git a/dunereco/TrackFinderDUNE/CMakeLists.txt b/dunereco/TrackFinderDUNE/CMakeLists.txt
+index ebf333b..1279ef3 100644
+--- a/dunereco/TrackFinderDUNE/CMakeLists.txt
++++ b/dunereco/TrackFinderDUNE/CMakeLists.txt
+@@ -1,28 +1,23 @@
+ art_make( BASENAME_ONLY
+-          MODULE_LIBRARIES larreco_RecoAlg
+-                           lardataalg_DetectorInfo
+-                           lardataobj_RecoBase
+-                           larcorealg_Geometry
+-                           larcore_Geometry_Geometry_service
+-                           lardata_Utilities
+-                           larsim_Simulation nug4::ParticleNavigation lardataobj_Simulation
+-                           larsim_MCCheater_BackTrackerService_service
+-                           larsim_MCCheater_ParticleInventoryService_service
++          MODULE_LIBRARIES larreco::RecoAlg
++                           lardataalg::DetectorInfo
++                           lardataobj::RecoBase
++                           larcorealg::Geometry
++                           larcore::Geometry_Geometry_service
++                           lardata::Utilities
++                           larsim::Simulation nug4::ParticleNavigation lardataobj::Simulation
++                           larsim::MCCheater_BackTrackerService_service
++                           larsim::MCCheater_ParticleInventoryService_service
+                            nusimdata::SimulationBase
+-                           ART_FRAMEWORK_CORE
+-                           ART_FRAMEWORK_PRINCIPAL
+-                           ART_FRAMEWORK_SERVICES_REGISTRY
+-                           ART_ROOT_IO_TFILE_SUPPORT
+                            ROOT::Core
+-                           ART_ROOT_IO_TFILESERVICE_SERVICE
+-                           ART_PERSISTENCY_PROVENANCE
++			   ROOT::Hist
+                            art::Persistency_Common
+-                           art::Utilities canvas
++                           art::Utilities
++			   art_root_io::tfile_support
+                            messagefacility::MF_MessageLogger
+                            fhiclcpp::fhiclcpp
+-                           cetlib::cetlib cetlib_except
+-                           ROOT_BASIC_LIB_LIST
+-         )
++                           cetlib::cetlib
++         ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/TrackPID/CMakeLists.txt b/dunereco/TrackPID/CMakeLists.txt
+index 6e74fb0..7ba7885 100644
+--- a/dunereco/TrackPID/CMakeLists.txt
++++ b/dunereco/TrackPID/CMakeLists.txt
+@@ -1,6 +1,6 @@
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+-if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
++if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
+   add_subdirectory(algorithms)
+   add_subdirectory(fcls)
+   add_subdirectory(modules)
+diff --git a/dunereco/TrackPID/algorithms/CMakeLists.txt b/dunereco/TrackPID/algorithms/CMakeLists.txt
+index dd283d4..47e19a7 100644
+--- a/dunereco/TrackPID/algorithms/CMakeLists.txt
++++ b/dunereco/TrackPID/algorithms/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( 
+     LIB_LIBRARIES larcorealg_Geometry
+@@ -24,12 +24,10 @@ art_make(
+     messagefacility::MF_MessageLogger
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib cetlib_except
+-    
+-    ROOT_BASIC_LIB_LIST
+     dunereco_AnaUtils
+     dunereco_TrackPID_tf
+     dunereco_TrackPID_products
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/TrackPID/fcls/CMakeLists.txt b/dunereco/TrackPID/fcls/CMakeLists.txt
+index edb2842..03ccca0 100644
+--- a/dunereco/TrackPID/fcls/CMakeLists.txt
++++ b/dunereco/TrackPID/fcls/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ install_fhicl()
+ 
+diff --git a/dunereco/TrackPID/modules/CMakeLists.txt b/dunereco/TrackPID/modules/CMakeLists.txt
+index d0e69a7..6399c6d 100644
+--- a/dunereco/TrackPID/modules/CMakeLists.txt
++++ b/dunereco/TrackPID/modules/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( 
+     MODULE_LIBRARIES larcorealg_Geometry
+@@ -11,12 +11,7 @@ art_make(
+     nusimdata::SimulationBase
+     larsim_MCCheater_BackTrackerService_service           
+     larsim_MCCheater_ParticleInventoryService_service
+-    ART_FRAMEWORK_CORE
+-    ART_FRAMEWORK_PRINCIPAL
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    ART_ROOT_IO_TFILE_SUPPORT
+     ROOT::Core
+-    ART_ROOT_IO_TFILESERVICE_SERVICE
+     art::Persistency_Common
+     art::Persistency_Provenance
+     art::Utilities
+@@ -24,14 +19,12 @@ art_make(
+     messagefacility::MF_MessageLogger
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib cetlib_except
+-    
+-    ROOT_BASIC_LIB_LIST
+     dunereco_AnaUtils
+     dunereco_TrackPID_tf
+     dunereco_TrackPID_algorithms
+     dunereco_TrackPID_products
+ #    MODULE_LIBRARIES dunereco_TrackPID
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/TrackPID/products/CMakeLists.txt b/dunereco/TrackPID/products/CMakeLists.txt
+index 7dee305..670ce93 100644
+--- a/dunereco/TrackPID/products/CMakeLists.txt
++++ b/dunereco/TrackPID/products/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ art_make( 
+     LIB_LIBRARIES 
+@@ -15,7 +15,6 @@ art_make(
+ #    art::Framework_Core
+ #    art::Framework_Principal
+ #    art::Framework_Services_Registry
+-#    ${ART_FRAMEWORK_SERVICES_BASIC}
+ #    art_root_io::tfile_support ROOT::Core
+ #    art_root_io::TFileService_service
+ #    art::Persistency_Common
+@@ -25,9 +24,7 @@ art_make(
+ #    messagefacility::MF_MessageLogger
+ #    fhiclcpp::fhiclcpp
+ #    cetlib::cetlib cetlib_except
+-#    
+-#    ROOT_BASIC_LIB_LIST
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/TrackPID/tf/CMakeLists.txt b/dunereco/TrackPID/tf/CMakeLists.txt
+index a710ebe..2671cb5 100644
+--- a/dunereco/TrackPID/tf/CMakeLists.txt
++++ b/dunereco/TrackPID/tf/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ 
+-include_directories ( $ENV{TENSORFLOW_INC}/absl )
++include_directories ( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ cet_add_compiler_flags(CXX -Wno-pedantic)
+ 
+@@ -8,7 +8,7 @@ art_make(BASENAME_ONLY
+   pthread
+   TensorFlow::cc
+   TensorFlow::framework
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/VLNets/CMakeLists.txt b/dunereco/VLNets/CMakeLists.txt
+index 496534c..3b5a524 100644
+--- a/dunereco/VLNets/CMakeLists.txt
++++ b/dunereco/VLNets/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ add_subdirectory(art)
+ add_subdirectory(data)
+ 
+-if ((DEFINED ENV{TENSORFLOW_DIR}) AND (DEFINED ENV{TRITON_DIR}))
++if ((DEFINED TENSORFLOW_DIR) AND (DEFINED TRITON_DIR))
+     add_subdirectory(models)
+ endif ()
+ 
+diff --git a/dunereco/VLNets/art/CMakeLists.txt b/dunereco/VLNets/art/CMakeLists.txt
+index f169ff7..3dab93c 100644
+--- a/dunereco/VLNets/art/CMakeLists.txt
++++ b/dunereco/VLNets/art/CMakeLists.txt
+@@ -2,7 +2,7 @@ add_subdirectory(products)
+ add_subdirectory(var_extractors)
+ add_subdirectory(data_generators)
+ 
+-if ((DEFINED ENV{TENSORFLOW_DIR}) AND (DEFINED ENV{TRITON_DIR}))
++if ((DEFINED TENSORFLOW_DIR) AND (DEFINED TRITON_DIR))
+     add_subdirectory(evaluators)
+ endif ()
+ 
+diff --git a/dunereco/VLNets/art/data_generators/CMakeLists.txt b/dunereco/VLNets/art/data_generators/CMakeLists.txt
+index c4d53ac..4031f64 100644
+--- a/dunereco/VLNets/art/data_generators/CMakeLists.txt
++++ b/dunereco/VLNets/art/data_generators/CMakeLists.txt
+@@ -6,7 +6,7 @@ art_make(
+         VLNVarExtractors
+         VLNDataGenerators
+     BASENAME_ONLY
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/VLNets/art/evaluators/CMakeLists.txt b/dunereco/VLNets/art/evaluators/CMakeLists.txt
+index 3360203..8ecfbde 100644
+--- a/dunereco/VLNets/art/evaluators/CMakeLists.txt
++++ b/dunereco/VLNets/art/evaluators/CMakeLists.txt
+@@ -6,7 +6,7 @@ art_make(
+         VLNVarExtractors
+         VLNDataGenerators
+     BASENAME_ONLY
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/dunereco/VLNets/art/products/CMakeLists.txt b/dunereco/VLNets/art/products/CMakeLists.txt
+index 925625f..cd8fc63 100644
+--- a/dunereco/VLNets/art/products/CMakeLists.txt
++++ b/dunereco/VLNets/art/products/CMakeLists.txt
+@@ -3,7 +3,7 @@ art_make(
+     LIB_LIBRARIES
+         VLNData
+     BASENAME_ONLY
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_source()
+diff --git a/dunereco/VLNets/models/CMakeLists.txt b/dunereco/VLNets/models/CMakeLists.txt
+index 6dbe419..84b31e4 100644
+--- a/dunereco/VLNets/models/CMakeLists.txt
++++ b/dunereco/VLNets/models/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ 
+-include_directories( $ENV{TENSORFLOW_INC}/absl )
++include_directories( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ cet_add_compiler_flags(CXX -Wno-pedantic)
+ 
+diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
+deleted file mode 100644
+index fe33cc7..0000000
+--- a/ups/CMakeLists.txt
++++ /dev/null
+@@ -1,6 +0,0 @@
+-
+-# create package configuration and version files
+-
+-process_ups_files()
+-
+-cet_cmake_config()
+diff --git a/ups/product-config.cmake.in b/ups/product-config.cmake.in
+deleted file mode 100644
+index 4e22a3b..0000000
+--- a/ups/product-config.cmake.in
++++ /dev/null
+@@ -1,12 +0,0 @@
+-
+-set( @product@_VERSION @cet_dot_version@ )
+-set( @product@_UPS_VERSION @version@ )
+-
+-@PACKAGE_INIT@
+-
+-@CONFIG_FIND_UPS_COMMANDS@
+-
+-@CONFIG_FIND_LIBRARY_COMMANDS@
+-
+-check_required_components(@product@)
+-
+diff --git a/ups/product_deps b/ups/product_deps
+index 3c6d848..0772f37 100644
+--- a/ups/product_deps
++++ b/ups/product_deps
+@@ -1,53 +1,338 @@
+-# This @product_deps@ file defines dependencies for this package.
++########################################################################
++# product_deps
++#
++#   Define attributes of a package to be built and distributed as a UPS
++#   product.
++#
++# This file is parsed as a consequence of sourcing the
++# setup_for_development or setup_deps shell-agnostic scripts.
++#
++# Generated by cetmodules 3.22.02 at Wed Sep 13 16:53:29 CDT 2023
++########################################################################
+ 
+-# The *parent* line must the first non-commented line and defines this product and version
+-# The version must be of the form vxx_yy_zz (e.g. v01_02_03).
++####################################
++# Basic information.
+ 
+-parent dunereco
++##################
++# parent
++##################
++#
++# The parent line - if present - must be the first non-comment line in
++# the file, defining the product's name and version. Any information not
++# specified will be taken from the CMake project(<project-name> VERSION
++# <dot-version>) call in the CMakeLists.txt in the parent directory to
++# the one containing this file.
++#
++# Recommended:
++#
++#>  parent <product-name>
++#
++# Deprecated (will produce a warning):
++#
++#>  parent <product-name> <product-ups-version> [<chain>]...
+ 
+-defaultqual e26
++##################
++# chain[s]
++##################
++#
++# List the UPS chains ("-c", -t, "new," "current," "old...") to be defined
++# for the package. The trailing `s' is optional and without meaning.
++# Multiple chains may be specified with one or more declarations.
++#
++#>  chains <chain>...
+ 
+-# These optional lines define where headers, libraries, and executables go and should
+-# be used only if your product does not conform to the defaults.
+-# Format: directory_type directory_path directory_name
+-#   where directory_type is one of incdir, libdir, or bindir
+-#   where directory_path is one of product_dir, fq_dir and -
+-# Defaults:
+-#incdir  product_dir  include
+-#fcldir  product_dir  fcl
+-#libdir  fq_dir       lib
+-#bindir  fq_dir       bin
+-wpdir product_dir wire-cell-cfg
++##################
++# defaultqual
++##################
++#
++# The default colon-delimited qualifier set used if one is not provided
++# to setup_for_development. Build type (debug, opt or prof) is optional.
++#
++# Deprecated - a qualifier should generally be provided to the
++# invocation of setup_for_development or setup_deps.
++#
++#>  defaultqual <qualifiers>
+ 
++##################
++# noarch
++##################
++#
++# Specify this keyword if the package is architecture-independent. This
++# does not necessarily imply a lack of qualifiers or of a
++# fully-qualified (fq) subdirectory in the installed package.
++#
++#>  noarch
++
++##################
++# no_fq_dir
++##################
++#
++# Specify this keyword if the UPS package should not have a
++# fully-qualified (fq) subdirectory in the installed package. This does
++# not necessarily imply noarch or a lack of qualifiers, but caution
++# should be observed if using this keyword for architecture-dependent
++# packages or those with qualifiers to avoid overwritten files when
++# multiple different variants of the package are installed in the same
++# UPS area.
++#
++#>  no_fq_dir
++
++##################
++# define_pythonpath
++##################
++#
++# If define_pythonpath is enabled, the appropriate path will be appended
++# to PYTHONPATH.
++#
++#>  define_pythonpath
++####################################
++parent		dunereco
++defaultqual	e26
++####################################
++
++####################################
++# Directory specifications.
++#
++# These optional definitions specify the installed directories where
++# various files headers, libraries, and executables will be found. Some
++# have defaults; others must be specified if files of that type are to
++# be installed. Minimize configuration complexity by using only those
++# definitions necessary for the package.
++#
++##################
++# Notes:
++#
++# * Use directory specifications only if the defaults are inappropriate
++#   for your product.
++#
++# * A specification with defaults may be obviated by specifying a base
++#   of `-' as the only argument.
++#
++# * A directory will be created and appropriate UPS table file entries
++#   made *if and only if* files of that type are installed using the
++#   appropriate directive.
++#
++##################
++# Format:
++#
++#>  <spec>		<base>		[<subdir-name>]
++#
++# <base> may be `-' (negate defaults), "product_dir", or "fq_dir" as
++# desired.
++#
++# Available <spec>s and defaults:
++#
++#>  bindir		fq_dir		bin
++#
++#     Built binaries for public use.
++#
++#>  cmakemoduledir	product_dir	Modules
++#
++#     CMake modules.
++#
++#>  fcldir		product_dir	fcl
++#
++#     FHiCL framework configuration files.
++#
++#>  fwdir
++#
++#     Framework data.
++#
++#>  gdmldir		product_dir	gdml
++#
++#     GDML geometry description files.
++#
++#>  incdir		product_dir	include
++#
++#     Headers.
++#
++#>  libdir		fq_dir		lib
++#
++#     Compiled and other libraries.
++#
++#>  perllib		product_dir	perl5lib
++#
++#     Perl modules, etc.
++#
++#>  set_fwdir
++#
++#     An additional location for framework data to be added to
++#     FW_SEARCH_PATH; may be specified multiple times.
++#
++#>  set_wpdir
++#
++#     An additional location for wirecell data to be added to
++#     WIRECELL_PATH; may be specified multiple times.
++#
++#>  testdir		product_dir	test
++#
++#     Tests.
++#
++#>  wpdir
++#
++#     Wirecell data.
++#
++####################################
++wpdir	product_dir	wire-cell-cfg
++####################################
++
++####################################
++# Product table.
++#
++# Table defining *all* direct UPS package dependencies.
++#
++##################
++# Format:
++#
++#>  product		version		qual	["<table_format=#>"]
++#>  <ups-product_name>	<ups-version>	[<qual-trigger>]	[<flag>]
++#>...
++#>  end_product_list
++#
++# <ups-version> may be a UPS version, a chain option (-c, -t, etc.) or a
++# chain name with a preceding `-'.
++#
++# Valid <qual-trigger> values:
++#
++# * [!]<single-qual>
++#
++#   A single qualifier whose presence in the parent's qualifier will
++#   trigger the setup of the specified version of the product. A prefix
++#   of `!' will negate the match.
++#
++# * <empty>|-
++#
++#   The specified version of the product will always be set up
++#   regardless of the parent's qualifiers. Use `-' as a placeholder if
++#   <flag> is to be specified.
++#
++# * -nq-
++#
++#   Specify explicitly that this product should be set up when the
++#   parent is unqualified.
++#
++# * -default-
++#
++#   The specified version of the product will be set up if no other
++#   product table entry for this product is applicable to the parent's
++#   qualifiers.
++#
++# Valid <flag> values:
++#
++# * only_for_build
++#
++#   The specified product will be set up for building only, and will not
++#   be added to the table file.
++#
++# * optional
++#
++#   It will not be an error if the specified product is not available to
++#   be set up.
++#
++##################
++# Notes.
++#
++# * Under older versions of the product table format ("<table_format=1>"
++#   or unspecified), -nq- had the same meaning as `-' above. When
++#   updating a product_deps file these entries should be reviewed when
++#   <table_format=2> is selected.
++#
++# * "<format>" is a valid alias for "<table_format>".
++#
++# * Under most circumstances (the parent is anything other than
++#   cetmodules), an entry for cetmodules is required.
++#
++# * It is an error for more than one non-(<qual-trigger> == "-default-")
++#   entry to match for a given product.
++#
++####################################
++product		version		qual	flags		<table_format=2>
++dunecore	v09_81_00d00	-
++cetmodules	v3_22_02	-	only_for_build
++end_product_list
++####################################
++
++####################################
++# Qualifier table.
++#
++# For each valid qualifer set of the parent, specify how dependencies
++# should be set up.
++#
++# Format:
++#
++#>  qualifier		<prod-spec>...	[<notes>]
++#>  <parent-qual>	<spec>...   [<text...>]
++#>...
++#>  end_qualifier_list
++#
++# <prod-spec> may be a product name or "compiler."
++#
++# <parent-qual> may be a colon-delimited qualifier set, or "-nq-" as a
++# column placeholder in the case of no parent qualifiers.
++#
++# Unless <prod-spec> is "compiler", <spec> may be a colon-delimited
++# qualifier set, or:
++#
++# * -
++#
++#   The dependency is not required for this <parent-qual> and will not
++#   be set up.
++#
++# * -nq-
++#
++#   The dependency will be set up without qualifiers.
++#
++# * -b- (deprecated)
++#
++#   A build-only dependency for this <parent-qual>. If the dependency is
++#   set up in this way, it will be set up without qualifiers. For more
++#   flexibility, use the product table to specify the only_for_build
++#   nature of the dependency and the qualifier table to specifiy how it
++#   should be set up.
++#
++# If <prod-spec> is "compiler", <spec> must be `-' (no compiler
++# required) or the name of the UPS product for the desired compiler. Any
++# qualifiers required to set up the compiler should be specified in the
++# appropriate column for that product.
++#
++##################
++# Notes.
++#
++# * A column for every product in the product table (see above) is
++#   *required* unless the only_for_build flag is specified, in which
++#   case it is optional.
++#
++####################################
++qualifier	dunecore	notes
++c14:debug	c14:debug
++c14:prof	c14:prof
++e26:debug	e26:debug
++e26:prof	e26:prof
++end_qualifier_list
++####################################
++
++####################################
++# Table fragment.
++#
++####################################
+ table_fragment_begin
+     pathPrepend(FW_SEARCH_PATH, ${DUNERECO_DIR}/scripts)
+     envSet(WIRECELL_PATH, ${DUNE_PARDATA_DIR}/WireCellData)
+     pathPrepend(WIRECELL_PATH, ${WIRECELL_FQ_DIR}/share/wirecell)
+     pathPrepend(WIRECELL_PATH, ${UPS_PROD_DIR}/wire-cell-cfg)
+ table_fragment_end
++####################################
+ 
+-# With "product  version" table below, we now define depdendencies
+-
+-# Add the dependent product and version
+-
+-product          version
+-cetbuildtools	 v8_20_00	-	only_for_build
+-dunecore         v09_81_00d00
+-end_product_list
+-
+-
+-# We now define allowed qualifiers and the corresponding qualifiers for the depdencies.
+-# Make a table by adding columns before "notes".
+-qualifier       dunecore        notes
+-c14:debug       c14:debug        
+-c14:prof        c14:prof       	 
+-e26:debug       e26:debug     	 
+-e26:prof        e26:prof      	 
+-end_qualifier_list
++####################################
++# Backmatter.
++#
++# Comments and editor-specific metadata.
+ 
+ # Preserve tabs and formatting in emacs and vi / vim:
+ 
+ ### Local Variables:
++### mode: sh
+ ### tab-width: 8
+ ### End:
+ 
++# vi:set ts=8 noexpandtab:
+diff --git a/ups/setup_deps b/ups/setup_deps
+deleted file mode 100644
+index 72c2e32..0000000
+--- a/ups/setup_deps
++++ /dev/null
+@@ -1,89 +0,0 @@
+-# NO USER-SERVICEABLE PARTS BELOW.
+-#
+-# There should be as little as possible here,
+-# with most of the heavy lifting done by other small scripts
+-#
+-# When sourcing this file from a script, you may have to tell this
+-# source file where it is via the fw_db shell (or env) variable.
+-# I.e.:
+-#    set fw_db=/some/path; source /some/path/this_file
+-# or  fw_db=/some/path; . /some/path/this_file
+-
+-test $?shell = 1 && set ss=csh || ss=sh
+-#echo Shell type is $ss.
+-
+-# make some things similar. need to use set_ because sh builtin set would hide function set
+-# Note: perhaps the trickiest thing in this file is the sh set_ function tries to return the same status
+-#       as at the start of the function (which most likely is the result of a back-tick expression
+-test "$ss" = csh && alias set_ set && alias vecho_ 'if ($?vv == 1) echo \!*' || eval 'vecho_() { test -n "${vv-}" && echo "$@"; return 0; }'
+-test "$ss" =  sh && eval 'set_() { sts=$?;for xx in "$@";do var=`expr "$xx" : "\([^=]*\)"`;val=`expr "$xx" : "[^=]*=\(.*\)"`;eval "$var=\"$val\"";done;return $sts; }'
+-test "$ss" =  sh && eval 'setenv() { export $1;eval "$1=\"\${2-}\""; }; source() { file=$1; shift; . $file "$@"; }; unsetenv_() { unset "$@"; }'
+-test "$ss" =  sh && eval 'tnotnull() { eval "test -n \"\${$1-}\""; }'                             && eval 'nullout() { "$@" >/dev/null 2>&1; }'
+-test "$ss" = csh && alias tnotnull "eval '"'test $?'"\!* -eq 1' && eval '"'test -n "$'"\!*"'"'"'" && alias nullout "\!* >& /dev/null" && alias unsetenv_ unsetenv
+-test "$ss" = csh && alias return exit
+-
+-set_ msg1='ERROR: You MUST setup ups'
+-test -z $UPS_DIR && ( echo ""; echo "$msg1"; echo "" ) && return
+-
+-set_ msg3='ERROR: You MUST specify either -o, -p, or -d'
+-set_ msg4='Usage: setup_deps <-d|-o|-p> <qualifier list>'
+-test -z "$1" && ( echo ""; echo "$msg4"; echo "$msg3"; echo "" ) && return
+-
+-# make sure we know where this script lives
+-# now if we were passed a path or if not, we can figure it out (maybe if we are interactive)
+-#   bash, zsh, ksh and tcsh pass params to a source file, csh does not. but someone will be writing csh scripts
+-set_ msg2='Please set shell or env. variable fw_db (to be the path to the framework source code). Fix this and other errors may go away.'
+-tnotnull fw_db && set_ db=`sh -c "cd $fw_db >/dev/null 2>&1 && pwd"` && vecho_ 'setting db from fw_db variable' || set_ db=
+-
+-test -z "$db" && tnotnull BASH_SOURCE && set_ me=`dirname $BASH_SOURCE` && set_ db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via BASH_SOURCE'
+-
+-# history is applicable only for interactive t/csh
+-test -z "$db" -a "$ss" = csh && test $?history = 0 && set history=5  # make sure history 1 works
+-test -z "$db" -a "$ss" = csh && set me=`history 1|sed 's/^[ 	0-9:]*//'` && test -n "$me" && set me=`dirname $me[2]` \
+-    && set db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via interactive history'
+-#echo This script lives in $db
+-
+-test -z "$db" && echo "$msg2" || vecho_ "db=$db"
+-test -n "$db" && setenv CETPKG_SOURCE `dirname $db`
+-
+-# make sure we know the current directory
+-set_ myname=`whoami`
+-setenv CETPKG_BUILD /tmp/$myname/setup_deps
+-rm -rf $CETPKG_BUILD
+-mkdir -p $CETPKG_BUILD
+-#echo Build directory is $CETPKG_BUILD
+-
+-echo The source code directory is $CETPKG_SOURCE
+-
+-set_ msg5='ERROR: setup of required products has failed'
+-
+-echo ----------- check this block for errors -----------------------
+-set_ setup_fail="false"
+-set_ exit_now="false"
+-set_ cetb=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $1 }' `
+-set_ cetv=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $2 }' `
+-#echo Found $cetb $cetv
+-setup -B $cetb $cetv
+-test "$?" = 0 || set_ setup_fail="true"
+-# now get the rest of the products
+-set_ cmd="$CETBUILDTOOLS_DIR/bin/set_dev_products $CETPKG_SOURCE $CETPKG_BUILD $*"
+-#echo Ready to run $cmd
+-source `$cmd`
+-test "$?" = 0 || set_ setup_fail="true"
+-#echo "$cmd returned $setup_fail"
+-test "$setup_fail" = "true" && echo "$msg5"
+-test "$setup_fail" = "true" && set_ exit_now="true"
+-test -e "$CETPKG_BUILD/diag_report" && cat $CETPKG_BUILD/diag_report
+-echo ----------------------------------------------------------------
+-
+-test "${exit_now}" = "true" && test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-test "${exit_now}" = "true" && unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail set_ setenv unsetenv_ tnotnull nullout vecho_
+-test "${exit_now}" = "true" && return 1
+-
+-# final sanity check and report
+-source $CETBUILDTOOLS_DIR/bin/set_dep_check_report
+-
+-# cleanup before exiting
+-test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail
+-unset set_ setenv unsetenv_ tnotnull nullout vecho_
+diff --git a/ups/setup_for_development b/ups/setup_for_development
+index 8c5bedf..e46765f 100644
+--- a/ups/setup_for_development
++++ b/ups/setup_for_development
+@@ -1,96 +1,260 @@
+-# NO USER-SERVICEABLE PARTS BELOW.
++########################################################################
++# This script is shell-agnostic, which involves much acrobatics to avoid
++# causing errors in one interpreter or another (*stares in csh*).
+ #
+-# There should be as little as possible here,
+-# with most of the heavy lifting done by other small scripts
++# There should be as little as possible here, with most of the heavy
++# lifting done by other small scripts.
+ #
+ # When sourcing this file from a script, you may have to tell this
+-# source file where it is via the fw_db shell (or env) variable.
+-# I.e.:
++# source file where it is via the fw_db shell (or env) variable, i.e.
+ #    set fw_db=/some/path; source /some/path/this_file
+ # or  fw_db=/some/path; . /some/path/this_file
++#
++# Generated by cetmodules 3.22.02 at Wed Sep 13 16:53:29 CDT 2023
++########################################################################
++
++########################################################################
++# NO USER-SERVICEABLE PARTS BELOW.
++########################################################################
++
++# Determine shell flavor.
++true && test $?shell = 1 && set _cetpkg_shell_flavor=csh || _cetpkg_shell_flavor=sh
++
++####################################
++# A common set of commands to use to hide as many shell flavor
++# differences as possible.
++
++##################
++# IMPORTANT NOTE:
++#
++# Following extensive tests in multiple shells, I have reached the
++# conclusion that it is not actually possible for a function to mirror
++# the semantics of an assignment with respect to the status code of ``
++# and compound statements joined with "||" or "&&". To handle this, we
++# write a large chunk of shell code to a temporary file in the current
++# directory a.k.a. CETPKG_BUILD with shell variable assignments correct
++# according to the shell flavor, and then source it. This also allows us
++# to deal with the fact that some shells don't pass arguments to sourced
++# scripts *stares harder in csh*.
++#
++# 2020-06-24 CHG.
++##################
++
++# If we're C-flavored, set up the commands using alias.
++test "$_cetpkg_shell_flavor" = csh && \
++  set _cetpkg_nobuild="" && \
++  set _cetpkg_shell_var_set=set\\1 && \
++  set _cetpkg_to_stderr="| sh -c 'cat 1>\\&2'" && \
++  alias vecho_ 'if ($?vv == 1) echo \>\> \!*' && \
++  alias unsetenv_ unsetenv && \
++  alias tnotnull "eval '"'test $?'"\!* -eq 1' && eval '"'test -n "$'"\!*"'"'"'" && \
++  alias nullout "\!* >& /dev/null" && \
++  alias __TOP_EOF__ '' && \
++  alias return exit
++
++# For Bourne-flavored shells, use functions.
++test "$_cetpkg_shell_flavor" = sh && \
++  _cetpkg_nobuild="" && \
++  _cetpkg_shell_var_set= && \
++  _cetpkg_to_stderr='1>\&2' && \
++  eval 'vecho_() { test -n "${vv-}" && echo ">> $*"; return 0; }' && \
++  eval 'setenv() { eval "$1=\"\${2-}\"; export $1"; }' && \
++  eval 'unsetenv_() { unset "$@"; }' && \
++  eval 'source() { . "$@"; }' && \
++  eval 'tnotnull() { eval "test -n \"\${$1-}\""; }' && \
++  eval 'nullout() { "$@" >/dev/null 2>&1; }'
++####################################
++
++##################
++# Check for UPS (uses alias for return in C-flavored shells).
++test -z "$UPS_DIR" && \
++  ( echo ""; echo "ERROR: you MUST set up UPS"; echo "" ) && \
++  return 1 || true
++##################
++
++####################################
++# Need to find ourselves to set CETPKG_SOURCE.
++
++# Define empty variables for C-flavor shells to make things easier.
++test "$_cetpkg_shell_flavor" = csh && \
++  set _cetpkg_fw_db= _cetpkg_myself= _cetpkg_mydir=
++
++# If user has set fw_db, identify our top-level source directory now.
++test "$_cetpkg_shell_flavor" = csh && tnotnull fw_db && \
++  set _cetpkg_fw_db=`sh -c "cd $fw_db:q >/dev/null 2>&1 && /bin/pwd -P"` && \
++  vecho_ "found ourselves through fw_db" || true
++test "$_cetpkg_shell_flavor" = sh && tnotnull fw_db && \
++  _cetpkg_fw_db=`sh -c "cd \"$fw_db\" >/dev/null 2>&1 && /bin/pwd -P"` && \
++  vecho_ "found ourselves through fw_db" || true
++
++##################
++# For Bash and zsh, identify ourselves now so we don't have to go
++# through acrobatics later in the sourced script.
++test "$_cetpkg_shell_flavor" = sh && tnotnull BASH_SOURCE && \
++  _cetpkg_myself="$BASH_SOURCE" && test -n "$BASH_SOURCE" && \
++  vecho_ "found ourselves through BASH_SOURCE" || true
++test "$_cetpkg_shell_flavor" = sh -a -z "$_cetpkg_myself" && \
++  tnotnull ZSH_VERSION && eval '_cetpkg_myself="${(%):-%x}"' && \
++  test -n "$_cetpkg_myself" && \
++  vecho_ "found ourselves through ZSH prompt logic" || true
++test "$_cetpkg_shell_flavor" = sh && tnotnull _cetpkg_myself && \
++  _cetpkg_mydir=`dirname "$_cetpkg_myself"` && \
++  _cetpkg_fw_db=`sh -c "cd $_cetpkg_mydir >/dev/null 2>&1 && /bin/pwd -P"` || true
++##################
++
++##################
++# History is applicable only for interactive t/csh.
++test -z "$_cetpkg_fw_db" -a "$_cetpkg_shell_flavor" = csh -a $?history = 0 && \
++  set history=5  || true
++test -z "$_cetpkg_fw_db" -a "$_cetpkg_shell_flavor" = csh && \
++  set _cetpkg_mydir=`history 1|sed -Ee 's/^[[:space:][:digit:]:]*.*\bsource[[:space:]]+//'` && \
++  test -n "$_cetpkg_mydir" && set _cetpkg_mydir=`dirname $_cetpkg_mydir[1]:q` && \
++  set _cetpkg_fw_db=`sh -c "cd $_cetpkg_mydir:q >/dev/null 2>&1 && /bin/pwd -P"` && \
++  vecho_ 'setting db via interactive history' || true
++##################
++
++# Set CETPKG_SOURCE.
++test -n "$_cetpkg_fw_db" && \
++  vecho_ "_cetpkg_fw_db=$_cetpkg_fw_db" && \
++  setenv CETPKG_SOURCE `dirname $_cetpkg_fw_db` || \
++  printf "WARNING: please set shell or env. variable fw_db (to be the path to the\n\
++         framework source code). Fix this and other errors may go away.\n"
++####################################
++
++##################
++# Set CETPKG_BUILD.
++setenv CETPKG_BUILD `/bin/pwd -P`
++##################
++
++########################################################################
++# Write the rest of ourselves to a file and source it to handle status
++# code semantics for variable assignments.
++#
++# Note that even here we have to play a trick or two due to the fact
++# that we have to deal with the difference in the way sh- and csh-flavor
++# shells handle a quoted delimiter word for a HERE document: the latter
++# expect the delimiter to include the quoting; the former do not. This
++# is the reason for the C-flavored __TOP_EOF__ alias, and the explicit
++# return at the end of the sourced script.
++#
++########################################################################
++
++sed -Ee 's&(^|[^[:alnum:]_])__SET__([[:space:]]+)&'$_cetpkg_shell_var_set'&g' \
++  -e 's&__SETUP_ARGS__&'"$*"'&g' \
++  -e 's&__TO_STDERR__&'"$_cetpkg_to_stderr"'&g' \
++  > ./setup_common.$_cetpkg_shell_flavor <<\__TOP_EOF__
++########################################################################
++
++####################################
++# Personality check: are we setup_deps or setup_for_development?
++#
++# If we're sourcing setup.in directly (e.g. for cetmodules itself) then
++# we select "setup_for_development" behavior, otherwise _cetpkg_nobuild
++# will be set appropriately by CMake's CONFIGURE() command for
++# setup_for_development or setup_deps.
++
++test -z "$_cetpkg_nobuild" -o "$_cetpkg_nobuild" = "--nobuild" || \
++  __SET__ _cetpkg_nobuild="" || true
++####################################
++
++####################################
++# Initial info.
++
++printf "\n";
++test -z "$_cetpkg_nobuild" && \
++  echo "The working build directory is $CETPKG_BUILD" || true
++cat <<EOF
++The source code directory is $CETPKG_SOURCE
++
++---------------------- check this block for errors ---------------------
++EOF
++
++__SET__ _cetpkg_status=""
++####################################
++
++####################################
++# Attempt to find a suitable cetmodules to set up.
++
++__SET__ _cetpkg_cetmsetup=`sed -nE 's&^[[:space:]]*(cetmodules)[[:space:]]+([^[:space:]]+).*\bonly_for_build\b.*$&\1 \2&p' "$CETPKG_SOURCE/ups/product_deps"`
++test -z "_cetpkg_cetmsetup" -a ! -x "$CETPKG_SOURCE/libexec/set_dev_products" && \
++  __SET__ _cetpkg_status=1 && \
++  echo "ERROR: unable to find suitable cetmodules >= 2.00.00" || true
++test -n "$_cetpkg_status" -o -z "$_cetpkg_cetmsetup" || setup -B $_cetpkg_cetmsetup
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of $_cetpkg_cetmsetup has failed" || true
++test -z "$_cetpkg_status$_cetpkg_cetmsetup" && setenv PATH `dropit -sfe "$CETPKG_SOURCE/bin"` && __SET__ _cetpkg_cettop="$CETPKG_SOURCE" || true
++test -z "$_cetpkg_status$_cetpkg_cettop" -a -n "$CETMODULES_DIR" && __SET__ _cetpkg_cettop="$CETMODULES_DIR"
++####################################
++
++########################################################################
++# A bootstrapped Perl environment is only needed if we're building
++# cetmodules itself.
++
++test -n "$_cetpkg_status" || test -n "$CETMODULES_DIR" || \
++  setup cetpkgsupport
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of cetpkgsupport has failed" || true
++test -n "$_cetpkg_status" || test -n "$CETMODULES_DIR" || \
++  yes n | "$_cetpkg_cettop/libexec/bootstrap-perl-env" > \
++  "$CETPKG_BUILD/bootstrap.log"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: bootstrap of Perl environment for cetmodules has failed: see $CETPKG_BUILD/bootstrap.log" || true
++test -n "$_cetpkg_status" || test -n "$CETMODULES_DIR" || \
++  eval "`perl -I\"$CETPKG_BUILD/$CET_SUBDIR/CPAN/lib/perl5\" -Mlocal::lib=\"$CETPKG_BUILD/$CET_SUBDIR/CPAN\",\"$CETPKG_BUILD/$CET_SUBDIR/cpan_build\"\`test \$?shell = 1 && printf \",--shelltype=csh\"\``"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of Perl environment for cetmodules has failed" || true
++
++####################################
++# Generate the setup script to set up dependencies.
++
++test -n "$_cetpkg_status" || \
++  __SET__ _cetpkg_setup="`${_cetpkg_cettop}/libexec/set_dev_products $_cetpkg_nobuild __SETUP_ARGS__`"
++test $? != 0 -o -z "$_cetpkg_setup" && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: generation of setup script has failed" || true
++####################################
++
++####################################
++# Source the setup script to set up dependencies.
++
++test -n "$_cetpkg_status" || source "$_cetpkg_setup"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of required products has failed" || true
++__SET__ _cetpkg_setup_errlog="$CETPKG_BUILD/cetpkg_setup.err"
++test -s "$_cetpkg_setup_errlog" && cat "$_cetpkg_setup_errlog" || \
++  rm -f "$_cetpkg_setup_errlog"
++####################################
++
++cat <<EOF
++------------------------------------------------------------------------
++
++EOF
++
++# Final sanity check and report.
++test -n "$_cetpkg_status" -o -n "$_cetpkg_nobuild" || \
++  "$_cetpkg_cettop/libexec/verify_build_environment" "$CETPKG_BUILD"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: unable to verify build environment" || true
++
++####################################
++# Clean up before exiting.
++
++# Clean up C-flavor aliases and prepare to return^H^H^H^H^H^Hexit.
++test "$_cetpkg_shell_flavor" = csh && \
++  unalias vecho_ unsetenv_ tnotnull nullout __TOP_EOF__ return && \
++  set return=exit || return=return
++
++# Finish cleanup and exit. Note the use of eval so we can unset
++# everything including $return and $_cetpkg_status.
++eval "unset vecho_ setenv unsetenv_ source tnotnull nullout "\
++"_cetpkg_nobuild _cetpkg_shell_var_set _cetpkg_to_stderr"\
++"_cetpkg_fw_db _cetpkg_myself _cetpkg_mydir _cetpkg_cetmsetup "\
++"_cetpkg_cettop _cetpkg_setup _cetpkg_setup_errlog "\
++"_cetpkg_shell_flavor return _cetpkg_status; \
++$return $_cetpkg_status"
++####################################
++
++########################################################################
++\__TOP_EOF__
++__TOP_EOF__
+ 
+-test $?shell = 1 && set ss=csh || ss=sh
+-#echo Shell type is $ss.
+-
+-# make some things similar. need to use set_ because sh builtin set would hide function set
+-# Note: perhaps the trickiest thing in this file is the sh set_ function tries to return the same status
+-#       as at the start of the function (which most likely is the result of a back-tick expression
+-test "$ss" = csh && alias set_ set && alias vecho_ 'if ($?vv == 1) echo \!*' || eval 'vecho_() { test -n "${vv-}" && echo "$@"; return 0; }'
+-test "$ss" =  sh && eval 'set_() { sts=$?;for xx in "$@";do var=`expr "$xx" : "\([^=]*\)"`;val=`expr "$xx" : "[^=]*=\(.*\)"`;eval "$var=\"$val\"";done;return $sts; }'
+-test "$ss" =  sh && eval 'setenv() { export $1;eval "$1=\"\${2-}\""; }; source() { file=$1; shift; . $file "$@"; }; unsetenv_() { unset "$@"; }'
+-test "$ss" =  sh && eval 'tnotnull() { eval "test -n \"\${$1-}\""; }'                             && eval 'nullout() { "$@" >/dev/null 2>&1; }'
+-test "$ss" = csh && alias tnotnull "eval '"'test $?'"\!* -eq 1' && eval '"'test -n "$'"\!*"'"'"'" && alias nullout "\!* >& /dev/null" && alias unsetenv_ unsetenv
+-test "$ss" = csh && alias return exit
+-
+-set_ msg1='ERROR: You MUST setup ups'
+-test -z $UPS_DIR && ( echo ""; echo "$msg1"; echo "" ) && return
+-
+-set_ msg3='ERROR: You MUST specify either -o, -p, or -d'
+-set_ msg4='Usage: setup_for_development <-d|-o|-p> <qualifier list>'
+-test -z "$1" && ( echo ""; echo "$msg4"; echo "$msg3"; echo "" ) && return
+-
+-# make sure we know where this script lives
+-# now if we were passed a path or if not, we can figure it out (maybe if we are interactive)
+-#   bash, zsh, ksh and tcsh pass params to a source file, csh does not. but someone will be writing csh scripts
+-set_ msg2='Please set shell or env. variable fw_db (to be the path to the framework source code). Fix this and other errors may go away.'
+-tnotnull fw_db && set_ db=`sh -c "cd $fw_db >/dev/null 2>&1 && pwd"` && vecho_ 'setting db from fw_db variable' || set_ db=
+-
+-test -z "$db" && tnotnull BASH_SOURCE && set_ me=`dirname $BASH_SOURCE` && set_ db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via BASH_SOURCE'
+-
+-# history is applicable only for interactive t/csh
+-test -z "$db" -a "$ss" = csh && test $?history = 0 && set history=5  # make sure history 1 works
+-test -z "$db" -a "$ss" = csh && set me=`history 1|sed 's/^[ 	0-9:]*//'` && test -n "$me" && set me=`dirname $me[2]` \
+-    && set db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via interactive history'
+-#echo This script lives in $db
+-
+-test -z "$db" && echo "$msg2" || vecho_ "db=$db"
+-test -n "$db" && setenv CETPKG_SOURCE `dirname $db`
+-
+-# make sure we know the current directory
+-setenv CETPKG_BUILD `pwd`
+-#echo Build directory is $CETPKG_BUILD
+-
+-echo The working build directory is $CETPKG_BUILD
+-echo The source code directory is $CETPKG_SOURCE
+-
+-set_ msg5='ERROR: setup of required products has failed'
+-
+-echo ----------- check this block for errors -----------------------
+-set_ setup_fail="false"
+-set_ exit_now="false"
+-set_ cetb=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $1 }' `
+-set_ cetv=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $2 }' `
+-#echo Found $cetb $cetv
+-setup -B $cetb $cetv
+-test "$?" = 0 || set_ setup_fail="true"
+-# now get the rest of the products
+-set_ cmd="$CETBUILDTOOLS_DIR/bin/set_dev_products $CETPKG_SOURCE $CETPKG_BUILD $*"
+-#echo Ready to run $cmd
+-source `$cmd`
+-test "$?" = 0 || set_ setup_fail="true"
+-#echo "$cmd returned $setup_fail"
+-test "$setup_fail" = "true" && echo "$msg5"
+-test "$setup_fail" = "true" && set_ exit_now="true"
+-test -e "$CETPKG_BUILD/diag_report" && cat $CETPKG_BUILD/diag_report
+-echo ----------------------------------------------------------------
+-
+-test "${exit_now}" = "true" && test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-test "${exit_now}" = "true" && unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail set_ setenv unsetenv_ tnotnull nullout vecho_
+-test "${exit_now}" = "true" && return 1
+-
+-# add lib to LD_LIBRARY_PATH
+-source $CETBUILDTOOLS_DIR/bin/set_dev_lib
+-# add bin to path
+-source $CETBUILDTOOLS_DIR/bin/set_dev_bin
+-# set FHICL_FILE_PATH
+-source $CETBUILDTOOLS_DIR/bin/set_dev_fhicl
+-# set FW_SEARCH_PATH
+-source $CETBUILDTOOLS_DIR/bin/set_dev_fwsearch
+-
+-# final sanity check and report
+-source $CETBUILDTOOLS_DIR/bin/set_dev_check_report
+-
+-# cleanup before exiting
+-test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail
+-unset set_ setenv unsetenv_ tnotnull nullout vecho_
++source ./setup_common.$_cetpkg_shell_flavor

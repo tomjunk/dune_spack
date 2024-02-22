@@ -40,21 +40,74 @@ class Dunecore(CMakePackage):
 
     version("09_81_00d00", sha256="4dd8f63fd791167bc55c5fba28f0a9310c2339c0cc3c70bd15e510d36d0ff972")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
-    # FIXME: Add dependencies if required.
+    depends_on("boost")
+    depends_on("geant4")
+    depends_on("root")
+    depends_on("eigen")
+    depends_on("art")
+    depends_on("art-root-io")
+    depends_on("artdaq-core")
+    depends_on("trace")
+    depends_on("canvas")
+    depends_on("canvas-root-io")
+    depends_on("cetlib-except")
+    depends_on("cetlib")
+    depends_on("clhep")
+    depends_on("fhicl-cpp")
+    depends_on("nufinder")
+    depends_on("genie")
+    depends_on("hep-concurrency")
+    depends_on("ifdh-art")
+    depends_on("ifdhc")
     depends_on("dunepdlegacy")
-    depends_on("dunedaqdataformats")
-    depends_on("dunedetdataformats")
     depends_on("duneutil")
     depends_on("larsoft")
+    depends_on("larana")
+    depends_on("larcore")
+    depends_on("larcorealg")
+    depends_on("larcoreobj")
+    depends_on("lardata")
+    depends_on("lardataalg")
+    depends_on("lardataobj")
+    depends_on("larevt")
+    depends_on("larpandora")
+    depends_on("larreco")
+    depends_on("larsim")
+    depends_on("messagefacility")
+    depends_on("nuevdb")
+    depends_on("nug4")
+    depends_on("nugen")
+    depends_on("nurandom")
+    depends_on("nusimdata")
+    depends_on("nutools")
+    depends_on("pandora")
+    depends_on("dunedaqdataformats")
+    depends_on("dunedetdataformats")
+    depends_on("postgresql")
+    depends_on("fftw")
+    depends_on("sqlite")
+    depends_on("nlohmann-json")
     depends_on("highfive")
+    depends_on("hdf5")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+            self.define("CMAKE_MODULE_PATH", "%s/Modules" % self.spec['nufinder'].prefix)
+        ] 
         return args
+
+    def setup_build_environment(self, spack_env):
+        spack_env.set("LD_LIBRARY_PATH", "%s/root" % self.spec["root"].prefix.lib)

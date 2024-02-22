@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a92ca17..56a689f 100644
+index a92ca17..27e314f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,13 +4,14 @@
@@ -14,13 +14,14 @@ index a92ca17..56a689f 100644
 +find_package(cetmodules REQUIRED) ### MIGRATE-ADDED (migrate-3.22.02) - find_package(cetmodules) must precede project()
 +project(duneopdet LANGUAGES CXX) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION -> set(CMAKE_PROJECT_VERSION_STRING ...)
  set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.81.00d00)
- 
+-
++set(${PROJECT_NAME}_FW_DIR  "config_data")
  # cetbuildtools contains our cmake modules
 -find_package(cetbuildtools REQUIRED)
  
  include(CetCMakeEnv)
  cet_cmake_env()
-@@ -21,26 +22,25 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
+@@ -21,33 +22,31 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
    EXTRA_FLAGS -pedantic -Wno-unused-local-typedefs
  )
  
@@ -44,6 +45,7 @@ index a92ca17..56a689f 100644
 -find_ups_product( dunecore )
 -find_ups_product( clhep )
 -find_ups_geant4( )
+-
 +cet_report_compiler_flags() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - add args: REPORT_THRESHOLD VERBOSE
 +
 +find_package( art REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art ...) -> find_package(art REQUIRED ...)
@@ -61,12 +63,12 @@ index a92ca17..56a689f 100644
 +find_package( larcorealg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcorealg ...) -> find_package(larcorealg REQUIRED ...)
 +find_package( nurandom REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nurandom ...) -> find_package(nurandom REQUIRED ...)
 +find_package( dunecore REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunecore ...) -> find_package(dunecore REQUIRED ...)
-+find_package( clhep REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep ...) -> find_package(clhep REQUIRED ...)
++find_package( CLHEP REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep ...) -> find_package(clhep REQUIRED ...)
 +find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
- 
++find_package( HDF5 REQUIRED )
  # macros for artdaq_dictionary and simple_plugin
  include(ArtDictionary)
-@@ -48,6 +48,5 @@ include(ArtMake)
+ include(ArtMake)
  include(BuildPlugins)
  
  add_subdirectory(duneopdet)
@@ -214,11 +216,43 @@ index 17e4350..455f36b 100644
  install_fhicl()
  install_headers()
 diff --git a/duneopdet/OpticalDetector/CMakeLists.txt b/duneopdet/OpticalDetector/CMakeLists.txt
-index 735fbda..fee7025 100644
+index 735fbda..2ad4a28 100644
 --- a/duneopdet/OpticalDetector/CMakeLists.txt
 +++ b/duneopdet/OpticalDetector/CMakeLists.txt
-@@ -77,7 +77,7 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
-                                 ROOT_BASIC_LIB_LIST                                
+@@ -22,7 +22,6 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+ 				canvas::canvas
+                                 cetlib::cetlib 
+ 				cetlib_except::cetlib_except 
+-                                ROOT_BASIC_LIB_LIST
+                                 Boost::filesystem
+   
+                 MODULE_LIBRARIES
+@@ -45,6 +44,8 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+                                 art::Framework_Services_Registry
+                                 art_root_io::tfile_support
+                                 ROOT::Core
++				ROOT::Tree
++				ROOT::Graf
+                                 art_root_io::TFileService_service
+                                 art::Framework_Services_Optional_RandomNumberGenerator_service
+                                 art::Persistency_Provenance
+@@ -53,8 +54,7 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+ 				canvas::canvas
+                                 cetlib::cetlib 
+ 				cetlib_except::cetlib_except
+-                                CLHEP
+-                                ROOT_BASIC_LIB_LIST
++				CLHEP::CLHEP
+                                 Boost::filesystem
+ 
+                 SERVICE_LIBRARIES
+@@ -73,11 +73,10 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+                                 art::Utilities 
+ 				canvas::canvas
+                                 cetlib::cetlib cetlib_except
+-                                CLHEP
+-                                ROOT_BASIC_LIB_LIST                                
++				CLHEP::CLHEP
                                  Boost::filesystem
  
 -)
@@ -227,11 +261,34 @@ index 735fbda..fee7025 100644
  file(GLOB dat_files *.dat)
  install_fw( LIST ${dat_files} )
 diff --git a/duneopdet/OpticalDetector/Deconvolution/CMakeLists.txt b/duneopdet/OpticalDetector/Deconvolution/CMakeLists.txt
-index 6a189a8..493b214 100644
+index 6a189a8..b7b6285 100644
 --- a/duneopdet/OpticalDetector/Deconvolution/CMakeLists.txt
 +++ b/duneopdet/OpticalDetector/Deconvolution/CMakeLists.txt
-@@ -76,7 +76,7 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
-                                 ROOT_BASIC_LIB_LIST                                
+@@ -21,7 +21,6 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+ 				canvas::canvas
+                                 cetlib::cetlib 
+ 				cetlib_except::cetlib_except 
+-                                ROOT_BASIC_LIB_LIST
+                                 Boost::filesystem
+   
+                 MODULE_LIBRARIES
+@@ -52,8 +51,7 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+ 				canvas::canvas
+                                 cetlib::cetlib 
+ 				cetlib_except::cetlib_except
+-                                CLHEP
+-                                ROOT_BASIC_LIB_LIST
++				CLHEP::CLHEP
+                                 Boost::filesystem
+ 
+                 SERVICE_LIBRARIES
+@@ -72,11 +70,10 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+                                 art::Utilities 
+ 				canvas::canvas
+                                 cetlib::cetlib cetlib_except
+-                                CLHEP
+-                                ROOT_BASIC_LIB_LIST                                
++				CLHEP::CLHEP
                                  Boost::filesystem
  
 -)
@@ -240,11 +297,43 @@ index 6a189a8..493b214 100644
  install_headers()
  install_fhicl()
 diff --git a/duneopdet/OpticalDetector/OpHitFinder/CMakeLists.txt b/duneopdet/OpticalDetector/OpHitFinder/CMakeLists.txt
-index 1f63b4f..abbe9a7 100644
+index 1f63b4f..de9dc58 100644
 --- a/duneopdet/OpticalDetector/OpHitFinder/CMakeLists.txt
 +++ b/duneopdet/OpticalDetector/OpHitFinder/CMakeLists.txt
-@@ -78,7 +78,7 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
-                                 ROOT_BASIC_LIB_LIST                                
+@@ -21,7 +21,6 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+ 				canvas::canvas
+                                 cetlib::cetlib 
+ 				cetlib_except::cetlib_except 
+-                                ROOT_BASIC_LIB_LIST
+                                 Boost::filesystem
+   
+                 MODULE_LIBRARIES
+@@ -45,6 +44,8 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+                                 art::Framework_Services_Registry
+                                 art_root_io::tfile_support
+                                 ROOT::Core
++				ROOT::Tree
++				ROOT::Graf
+                                 art_root_io::TFileService_service
+                                 art::Framework_Services_Optional_RandomNumberGenerator_service
+                                 art::Persistency_Provenance
+@@ -53,8 +54,7 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+ 				canvas::canvas
+                                 cetlib::cetlib 
+ 				cetlib_except::cetlib_except
+-                                CLHEP
+-                                ROOT_BASIC_LIB_LIST
++                                CLHEP::CLHEP
+                                 Boost::filesystem
+ 
+                 SERVICE_LIBRARIES
+@@ -74,12 +74,11 @@ art_make( BASENAME_ONLY ALLOW_UNDERSCORES
+                                 art::Utilities 
+ 				canvas::canvas
+                                 cetlib::cetlib cetlib_except
+-                                CLHEP
+-                                ROOT_BASIC_LIB_LIST                                
++                                CLHEP::CLHEP
                                  Boost::filesystem
  
 -)
@@ -252,11 +341,26 @@ index 1f63b4f..abbe9a7 100644
  
  install_headers()
  install_fhicl()
+-install_source()
+\ No newline at end of file
++install_source()
 diff --git a/duneopdet/PhotonPropagation/CMakeLists.txt b/duneopdet/PhotonPropagation/CMakeLists.txt
-index 9d063ee..6932f73 100644
+index 9d063ee..cf2182e 100644
 --- a/duneopdet/PhotonPropagation/CMakeLists.txt
 +++ b/duneopdet/PhotonPropagation/CMakeLists.txt
-@@ -49,7 +49,7 @@ art_make(
+@@ -22,10 +22,8 @@ art_make(
+ 			fhiclcpp::fhiclcpp
+                         CLHEP
+ 			cetlib::cetlib cetlib_except
+-			ROOT_BASIC_LIB_LIST
+-                        ROOT_EG
++                        ROOT::EG
+           MODULE_LIBRARIES
+-                        ROOT_BASIC_LIB_LIST
+                         larsim::LegacyLArG4
+                         lardataobj::Simulation
+                         duneopdet::PhotonPropagation_PhotonVisibilityServiceS2_service
+@@ -49,7 +47,7 @@ art_make(
  			fhiclcpp::fhiclcpp
  			cetlib::cetlib cetlib_except
                          CLHEP

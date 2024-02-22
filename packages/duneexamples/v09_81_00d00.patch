@@ -168,11 +168,15 @@ index 0000000..e1498e9
 +   "version" : 3
 +}
 diff --git a/duneexamples/DuneExample/CMakeLists.txt b/duneexamples/DuneExample/CMakeLists.txt
-index 0b59591..0b59f07 100644
+index 0b59591..f286896 100644
 --- a/duneexamples/DuneExample/CMakeLists.txt
 +++ b/duneexamples/DuneExample/CMakeLists.txt
-@@ -12,7 +12,7 @@ art_make(BASENAME_ONLY
-          ROOT_BASIC_LIB_LIST
+@@ -9,10 +9,10 @@ art_make(BASENAME_ONLY
+          duneexamples_DuneExample_dict
+          LIB_LIBRARIES
+          art::Persistency_Provenance canvas
+-         ROOT_BASIC_LIB_LIST
++         ROOT::Core
           ROOT::HistPainter
           NO_PLUGINS
 -        )
@@ -180,6 +184,18 @@ index 0b59591..0b59f07 100644
  
  #install_fhicl()
  install_source()
+diff --git a/duneexamples/DuneExample/test/CMakeLists.txt b/duneexamples/DuneExample/test/CMakeLists.txt
+index 98aefeb..e62ad09 100644
+--- a/duneexamples/DuneExample/test/CMakeLists.txt
++++ b/duneexamples/DuneExample/test/CMakeLists.txt
+@@ -7,6 +7,6 @@ cet_enable_asserts()
+ cet_test(test_MyClass SOURCES test_MyClass.cxx
+   LIBRARIES
+     duneexamples_DuneExample
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
 diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
 deleted file mode 100644
 index fe33cc7..0000000

@@ -40,15 +40,31 @@ class Duneexamples(CMakePackage):
 
     version("09_81_00d00", sha256="5ca163fe371aee48601d4ee63da447f26901a610d3bb175070aac113f93a5779")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
+    depends_on("art")
+    depends_on("art-root-io")
+    depends_on("canvas-root-io")
+    depends_on("boost")
+    depends_on("root")
+    depends_on("dunecore")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+        ] 
         return args
+
+    def setup_build_environment(self, spack_env):
+        spack_env.set("LD_LIBRARY_PATH", "%s/root" % self.spec["root"].prefix.lib)

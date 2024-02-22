@@ -183,10 +183,15 @@ index 0000000..554d4b6
 +   "version" : 3
 +}
 diff --git a/dunecalib/Calib/CMakeLists.txt b/dunecalib/Calib/CMakeLists.txt
-index de569aa..ad417c0 100644
+index de569aa..ccd4407 100644
 --- a/dunecalib/Calib/CMakeLists.txt
 +++ b/dunecalib/Calib/CMakeLists.txt
-@@ -14,17 +14,17 @@ art_make_library(  LIBRARY_NAME  dunecalib::Calib
+@@ -10,21 +10,21 @@ art_make_library(  LIBRARY_NAME  dunecalib::Calib
+ 			cetlib_except::cetlib_except
+                         messagefacility::MF_MessageLogger
+ 			fhiclcpp::fhiclcpp
+-                        ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Hist
  			
          )
   
@@ -208,6 +213,26 @@ index de569aa..ad417c0 100644
  
  install_headers()
  install_fhicl()
+diff --git a/dunecalib/CalibServices/CMakeLists.txt b/dunecalib/CalibServices/CMakeLists.txt
+index 9d12677..f8e4a56 100644
+--- a/dunecalib/CalibServices/CMakeLists.txt
++++ b/dunecalib/CalibServices/CMakeLists.txt
+@@ -14,7 +14,6 @@ cet_build_plugin(XYZCalibServiceProtoDUNE art::service
+ 	      messagefacility::MF_MessageLogger
+   	      cetlib::cetlib 
+ 	      cetlib_except::cetlib_except
+-   	      ROOT_BASIC_LIB_LIST
+               
+ )
+ 
+@@ -34,7 +33,6 @@ cet_build_plugin(LifetimeCalibServiceProtoDUNE art::service
+       canvas::canvas
+       cetlib::cetlib 
+       cetlib_except::cetlib_except
+-      ROOT_BASIC_LIB_LIST
+ 
+ ) 
+ 
 diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
 deleted file mode 100644
 index fe33cc7..0000000

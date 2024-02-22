@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1a9e2c6..7e7e1e1 100644
+index 1a9e2c6..0dd930f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,13 +3,14 @@
@@ -14,7 +14,8 @@ index 1a9e2c6..7e7e1e1 100644
 +find_package(cetmodules REQUIRED) ### MIGRATE-ADDED (migrate-3.22.02) - find_package(cetmodules) must precede project()
 +project(dunesim LANGUAGES CXX) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION -> set(CMAKE_PROJECT_VERSION_STRING ...)
  set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.81.00d00)
- 
+-
++set(${PROJECT_NAME}_FW_DIR "config_data")
  # cetbuildtools contains our cmake modules
 -find_package(cetbuildtools REQUIRED)
  
@@ -64,7 +65,7 @@ index 1a9e2c6..7e7e1e1 100644
 +find_package( nurandom REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nurandom ...) -> find_package(nurandom REQUIRED ...)
 +find_package( dunecore REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunecore ...) -> find_package(dunecore REQUIRED ...)
 +find_package( lardata REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardata ...) -> find_package(lardata REQUIRED ...)
-+find_package( clhep REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep ...) -> find_package(clhep REQUIRED ...)
++find_package( CLHEP REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep ...) -> find_package(clhep REQUIRED ...)
 +find_package( nugen REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nugen ...) -> find_package(nugen REQUIRED ...)
 +find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
  
@@ -210,35 +211,262 @@ index 0000000..495b858
 +   "version" : 3
 +}
 diff --git a/dunesim/DetSim/CMakeLists.txt b/dunesim/DetSim/CMakeLists.txt
-index 2341d41..0144c84 100644
+index 2341d41..99be591 100644
 --- a/dunesim/DetSim/CMakeLists.txt
 +++ b/dunesim/DetSim/CMakeLists.txt
-@@ -40,7 +40,7 @@ art_make( BASENAME_ONLY
-                            ROOT_XMLIO
-                            ROOT_GDML
- 			   ROOT_BASIC_LIB_LIST
+@@ -36,11 +36,10 @@ art_make( BASENAME_ONLY
+  	                   fhiclcpp::fhiclcpp
+ 			   cetlib::cetlib cetlib_except
+ 			   CLHEP
+-                           ROOT_GEOM
+-                           ROOT_XMLIO
+-                           ROOT_GDML
+-			   ROOT_BASIC_LIB_LIST
 -        )
++                           ROOT::Geom
++                           ROOT::XMLIO
++                           ROOT::Gdml
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  add_subdirectory(Utility)
  add_subdirectory(Tool)
 diff --git a/dunesim/DetSim/Module/CMakeLists.txt b/dunesim/DetSim/Module/CMakeLists.txt
-index 4af5c79..45eb4ce 100644
+index 4af5c79..cbfc5ea 100644
 --- a/dunesim/DetSim/Module/CMakeLists.txt
 +++ b/dunesim/DetSim/Module/CMakeLists.txt
-@@ -39,6 +39,6 @@ art_make(
-     ROOT_XMLIO
-     ROOT_GDML
-     ROOT_BASIC_LIB_LIST
+@@ -34,11 +34,10 @@ art_make(
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib 
+     cetlib_except::cetlib_except
+-    CLHEP
+-    ROOT_GEOM
+-    ROOT_XMLIO
+-    ROOT_GDML
+-    ROOT_BASIC_LIB_LIST
 -)
++    CLHEP::CLHEP
++    ROOT::Geom
++    ROOT::XMLIO
++    ROOT::Gdml
 +) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_source()
+diff --git a/dunesim/DetSim/Service/CMakeLists.txt b/dunesim/DetSim/Service/CMakeLists.txt
+index e881f4e..b989428 100644
+--- a/dunesim/DetSim/Service/CMakeLists.txt
++++ b/dunesim/DetSim/Service/CMakeLists.txt
+@@ -19,7 +19,7 @@ cet_build_plugin(Dune35tSimChannelExtractService
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(GenericSimChannelExtractService   
+@@ -34,7 +34,7 @@ cet_build_plugin(GenericSimChannelExtractService
+ 		canvas::canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(DPhaseSimChannelExtractService   
+@@ -50,9 +50,9 @@ cet_build_plugin(DPhaseSimChannelExtractService
+                 art::Framework_Core
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+ 		nurandom::RandomUtils_NuRandomService_service
+-		CLHEP
++		CLHEP::CLHEP
+              )
+ 
+ cet_build_plugin(ExponentialChannelNoiseService   
+@@ -67,8 +67,8 @@ cet_build_plugin(ExponentialChannelNoiseService
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+               
+ cet_build_plugin(ShapedCohProtoDUNENoiseService   art::service
+@@ -84,8 +84,8 @@ cet_build_plugin(ShapedCohProtoDUNENoiseService   art::service
+ 		canvas::canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(DPhaseRealisticNoiseService   
+@@ -103,8 +103,8 @@ cet_build_plugin(DPhaseRealisticNoiseService
+ 	       canvas::canvas
+                cetlib::cetlib 
+ 	       cetlib_except::cetlib_except
+-               CLHEP
+-               ROOT_BASIC_LIB_LIST
++               CLHEP::CLHEP
++               ROOT::Core
+              )
+ 
+ cet_build_plugin(DPhaseCoherentNoiseService   
+@@ -121,8 +121,8 @@ cet_build_plugin(DPhaseCoherentNoiseService
+ 		canvas::canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+               )
+ 
+ cet_build_plugin(ProtoDUNEChannelNoiseService   
+@@ -137,8 +137,8 @@ cet_build_plugin(ProtoDUNEChannelNoiseService
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(SPhaseChannelNoiseService   
+@@ -153,8 +153,8 @@ cet_build_plugin(SPhaseChannelNoiseService
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(SPhaseUniqChannelNoiseService   
+@@ -169,8 +169,8 @@ cet_build_plugin(SPhaseUniqChannelNoiseService
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(WhiteChannelNoiseService   
+@@ -186,8 +186,8 @@ cet_build_plugin(WhiteChannelNoiseService
+ 		canvas::canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(ProvidedPedestalAdditionService 
+@@ -202,8 +202,8 @@ cet_build_plugin(ProvidedPedestalAdditionService
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+                 messagefacility::MF_MessageLogger
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++		ROOT::Hist
+              )
+ 
+ cet_build_plugin(Dune35tZeroSuppressService        
+@@ -252,8 +252,8 @@ cet_build_plugin(StuckBitAdcDistortionService
+                 messagefacility::MF_MessageLogger
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                CLHEP
+-                ROOT_BASIC_LIB_LIST
++                CLHEP::CLHEP
++                ROOT::Core
+              )
+ 
+ cet_build_plugin(FixedDetPedestalService 
+@@ -262,7 +262,7 @@ cet_build_plugin(FixedDetPedestalService
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+ )
+ 
+ #cet_build_plugin(DPhaseFixedDetPedestalService 
+@@ -271,7 +271,7 @@ cet_build_plugin(FixedDetPedestalService
+ #                art::Utilities canvas
+ #                cetlib::cetlib 
+ #                cetlib_except::cetlib_except
+-#                ROOT_BASIC_LIB_LIST
++#                ROOT::Core
+ #)
+ 
+ add_subdirectory(test)
+diff --git a/dunesim/DetSim/Tool/CMakeLists.txt b/dunesim/DetSim/Tool/CMakeLists.txt
+index e114428..5d28373 100644
+--- a/dunesim/DetSim/Tool/CMakeLists.txt
++++ b/dunesim/DetSim/Tool/CMakeLists.txt
+@@ -11,7 +11,6 @@ cet_build_plugin(IdealAdcSimulator
+   canvas::canvas
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+-  ROOT_BASIC_LIB_LIST
+   )
+ 
+ cet_build_plugin(NoisyAdcSimulator   
+@@ -27,7 +26,6 @@ cet_build_plugin(NoisyAdcSimulator
+   ROOT::Core
+   art_root_io::TFileService_service
+   art::Framework_Core
+-  ROOT_BASIC_LIB_LIST
+ 
+   )
+ 
+diff --git a/dunesim/DetSim/Tool/test/CMakeLists.txt b/dunesim/DetSim/Tool/test/CMakeLists.txt
+index 1888f31..0db92a3 100644
+--- a/dunesim/DetSim/Tool/test/CMakeLists.txt
++++ b/dunesim/DetSim/Tool/test/CMakeLists.txt
+@@ -16,6 +16,6 @@ cet_test(test_IdealAdcSimulator SOURCES test_IdealAdcSimulator.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    SQLITE3
++    SQLite::SQLite3
+     Boost::filesystem
+ )
+diff --git a/dunesim/DetectorVariations/CMakeLists.txt b/dunesim/DetectorVariations/CMakeLists.txt
+index ae8aaae..26ded30 100644
+--- a/dunesim/DetectorVariations/CMakeLists.txt
++++ b/dunesim/DetectorVariations/CMakeLists.txt
+@@ -1,11 +1,6 @@
+ cet_build_plugin(RandomChannelStatusService art::service
+               larcorealg_Geometry
+-              ROOT_BASIC_LIB_LIST
+-              ROOT_GEOM
+-              ART_FRAMEWORK_CORE
+-              ART_FRAMEWORK_PRINCIPAL
+-              ART_FRAMEWORK_SERVICES_REGISTRY
+-              ART_ROOT_IO_TFILE_SUPPORT
++              ROOT::Geom
+               ROOT::Core
+               )
+ 
 diff --git a/dunesim/EventGenerator/CMakeLists.txt b/dunesim/EventGenerator/CMakeLists.txt
-index 4e6f5df..8b95a44 100644
+index 4e6f5df..1fb53fd 100644
 --- a/dunesim/EventGenerator/CMakeLists.txt
 +++ b/dunesim/EventGenerator/CMakeLists.txt
-@@ -1,7 +1,7 @@
+@@ -1,13 +1,12 @@
 -include_directories( $ENV{IFDHC_FQ_DIR}/inc )
 +include_directories( $ENV{IFDHC_FQ_DIR}/inc ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
   
@@ -248,7 +476,35 @@ index 4e6f5df..8b95a44 100644
  
  
  #art_make_library( LIBRARY_NAME ProtoDUNETriggeredBeamUtils
-@@ -37,7 +37,7 @@ art_make( BASENAME_ONLY
+ #		  SOURCE ProtoDUNETriggeredBeamUtils.cxx
+ #		  LIBRARIES
+-#                       ROOT_BASIC_LIB_LIST 
+ #	    )
+ 
+ art_make( BASENAME_ONLY
+@@ -19,10 +18,6 @@ art_make( BASENAME_ONLY
+                         larsim_Simulation lardataobj_Simulation
+                         lardataobj_RecoBase
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities canvas
+@@ -30,14 +25,14 @@ art_make( BASENAME_ONLY
+                         hep_concurrency
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib cetlib_except
+-                        CLHEP
+-                        ROOT_BASIC_LIB_LIST
+-                        SQLITE3
+-                        ROOT_EG
++			CLHEP::CLHEP
++			SQLite::SQLite3
++                        ROOT::EG
++			ROOT::Tree
                          ifdh::ifdh
                          dunesim_EventGenerator_ProtoDUNEbeamDataProducts
                          ProtoDUNETriggeredBeamUtils
@@ -258,12 +514,37 @@ index 4e6f5df..8b95a44 100644
  
  install_headers()
 diff --git a/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt b/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt
-index b6150b8..e89d5d6 100644
+index b6150b8..1cf3796 100644
 --- a/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt
 +++ b/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt
-@@ -27,7 +27,7 @@ art_make(
-                         SQLITE3
-                         ROOT_EG
+@@ -7,27 +7,21 @@ art_make(
+                         nurandom::RandomUtils_NuRandomService_service
+                         larsim_Simulation lardataobj_Simulation
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities
+                         canvas::canvas
+                         messagefacility::MF_MessageLogger
+-
++                        art_root_io::tfile_support
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib cetlib_except
+-                        CLHEP
+-                        ROOT_BASIC_LIB_LIST
+-                        SQLITE3
+-                        ROOT_EG
++			CLHEP::CLHEP
++			ROOT::Tree
++			SQLite::SQLite3
++                        ROOT::EG
                          ifdh::ifdh
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
@@ -284,25 +565,73 @@ index c03b5d9..1257066 100644
  install( FILES ${xml_file} DESTINATION ${${product}_script_dir} )
  
 diff --git a/dunesim/EventGenerator/MUSUN/CMakeLists.txt b/dunesim/EventGenerator/MUSUN/CMakeLists.txt
-index 59840a6..ff881d6 100644
+index 59840a6..a527c80 100644
 --- a/dunesim/EventGenerator/MUSUN/CMakeLists.txt
 +++ b/dunesim/EventGenerator/MUSUN/CMakeLists.txt
-@@ -22,7 +22,7 @@ art_make(
-                         CLHEP
-                         ROOT_BASIC_LIB_LIST
-                         ROOT_GEOM
+@@ -1,17 +1,11 @@
+ art_make(
+           MODULE_LIBRARIES
+-                        larcoreobj_SummaryData
+-                        larcore_Geometry_Geometry_service
+-                        larcorealg_Geometry
++                        larcoreobj::SummaryData
++                        larcore::Geometry_Geometry_service
++                        larcorealg::Geometry
+                         larsim_Simulation lardataobj_Simulation
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities
+@@ -19,10 +13,9 @@ art_make(
+                         messagefacility::MF_MessageLogger
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib cetlib_except
+-                        CLHEP
+-                        ROOT_BASIC_LIB_LIST
+-                        ROOT_GEOM
 -        )
++			CLHEP::CLHEP
++                        ROOT::Geom
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/dunesim/EventGenerator/NEUT/CMakeLists.txt b/dunesim/EventGenerator/NEUT/CMakeLists.txt
-index 62322b9..b5ae9d8 100644
+index 62322b9..ea8d936 100644
 --- a/dunesim/EventGenerator/NEUT/CMakeLists.txt
 +++ b/dunesim/EventGenerator/NEUT/CMakeLists.txt
-@@ -25,7 +25,7 @@ art_make(
-                         SQLITE3
-                         ROOT_EG
+@@ -6,13 +6,7 @@ art_make(
+                         nurandom::RandomUtils_NuRandomService_service
+                         larsim_Simulation lardataobj_Simulation
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities
+@@ -20,12 +14,11 @@ art_make(
+                         messagefacility::MF_MessageLogger
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib cetlib_except
+-                        CLHEP
+-                        ROOT_BASIC_LIB_LIST
+-                        SQLITE3
+-                        ROOT_EG
++			CLHEP::CLHEP
++			SQLite::SQLite3
++                        ROOT::EG
                          ifdh::ifdh
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
@@ -310,12 +639,31 @@ index 62322b9..b5ae9d8 100644
  install_headers()
  install_fhicl()
 diff --git a/dunesim/EventGenerator/NuE/CMakeLists.txt b/dunesim/EventGenerator/NuE/CMakeLists.txt
-index 69002e1..8949dc6 100644
+index 69002e1..f5e780f 100644
 --- a/dunesim/EventGenerator/NuE/CMakeLists.txt
 +++ b/dunesim/EventGenerator/NuE/CMakeLists.txt
-@@ -22,7 +22,7 @@ art_make(
-                         SQLITE3
-                         ROOT_EG
+@@ -6,10 +6,6 @@ art_make(
+                         nurandom::RandomUtils_NuRandomService_service
+                         larsim_Simulation lardataobj_Simulation
+                         nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities
+@@ -18,11 +14,12 @@ art_make(
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib cetlib_except
+                         CLHEP
+-                        ROOT_BASIC_LIB_LIST
+-                        SQLITE3
+-                        ROOT_EG
++			ROOT::Core
++			ROOT::Hist
++			SQLite::SQLite3
++                        ROOT::EG
                          ifdh::ifdh
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
@@ -323,37 +671,55 @@ index 69002e1..8949dc6 100644
  install_headers()
  install_fhicl()
 diff --git a/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt b/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt
-index b96f3d4..72093ed 100644
+index b96f3d4..778be0c 100644
 --- a/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt
 +++ b/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt
-@@ -1,5 +1,5 @@
+@@ -1,15 +1,13 @@
  # for classes_def.xml
 -include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 +include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  art_make(
            MODULE_LIBRARIES dunesim_EventGenerator_ProtoDUNEbeamDataProducts
-@@ -18,7 +18,7 @@ art_make(
+           LIB_LIBRARIES lardataobj_Simulation
+-          ART_FRAMEWORK_CORE
+-          ART_FRAMEWORK_PRINCIPAL
+-          ART_FRAMEWORK_SERVICES_REGISTRY
+-          ART_ROOT_IO_TFILE_SUPPORT
++          art_Framework_Services_Registry
++          art_root_io::tfile_support
+           ROOT::Core
+-          ART_ROOT_IO_TFILESERVICE_SERVICE
++	  art_root_io::TFileService_service
+           art::Persistency_Common
+           art::Utilities 
+           art::Persistency_Common
+@@ -17,8 +15,7 @@ art_make(
+ 	  canvas::canvas
            messagefacility::MF_MessageLogger
            cetlib::cetlib cetlib_except
-           ROOT_BASIC_LIB_LIST
+-          ROOT_BASIC_LIB_LIST
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_source()
 diff --git a/dunesim/EventGenerator/Utils/CMakeLists.txt b/dunesim/EventGenerator/Utils/CMakeLists.txt
-index 86ed60a..499812c 100644
+index 86ed60a..a59b914 100644
 --- a/dunesim/EventGenerator/Utils/CMakeLists.txt
 +++ b/dunesim/EventGenerator/Utils/CMakeLists.txt
-@@ -1,4 +1,4 @@
+@@ -1,17 +1,18 @@
 -include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 +include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  
  art_make_library( LIBRARY_NAME ProtoDUNETriggeredBeamUtils
-@@ -8,10 +8,10 @@ art_make_library( LIBRARY_NAME ProtoDUNETriggeredBeamUtils
-                        ROOT_BASIC_LIB_LIST 
+ 		  SOURCE ProtoDUNETriggeredBeamUtils.cxx
+ 		  LIBRARIES
+                        fhiclcpp::fhiclcpp
+-                       ROOT_BASIC_LIB_LIST 
++		       ROOT::Core
++		       ROOT::Physics
  	        )
  
 -art_make_exec( NAME runEventCounter
@@ -366,30 +732,200 @@ index 86ed60a..499812c 100644
  install_scripts()
  install_fhicl()
 diff --git a/dunesim/LArG4/CMakeLists.txt b/dunesim/LArG4/CMakeLists.txt
-index 6f734da..bd8eef5 100644
+index 6f734da..2abe1c9 100644
 --- a/dunesim/LArG4/CMakeLists.txt
 +++ b/dunesim/LArG4/CMakeLists.txt
-@@ -21,7 +21,7 @@ art_make( BASENAME_ONLY
-                         ROOT_XMLIO
-                         ROOT_GDML
- 			ROOT_BASIC_LIB_LIST
+@@ -4,24 +4,19 @@ art_make( BASENAME_ONLY
+ 			larcore_Geometry_Geometry_service
+ 			larsim_Simulation nug4::ParticleNavigation lardataobj_Simulation
+ 			nusimdata::SimulationBase
+-			ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
++			ROOT::Tree
++			art_root_io::tfile_support
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+-			
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        ROOT_GEOM
+-                        ROOT_XMLIO
+-                        ROOT_GDML
+-			ROOT_BASIC_LIB_LIST
 -        )
++                        ROOT::Geom
++                        ROOT::XMLIO
++                        ROOT::Gdml
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  # install_headers()
  install_fhicl()
+diff --git a/dunesim/SimFilter/CMakeLists.txt b/dunesim/SimFilter/CMakeLists.txt
+index 8906887..f9f0c27 100644
+--- a/dunesim/SimFilter/CMakeLists.txt
++++ b/dunesim/SimFilter/CMakeLists.txt
+@@ -6,19 +6,12 @@ cet_build_plugin(GenExtCounterFilter art::module
+ 			larcore_Geometry_Geometry_service
+ 			lardata_Utilities
+ 			nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+  			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+-			
+ 			cetlib::cetlib cetlib_except
+-			ROOT_BASIC_LIB_LIST
+               BASENAME_ONLY
+ )
+ 
+@@ -30,19 +23,12 @@ cet_build_plugin(LArG4ExtCounterFilter art::module
+ 			larcore_Geometry_Geometry_service
+ 			lardata_Utilities
+ 			nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
+  			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+-			
+ 			cetlib::cetlib cetlib_except
+-			ROOT_BASIC_LIB_LIST
+               BASENAME_ONLY
+ )
+ 
 diff --git a/dunesim/SpaceCharge/CMakeLists.txt b/dunesim/SpaceCharge/CMakeLists.txt
-index 7502964..227ea43 100644
+index 7502964..0a72f12 100644
 --- a/dunesim/SpaceCharge/CMakeLists.txt
 +++ b/dunesim/SpaceCharge/CMakeLists.txt
-@@ -22,7 +22,7 @@ art_make( NO_PLUGINS
+@@ -7,22 +7,17 @@ art_make( NO_PLUGINS
+               larevt_SpaceCharge
+ 			larcorealg_Geometry
+                         messagefacility::MF_MessageLogger
+-                        
++                        art::Framework_Services_Registry 
+                         cetlib::cetlib cetlib_except
+-            ART_FRAMEWORK_CORE
+-			    ART_FRAMEWORK_PRINCIPAL
+-			    ART_FRAMEWORK_SERVICES_REGISTRY
+-			    ART_ROOT_IO_TFILE_SUPPORT
++			    art_root_io::tfile_support
+ 			    ROOT::Core
+-			    ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+-			    ART_ROOT_IO_TFILESERVICE_SERVICE
+ 			    art::Persistency_Common canvas
+ 			    art::Persistency_Provenance canvas
+ 			    art::Utilities canvas
  			fhiclcpp::fhiclcpp
-                         ROOT_BASIC_LIB_LIST
+-                        ROOT_BASIC_LIB_LIST
++                            ROOT::Hist
  			
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  
+ 
+diff --git a/dunesim/SpaceChargeServices/CMakeLists.txt b/dunesim/SpaceChargeServices/CMakeLists.txt
+index 8e0e3e1..a16fa82 100644
+--- a/dunesim/SpaceChargeServices/CMakeLists.txt
++++ b/dunesim/SpaceChargeServices/CMakeLists.txt
+@@ -1,77 +1,49 @@
+ cet_build_plugin(SpaceChargeServiceProtoDUNE art::service
+               dunesim_SpaceCharge
+               lardataalg_DetectorInfo
+-	      ART_FRAMEWORK_CORE
+-	      ART_FRAMEWORK_PRINCIPAL
+-	      ART_FRAMEWORK_SERVICES_REGISTRY
++	      art::Framework_Principal
+ 	      art::Persistency_Common canvas
+ 	      art::Persistency_Provenance canvas
+-	      ART_ROOT_IO_TFILE_SUPPORT
+ 	      ROOT::Core
+-	      ART_ROOT_IO_TFILESERVICE_SERVICE
+-	      ART_FRAMEWORK_SERVICES_SYSTEM_FILECATALOGMETADATA_SERVICE
+ 	      art::Utilities canvas
+ 	      messagefacility::MF_MessageLogger
+-	      
+   	      cetlib::cetlib cetlib_except
+-   	      ROOT_BASIC_LIB_LIST
+ )              
+ cet_build_plugin(SpaceChargeServiceProtoDUNEdp art::service
+               dunesim_SpaceCharge
+               lardataalg_DetectorInfo
+-              ART_FRAMEWORK_CORE
+-              ART_FRAMEWORK_PRINCIPAL
+-              ART_FRAMEWORK_SERVICES_REGISTRY
++	      art::Framework_Principal
+               art::Persistency_Common canvas
+               art::Persistency_Provenance canvas
+-              ART_ROOT_IO_TFILE_SUPPORT
+               ROOT::Core
+-              ART_ROOT_IO_TFILESERVICE_SERVICE
+-              ART_FRAMEWORK_SERVICES_SYSTEM_FILECATALOGMETADATA_SERVICE
+               art::Utilities canvas
+               messagefacility::MF_MessageLogger
+-
+               cetlib::cetlib cetlib_except
+-              ROOT_BASIC_LIB_LIST
+ 
+ )
+ 
+ 
+ cet_build_plugin(SpaceChargeServiceDUNE35t art::service
+               dunesim_SpaceCharge
+-	      ART_FRAMEWORK_CORE
+-	      ART_FRAMEWORK_PRINCIPAL
+-	      ART_FRAMEWORK_SERVICES_REGISTRY
++	      art::Framework_Principal
+ 	      art::Persistency_Common canvas
+ 	      art::Persistency_Provenance canvas
+-	      ART_ROOT_IO_TFILE_SUPPORT
+ 	      ROOT::Core
+-	      ART_ROOT_IO_TFILESERVICE_SERVICE
+-	      ART_FRAMEWORK_SERVICES_SYSTEM_FILECATALOGMETADATA_SERVICE
+ 	      art::Utilities canvas
+ 	      messagefacility::MF_MessageLogger
+-	      
+   	      cetlib::cetlib cetlib_except
+-   	      ROOT_BASIC_LIB_LIST
+               
+ )
+ 
+ cet_build_plugin(SpaceChargeService3x1x1dphase art::service
+               dunesim_SpaceCharge
+-	      ART_FRAMEWORK_CORE
+-	      ART_FRAMEWORK_PRINCIPAL
+-	      ART_FRAMEWORK_SERVICES_REGISTRY
++	      art::Framework_Principal
+ 	      art::Persistency_Common canvas
+ 	      art::Persistency_Provenance canvas
+-	      ART_ROOT_IO_TFILE_SUPPORT
+ 	      ROOT::Core
+-	      ART_ROOT_IO_TFILESERVICE_SERVICE
+-	      ART_FRAMEWORK_SERVICES_SYSTEM_FILECATALOGMETADATA_SERVICE
+ 	      art::Utilities canvas
+ 	      messagefacility::MF_MessageLogger
+-	      
+   	      cetlib::cetlib cetlib_except
+-   	      ROOT_BASIC_LIB_LIST
+               
+ )
  
 diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
 deleted file mode 100644

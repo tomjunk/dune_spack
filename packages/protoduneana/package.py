@@ -40,6 +40,14 @@ class Protoduneana(CMakePackage):
 
     version("09_81_00d00", sha256="f490a31fe519217539ecd2e46194f70d179fa70a023a163d84e89d9e07f41695")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@1_01_00')
 
     # FIXME: Add dependencies if required.
@@ -49,8 +57,8 @@ class Protoduneana(CMakePackage):
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+        ] 
         return args
+

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8ea0f..9b212cf 100644
+index ca8ea0f..148b424 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,13 +15,14 @@
+@@ -15,15 +15,16 @@
  # It sets up all of the larsoft ups products (lardata, larsim, larreco, etc.)
  # ======================================================================
  
@@ -18,9 +18,12 @@ index ca8ea0f..9b212cf 100644
 -project(dunecore LANGUAGES CXX)
 +project(dunecore LANGUAGES CXX) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION -> set(CMAKE_PROJECT_VERSION_STRING ...)
  set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.81.00d00)
- 
+-
++set(${PROJECT_NAME}_FW_DIR "config_data")
  ## Make target names shorter (dunecore::X vs dunecore::dune_X).
-@@ -43,60 +44,60 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
+ # set(dunecore_NAMESPACE dune)
+ 
+@@ -43,62 +44,57 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
  )
  ##add_definitions(-DGENIE_PRE_R3)
  
@@ -79,8 +82,8 @@ index ca8ea0f..9b212cf 100644
 +find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
 +find_package( ROOT REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
 +
-+find_package( eigen REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(eigen ...) -> find_package(eigen REQUIRED ...)
-+include_directories( $ENV{EIGEN_INC} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++find_package( Eigen3 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(eigen ...) -> find_package(eigen REQUIRED ...)
++#include_directories( $ENV{EIGEN_INC} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
 +
 +find_package( art 3.09.00 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art v3_09_00 ...) -> find_package(art 3.09.00 REQUIRED ...)
 +find_package( art_root_io REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art_root_io ...) -> find_package(art_root_io REQUIRED ...)
@@ -90,10 +93,10 @@ index ca8ea0f..9b212cf 100644
 +find_package( canvas_root_io REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(canvas_root_io ...) -> find_package(canvas_root_io REQUIRED ...)
 +find_package( cetlib_except REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(cetlib_except ...) -> find_package(cetlib_except REQUIRED ...)
 +find_package( cetlib REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(cetlib ...) -> find_package(cetlib REQUIRED ...)
-+find_package( clhep 2.1.3.0 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep v2_1_3_0 ...) -> find_package(clhep 2.1.3.0 REQUIRED ...)
++find_package( CLHEP 2.1.3.0 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep v2_1_3_0 ...) -> find_package(clhep 2.1.3.0 REQUIRED ...)
 +find_package( dunepdlegacy REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunepdlegacy ...) -> find_package(dunepdlegacy REQUIRED ...)
 +find_package( fhiclcpp REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(fhiclcpp ...) -> find_package(fhiclcpp REQUIRED ...)
-+find_package( genie REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(genie ...) -> find_package(genie REQUIRED ...)
++find_package( GENIE REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(genie ...) -> find_package(genie REQUIRED ...)
 +find_package( hep_concurrency REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(hep_concurrency ...) -> find_package(hep_concurrency REQUIRED ...)
 +find_package( ifdh_art REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(ifdh_art ...) -> find_package(ifdh_art REQUIRED ...)
 +find_package( ifdhc REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(ifdhc ...) -> find_package(ifdhc REQUIRED ...)
@@ -115,23 +118,22 @@ index ca8ea0f..9b212cf 100644
 +find_package( nurandom REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nurandom ...) -> find_package(nurandom REQUIRED ...)
 +find_package( nusimdata REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nusimdata ...) -> find_package(nusimdata REQUIRED ...)
 +find_package( nutools REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nutools ...) -> find_package(nutools REQUIRED ...)
-+find_package( pandora REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(pandora ...) -> find_package(pandora REQUIRED ...)
 +find_package( dunedaqdataformats REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunedaqdataformats ...) -> find_package(dunedaqdataformats REQUIRED ...)
 +find_package( dunedetdataformats REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunedetdataformats ...) -> find_package(dunedetdataformats REQUIRED ...)
-+find_package( postgresql 9.1.5 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(postgresql v9_1_5 ...) -> find_package(postgresql 9.1.5 REQUIRED ...)
-+find_package( systematicstools  REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(systematicstools ...) -> find_package(systematicstools REQUIRED ...)
-+find_package( fftw REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(fftw ...) -> find_package(fftw REQUIRED ...)
++find_package( PostgreSQL 9.1.5 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(postgresql v9_1_5 ...) -> find_package(postgresql 9.1.5 REQUIRED ...)
  find_package(FFTW3 REQUIRED EXPORT)
 -find_ups_product( sqlite )
 -find_ups_product( nlohmann_json )
 -find_ups_product( highfive )
+-find_package(HDF5 REQUIRED EXPORT)
+-
 +find_package(  SQLite3 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(sqlite ...) -> find_package(SQLite3 REQUIRED ...)
 +find_package( nlohmann_json REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nlohmann_json ...) -> find_package(nlohmann_json REQUIRED ...)
-+find_package( highfive REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(highfive ...) -> find_package(highfive REQUIRED ...)
- find_package(HDF5 REQUIRED EXPORT)
- 
++find_package( HDF5 REQUIRED)
  # Define an export set for tool support to enable simpler per-tool build
-@@ -117,7 +118,6 @@ add_subdirectory(dunecore)
+ # call.
+ cet_register_export_set(SET_NAME PluginTypes NAMESPACE art_plugin_types)
+@@ -117,7 +113,6 @@ add_subdirectory(dunecore)
  # CMake Modules
  add_subdirectory(Modules)
  # ups - table and config files
@@ -283,6 +285,29 @@ index df2fcd6..444cae3 100644
  
  add_subdirectory(Tool)
  add_subdirectory(test)
+diff --git a/dunecore/ArtSupport/Tool/CMakeLists.txt b/dunecore/ArtSupport/Tool/CMakeLists.txt
+index 9166381..5335c35 100644
+--- a/dunecore/ArtSupport/Tool/CMakeLists.txt
++++ b/dunecore/ArtSupport/Tool/CMakeLists.txt
+@@ -9,5 +9,5 @@ cet_build_plugin(TestTool   art::tool
+                 art::Utilities canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                ROOT::Core
+              )
+diff --git a/dunecore/ArtSupport/test/CMakeLists.txt b/dunecore/ArtSupport/test/CMakeLists.txt
+index 8de3ce5..9d9ce2a 100644
+--- a/dunecore/ArtSupport/test/CMakeLists.txt
++++ b/dunecore/ArtSupport/test/CMakeLists.txt
+@@ -23,7 +23,6 @@ cet_test(test_ArtServiceHelper
+     dunecore_ArtSupport
+     art_root_io::TFileService_service
+     art::Framework_Services_Optional_RandomNumberGenerator_service
+-    ROOT_BASIC_LIB_LIST
+ )
+ 
+ cet_test(test_DuneToolManager
 diff --git a/dunecore/ChannelMap/CMakeLists.txt b/dunecore/ChannelMap/CMakeLists.txt
 index a2717ae..cc412b2 100644
 --- a/dunecore/ChannelMap/CMakeLists.txt
@@ -295,23 +320,40 @@ index a2717ae..cc412b2 100644
 +) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
 diff --git a/dunecore/DAQTriggerSim/AnalyzeTriggers/CMakeLists.txt b/dunecore/DAQTriggerSim/AnalyzeTriggers/CMakeLists.txt
-index c7ce658..fe1915c 100644
+index c7ce658..4a90ced 100644
 --- a/dunecore/DAQTriggerSim/AnalyzeTriggers/CMakeLists.txt
 +++ b/dunecore/DAQTriggerSim/AnalyzeTriggers/CMakeLists.txt
-@@ -19,7 +19,7 @@ art_make(
+@@ -9,7 +9,7 @@ art_make(
+                            art::Framework_Principal
+                            art::Framework_Services_Registry
+                            art_root_io::tfile_support
+-                           ROOT::Core
++			   ROOT::Core ROOT::Tree
+                            art_root_io::TFileService_service
+                            art::Persistency_Common 
+                            art::Persistency_Provenance 
+@@ -18,8 +18,7 @@ art_make(
+                            messagefacility::MF_MessageLogger
                             cetlib::cetlib 
  			   cetlib_except::cetlib_except
-                            ROOT_BASIC_LIB_LIST
+-                           ROOT_BASIC_LIB_LIST
 -	 )
 +	 ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_fhicl()
  install_headers()
 diff --git a/dunecore/DAQTriggerSim/FDHDDAQWriter/CMakeLists.txt b/dunecore/DAQTriggerSim/FDHDDAQWriter/CMakeLists.txt
-index 0915cf6..028c93d 100644
+index 0915cf6..c165b28 100644
 --- a/dunecore/DAQTriggerSim/FDHDDAQWriter/CMakeLists.txt
 +++ b/dunecore/DAQTriggerSim/FDHDDAQWriter/CMakeLists.txt
-@@ -14,7 +14,7 @@ art_make(MODULE_LIBRARIES
+@@ -7,14 +7,11 @@ art_make(MODULE_LIBRARIES
+                         art_root_io::tfile_support
+                         ROOT::Core
+                         art_root_io::TFileService_service
+-                        ART_PERSISTENCY_PROVENANCE
+                         messagefacility::MF_MessageLogger
+-                        CETLIB
+-                        ROOT_BASIC_LIB_LIST
  			HDF5::HDF5
                          dunecore::ChannelMap_FDHDChannelMapService_service
                          BASENAME_ONLY
@@ -321,20 +363,60 @@ index 0915cf6..028c93d 100644
  install_headers()
  install_fhicl()
 diff --git a/dunecore/DAQTriggerSim/HardwareMapperTest/CMakeLists.txt b/dunecore/DAQTriggerSim/HardwareMapperTest/CMakeLists.txt
-index 71b9da2..d5b64d1 100644
+index 71b9da2..117fa39 100644
 --- a/dunecore/DAQTriggerSim/HardwareMapperTest/CMakeLists.txt
 +++ b/dunecore/DAQTriggerSim/HardwareMapperTest/CMakeLists.txt
-@@ -19,7 +19,7 @@ art_make(
+@@ -18,8 +18,7 @@ art_make(
+           messagefacility::MF_MessageLogger
            cetlib::cetlib 
  	  cetlib_except::cetlib_except
-           ROOT_BASIC_LIB_LIST
+-          ROOT_BASIC_LIB_LIST
 -        )
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_fhicl()
  install_headers()
+diff --git a/dunecore/DAQTriggerSim/Service/CMakeLists.txt b/dunecore/DAQTriggerSim/Service/CMakeLists.txt
+index 9132f3c..512aa81 100644
+--- a/dunecore/DAQTriggerSim/Service/CMakeLists.txt
++++ b/dunecore/DAQTriggerSim/Service/CMakeLists.txt
+@@ -6,30 +6,19 @@
+ # CMake instructions for DAQTriggerSim/Services
+ 
+ cet_build_plugin(TemplateTriggerService   art::service
+-                ART_ROOT_IO_TFILE_SUPPORT
+                 ROOT::Core
+-                ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE
+                 nurandom::RandomUtils_NuRandomService_service
+-                ART_FRAMEWORK_CORE
+-                ART_FRAMEWORK_PRINCIPAL
+-                art::Utilities canvas
++		art::Utilities canvas::canvas art::Framework_Principal
+                 messagefacility::MF_MessageLogger
+-                cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
++                cetlib::cetlib cetlib_except::cetlib_except
+              )
+ 
+ cet_build_plugin(HardwareMapperService   art::service
+-                larcorealg_Geometry
++                larcorealg::Geometry
+                 dunecore_Geometry
+-                ART_FRAMEWORK_CORE
+-                ART_FRAMEWORK_PRINCIPAL
+-                ART_FRAMEWORK_SERVICES_REGISTRY
+-                ART_ROOT_IO_TFILE_SUPPORT
+                 ROOT::Core
+-                ART_PERSISTENCY_PROVENANCE
+                 messagefacility::MF_MessageLogger
+-                ROOT_BASIC_LIB_LIST
+-                art::Utilities canvas
++                art::Utilities canvas::canvas art::Framework_Principal
+              )
+ 
+ install_fhicl()
 diff --git a/dunecore/DAQTriggerSim/TriggerAlgorithms/CMakeLists.txt b/dunecore/DAQTriggerSim/TriggerAlgorithms/CMakeLists.txt
-index 9195d61..d2a523c 100644
+index 9195d61..8cf5b6d 100644
 --- a/dunecore/DAQTriggerSim/TriggerAlgorithms/CMakeLists.txt
 +++ b/dunecore/DAQTriggerSim/TriggerAlgorithms/CMakeLists.txt
 @@ -1,6 +1,6 @@
@@ -345,7 +427,11 @@ index 9195d61..d2a523c 100644
  
  art_make(
    LIB_LIBRARIES    
-@@ -23,7 +23,7 @@ art_make(
+@@ -19,11 +19,10 @@ art_make(
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+   Boost::filesystem              
+-  ROOT_BASIC_LIB_LIST
    messagefacility::MF_MessageLogger
    fhiclcpp::fhiclcpp
    dunecore::DAQTriggerSim_TriggerDataProducts
@@ -355,7 +441,7 @@ index 9195d61..d2a523c 100644
  
  install_headers()
 diff --git a/dunecore/DAQTriggerSim/TriggerDataProducts/CMakeLists.txt b/dunecore/DAQTriggerSim/TriggerDataProducts/CMakeLists.txt
-index afe7593..7ffe71b 100644
+index afe7593..7af5895 100644
 --- a/dunecore/DAQTriggerSim/TriggerDataProducts/CMakeLists.txt
 +++ b/dunecore/DAQTriggerSim/TriggerDataProducts/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -365,28 +451,58 @@ index afe7593..7ffe71b 100644
  
  art_make( 
            LIB_LIBRARIES 
-@@ -10,7 +10,7 @@ art_make(
+@@ -9,8 +9,7 @@ art_make(
+ 	  canvas::canvas
  	  messagefacility::MF_MessageLogger
  	  cetlib::cetlib cetlib_except
- 	  ROOT_BASIC_LIB_LIST
+-	  ROOT_BASIC_LIB_LIST
 -	)
 +	) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_source()
 diff --git a/dunecore/DAQTriggerSim/TriggerModules/CMakeLists.txt b/dunecore/DAQTriggerSim/TriggerModules/CMakeLists.txt
-index d3b518a..774fe55 100644
+index d3b518a..37d554f 100644
 --- a/dunecore/DAQTriggerSim/TriggerModules/CMakeLists.txt
 +++ b/dunecore/DAQTriggerSim/TriggerModules/CMakeLists.txt
-@@ -19,7 +19,7 @@ art_make( BASENAME_ONLY
+@@ -18,8 +18,7 @@ art_make( BASENAME_ONLY
+                            messagefacility::MF_MessageLogger
                             cetlib::cetlib 
  			   cetlib_except::cetlib_except
-                            ROOT_BASIC_LIB_LIST
+-                           ROOT_BASIC_LIB_LIST
 -	 )
 +	 ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_fhicl()
  install_headers()
+diff --git a/dunecore/DuneCommon/Service/CMakeLists.txt b/dunecore/DuneCommon/Service/CMakeLists.txt
+index f660b51..86eda92 100644
+--- a/dunecore/DuneCommon/Service/CMakeLists.txt
++++ b/dunecore/DuneCommon/Service/CMakeLists.txt
+@@ -11,7 +11,6 @@ cet_build_plugin(GeoRopChannelGroupService   art::service
+ 		canvas::canvas
+                 cetlib::cetlib 
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
+              )
+ 
+ cet_build_plugin(GeoApaChannelGroupService   art::service
+@@ -20,7 +19,6 @@ cet_build_plugin(GeoApaChannelGroupService   art::service
+ 		canvas::canvas
+                 cetlib::cetlib
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
+              )
+ 
+ cet_build_plugin(FixedChannelGroupService   art::service
+@@ -28,7 +26,6 @@ cet_build_plugin(FixedChannelGroupService   art::service
+ 		canvas::canvas
+                 cetlib::cetlib
+ 		cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
+              )
+ 
+ add_subdirectory(test)
 diff --git a/dunecore/DuneCommon/Service/EventContext/CMakeLists.txt b/dunecore/DuneCommon/Service/EventContext/CMakeLists.txt
 index e3c215c..84b1ba5 100644
 --- a/dunecore/DuneCommon/Service/EventContext/CMakeLists.txt
@@ -400,22 +516,272 @@ index e3c215c..84b1ba5 100644
  
  add_subdirectory(test)
 diff --git a/dunecore/DuneCommon/Service/ToolBasedChannelStatus/CMakeLists.txt b/dunecore/DuneCommon/Service/ToolBasedChannelStatus/CMakeLists.txt
-index bf3227c..3f048fb 100644
+index bf3227c..21f252d 100644
 --- a/dunecore/DuneCommon/Service/ToolBasedChannelStatus/CMakeLists.txt
 +++ b/dunecore/DuneCommon/Service/ToolBasedChannelStatus/CMakeLists.txt
-@@ -21,6 +21,6 @@ art_make(SERVICE_LIBRARIES
+@@ -19,8 +19,7 @@ art_make(SERVICE_LIBRARIES
+            art::Persistency_Provenance
+            canvas::canvas
             ROOT::HistPainter
-            ROOT_BASIC_LIB_LIST
+-           ROOT_BASIC_LIB_LIST
             FFTW3::FFTW3
 -)
 +) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  add_subdirectory(test)
+diff --git a/dunecore/DuneCommon/Tool/CMakeLists.txt b/dunecore/DuneCommon/Tool/CMakeLists.txt
+index 594d545..30afbe7 100644
+--- a/dunecore/DuneCommon/Tool/CMakeLists.txt
++++ b/dunecore/DuneCommon/Tool/CMakeLists.txt
+@@ -10,7 +10,7 @@ cet_build_plugin(FclRunDataTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(FclIndexRangeTool  art::tool
+@@ -18,7 +18,7 @@ cet_build_plugin(FclIndexRangeTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(FclIndexVectorMapTool  art::tool
+@@ -26,7 +26,7 @@ cet_build_plugin(FclIndexVectorMapTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(FixedTimeOffsetTool  art::tool
+@@ -34,7 +34,7 @@ cet_build_plugin(FixedTimeOffsetTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(TimingRawDecoderOffsetTool  art::tool
+@@ -45,7 +45,7 @@ cet_build_plugin(TimingRawDecoderOffsetTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(FclFloatArray  art::tool
+@@ -53,7 +53,7 @@ cet_build_plugin(FclFloatArray  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(FclFileFloatArray  art::tool
+@@ -61,7 +61,7 @@ cet_build_plugin(FclFileFloatArray  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(SimpleHistogramManager  art::tool
+@@ -69,7 +69,7 @@ cet_build_plugin(SimpleHistogramManager  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(ChannelStatusServiceTool  art::tool
+@@ -78,7 +78,7 @@ cet_build_plugin(ChannelStatusServiceTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(ChannelStatusConfigTool  art::tool
+@@ -87,7 +87,7 @@ cet_build_plugin(ChannelStatusConfigTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(BlockIndexMapTool  art::tool
+@@ -96,7 +96,7 @@ cet_build_plugin(BlockIndexMapTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(TextIndexMapTool  art::tool
+@@ -106,7 +106,7 @@ cet_build_plugin(TextIndexMapTool  art::tool
+                 canvas::canvas
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ cet_build_plugin(DuneRunToolRedirector  art::tool
+@@ -117,7 +117,7 @@ cet_build_plugin(DuneRunToolRedirector  art::tool
+                 fhiclcpp::fhiclcpp
+                 cetlib::cetlib
+                 cetlib_except::cetlib_except
+-                ROOT_BASIC_LIB_LIST
++		ROOT::Core
+              )
+ 
+ add_subdirectory(test)
+diff --git a/dunecore/DuneCommon/Tool/test/CMakeLists.txt b/dunecore/DuneCommon/Tool/test/CMakeLists.txt
+index 948ea76..4b60f6d 100644
+--- a/dunecore/DuneCommon/Tool/test/CMakeLists.txt
++++ b/dunecore/DuneCommon/Tool/test/CMakeLists.txt
+@@ -15,8 +15,6 @@ cet_test(test_FclRunDataTool SOURCES test_FclRunDataTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -28,8 +26,6 @@ cet_test(test_FclIndexRangeTool SOURCES test_FclIndexRangeTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -41,8 +37,6 @@ cet_test(test_FclIndexVectorMapTool SOURCES test_FclIndexVectorMapTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -54,8 +48,6 @@ cet_test(test_FixedTimeOffsetTool SOURCES test_FixedTimeOffsetTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -67,8 +59,6 @@ cet_test(test_TimingRawDecoderOffsetTool SOURCES test_TimingRawDecoderOffsetTool
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -80,9 +70,8 @@ cet_test(test_SimpleHistogramManager SOURCES test_SimpleHistogramManager.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
++    ROOT::Hist
+ )
+ 
+ cet_test(test_FclFloatArray SOURCES test_FclFloatArray.cxx
+@@ -93,8 +82,6 @@ cet_test(test_FclFloatArray SOURCES test_FclFloatArray.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ cet_test(test_FclFileFloatArray SOURCES test_FclFileFloatArray.cxx
+@@ -105,8 +92,6 @@ cet_test(test_FclFileFloatArray SOURCES test_FclFileFloatArray.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -118,8 +103,6 @@ cet_test(test_ChannelStatusServiceTool SOURCES test_ChannelStatusServiceTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -131,8 +114,6 @@ cet_test(test_ChannelStatusConfigTool SOURCES test_ChannelStatusConfigTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -144,8 +125,6 @@ cet_test(test_BlockIndexMapTool SOURCES test_BlockIndexMapTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -158,8 +137,6 @@ cet_test(test_TextIndexMapTool SOURCES test_TextIndexMapTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -172,8 +149,6 @@ cet_test(test_DuneRunToolRedirector SOURCES test_DuneRunToolRedirector.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib
+     cetlib_except::cetlib_except
+-    ROOT_BASIC_LIB_LIST
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
 diff --git a/dunecore/DuneCommon/Utility/CMakeLists.txt b/dunecore/DuneCommon/Utility/CMakeLists.txt
-index 11e6274..d7b31a0 100644
+index 11e6274..0235a94 100644
 --- a/dunecore/DuneCommon/Utility/CMakeLists.txt
 +++ b/dunecore/DuneCommon/Utility/CMakeLists.txt
-@@ -22,7 +22,7 @@ art_make(BASENAME_ONLY
+@@ -18,11 +18,10 @@ art_make(BASENAME_ONLY
+            art::Persistency_Provenance
+            canvas::canvas
+            ROOT::HistPainter
+-           ROOT_BASIC_LIB_LIST
             FFTW3::FFTW3
           PUBLIC ROOT::Core
           NO_PLUGINS
@@ -424,6 +790,139 @@ index 11e6274..d7b31a0 100644
  
  install_source()
  install_headers()
+diff --git a/dunecore/DuneCommon/Utility/test/CMakeLists.txt b/dunecore/DuneCommon/Utility/test/CMakeLists.txt
+index c6a87bf..37b585a 100644
+--- a/dunecore/DuneCommon/Utility/test/CMakeLists.txt
++++ b/dunecore/DuneCommon/Utility/test/CMakeLists.txt
+@@ -6,7 +6,7 @@ cet_enable_asserts()
+ 
+ cet_test(test_LineColors SOURCES test_LineColors.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Gpad
+ )
+ 
+ 
+@@ -18,96 +18,97 @@ cet_test(test_LineColors SOURCES test_LineColors.cxx
+ cet_test(test_StringManipulator SOURCES test_StringManipulator.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+   )
+ 
+ cet_test(test_TPadManipulator SOURCES test_TPadManipulator.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_RootPalette SOURCES test_RootPalette.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_CompactRealDftData SOURCES test_CompactRealDftData.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_DuneFFT SOURCES test_DuneFFT.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_FwFFT SOURCES test_FwFFT.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_Fw2dFFT SOURCES test_Fw2dFFT.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_coldelecResponse SOURCES test_coldelecResponse.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_gausTF1 SOURCES test_gausTF1.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_offsetLine SOURCES test_offsetLine.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_GausStepFitter SOURCES test_GausStepFitter.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_GausRmsFitter SOURCES test_GausRmsFitter.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_SampleTailer SOURCES test_SampleTailer.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_shiftHistFit SOURCES test_shiftHistFit.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_RootParFormula SOURCES test_RootParFormula.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+ )
+ 
+ cet_test(test_DuneContextToolRedirector SOURCES test_DuneContextToolRedirector.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
++    ROOT::Core
+ )
+ 
+ cet_test(test_DuneContextManager
+@@ -115,5 +116,6 @@ cet_test(test_DuneContextManager
+     test_DuneContextManager.cxx
+   LIBRARIES
+     dunecore::DuneCommon_Utility
++    ROOT::Core
+ )
+ 
 diff --git a/dunecore/DuneInterface/Data/CMakeLists.txt b/dunecore/DuneInterface/Data/CMakeLists.txt
 index 7bd7a14..f6ebb17 100644
 --- a/dunecore/DuneInterface/Data/CMakeLists.txt
@@ -437,6 +936,57 @@ index 7bd7a14..f6ebb17 100644
  
  # Including DataMap.h confers a transitive dependency on ROOT::Hist
  cet_make_library(LIBRARY_NAME dunecore::DuneInterface_Data_DataMap INTERFACE
+diff --git a/dunecore/DuneInterface/Data/test/CMakeLists.txt b/dunecore/DuneInterface/Data/test/CMakeLists.txt
+index cb3395d..ab13db4 100644
+--- a/dunecore/DuneInterface/Data/test/CMakeLists.txt
++++ b/dunecore/DuneInterface/Data/test/CMakeLists.txt
+@@ -9,38 +9,39 @@ include(CetTest)
+ 
+ cet_test(test_DataMap SOURCES test_DataMap.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Core
++  ROOT::Hist
+ )
+ 
+ cet_test(test_DuneEventInfo SOURCES test_DuneEventInfo.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Core
+ )
+ 
+ cet_test(test_RunData SOURCES test_RunData.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Core
+ )
+ 
+ cet_test(test_AdcChannelData SOURCES test_AdcChannelData.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Core
+ )
+ 
+ cet_test(test_FftwReal2dDftData SOURCES test_FftwReal2dDftData.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Core
+ )
+ 
+ cet_test(test_Tpc2dRoi SOURCES test_Tpc2dRoi.cxx
+   LIBRARIES
+-    ROOT_BASIC_LIB_LIST
++  ROOT::Core
+ )
+ 
+ cet_test(test_TpcData SOURCES test_TpcData.cxx
+   LIBRARIES
++  ROOT::Core
+     dunecore::DuneInterface_Data
+-    ROOT_BASIC_LIB_LIST
+ )
+ 
+ cet_enable_asserts()
 diff --git a/dunecore/DuneInterface/Service/CMakeLists.txt b/dunecore/DuneInterface/Service/CMakeLists.txt
 index 204dd51..e282d06 100644
 --- a/dunecore/DuneInterface/Service/CMakeLists.txt
@@ -449,11 +999,58 @@ index 204dd51..e282d06 100644
 +art_make() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
+diff --git a/dunecore/DuneInterface/Tool/CMakeLists.txt b/dunecore/DuneInterface/Tool/CMakeLists.txt
+index c0a304b..c70dbba 100644
+--- a/dunecore/DuneInterface/Tool/CMakeLists.txt
++++ b/dunecore/DuneInterface/Tool/CMakeLists.txt
+@@ -29,6 +29,7 @@ cet_make_library(LIBRARY_NAME RunDataTool INTERFACE
+   SOURCE RunDataTool.h
+   LIBRARIES INTERFACE
+   dunecore::DuneInterface_Data_RunData
++  ROOT::Core
+   )
+ 
+ cet_make_library(LIBRARY_NAME TpcDataTool INTERFACE
+diff --git a/dunecore/DuneInterface/Tool/test/CMakeLists.txt b/dunecore/DuneInterface/Tool/test/CMakeLists.txt
+index 7373a7f..8cdb684 100644
+--- a/dunecore/DuneInterface/Tool/test/CMakeLists.txt
++++ b/dunecore/DuneInterface/Tool/test/CMakeLists.txt
+@@ -15,7 +15,6 @@ cet_test(test_AdcChannelTool SOURCES test_AdcChannelTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
+     Boost::filesystem
+ )
+ 
+@@ -28,6 +27,5 @@ cet_test(test_TpcDataTool SOURCES test_TpcDataTool.cxx
+     fhiclcpp::fhiclcpp
+     cetlib::cetlib cetlib_except
+     cetlib_except::cetlib_except
+-    SQLITE3
+     Boost::filesystem
+ )
 diff --git a/dunecore/DuneObj/CMakeLists.txt b/dunecore/DuneObj/CMakeLists.txt
-index eccd127..e2f7d3d 100644
+index eccd127..368d5bd 100644
 --- a/dunecore/DuneObj/CMakeLists.txt
 +++ b/dunecore/DuneObj/CMakeLists.txt
-@@ -16,7 +16,7 @@ art_make(
+@@ -1,22 +1,19 @@
+-#cet_make( LIBRARIES canvas::canvas
+-#		    messagefacility::MF_MessageLogger
+ #		    MF_Utilities
+ #		    cetlib::cetlib 
+ #                   cetlib_except::cetlib_except
+-#		    ROOT_BASIC_LIB_LIST
+         #        NO_DICTIONARY )
+ 
+       #art_dictionary( DICTIONARY_LIBRARIES dunedataobj_DuneBase )
+ art_make(
+   LIB_LIBRARIES
++                    ROOT::Core
+ 		    messagefacility::MF_MessageLogger
+ 		    cetlib::cetlib 
+ 		    cetlib_except::cetlib_except
+-		    ROOT_BASIC_LIB_LIST
                      HDF5::HDF5
    DICT_LIBRARIES
    #  EXCLUDE OpDetDivRec.h OpDetDivRec.cc
@@ -463,31 +1060,120 @@ index eccd127..e2f7d3d 100644
  
  install_headers()
 diff --git a/dunecore/DuneObjDumpers/CMakeLists.txt b/dunecore/DuneObjDumpers/CMakeLists.txt
-index 5c2664a..c8d0168 100644
+index 5c2664a..9c1f95d 100644
 --- a/dunecore/DuneObjDumpers/CMakeLists.txt
 +++ b/dunecore/DuneObjDumpers/CMakeLists.txt
-@@ -16,7 +16,7 @@ art_make(
+@@ -1,6 +1,6 @@
+ art_make(
+   LIB_LIBRARIES
+-    ROOT_EG
++    ROOT::EG
+     ROOT::Core
+   MODULE_LIBRARIES
+     dunecore::DuneObj
+@@ -14,9 +14,8 @@ art_make(
+     messagefacility::MF_MessageLogger
+     cetlib::cetlib
      cetlib_except::cetlib_except
-     ROOT_EG
-     ROOT_BASIC_LIB_LIST
+-    ROOT_EG
+-    ROOT_BASIC_LIB_LIST
 -  )
++    ROOT::EG
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/dunecore/Geometry/CMakeLists.txt b/dunecore/Geometry/CMakeLists.txt
-index ff96507..5beac55 100644
+index ff96507..d322330 100644
 --- a/dunecore/Geometry/CMakeLists.txt
 +++ b/dunecore/Geometry/CMakeLists.txt
-@@ -23,7 +23,7 @@ art_make( BASENAME_ONLY
+@@ -11,8 +11,7 @@ art_make( BASENAME_ONLY
+                         art::Framework_Services_Registry
+                         art::Utilities
+                         canvas::canvas
+-                        ROOT_BASIC_LIB_LIST
+-                        ROOT_GEOM
++                        ROOT::Geom
+                         
+           SERVICE_LIBRARIES larcorealg::Geometry
+                         dunecore_Geometry
+@@ -21,9 +20,8 @@ art_make( BASENAME_ONLY
+ 			cetlib_except::cetlib_except
+                         ROOT::Geom
                          ROOT::XMLIO
-                         ROOT_Gdml
-                         ROOT_BASIC_LIB_LIST
+-                        ROOT_Gdml
+-                        ROOT_BASIC_LIB_LIST
 -        )
++                        ROOT::Gdml
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  cet_build_plugin ( CheckGeometry art::module
                       larcorealg::Geometry
+@@ -43,9 +41,8 @@ cet_build_plugin ( CheckGeometry art::module
+                      fhiclcpp::fhiclcpp
+                      cetlib::cetlib
+ 	             cetlib_except::cetlib_except
+-                     ROOT_BASIC_LIB_LIST
+                      ROOT::Geom
+-
++                     ROOT::Gpad
+                BASENAME_ONLY
+           )
+ 
+@@ -67,8 +64,8 @@ cet_build_plugin ( CheckDPhaseGeometry art::module
+                      fhiclcpp::fhiclcpp
+                      cetlib::cetlib
+ 	             cetlib_except::cetlib_except
+-                     ROOT_BASIC_LIB_LIST
+                      ROOT::Geom
++		     ROOT::Gpad
+                BASENAME_ONLY
+           )
+ 
+@@ -90,8 +87,8 @@ cet_build_plugin ( CheckCRPGeometry art::module
+                      fhiclcpp::fhiclcpp
+                      cetlib::cetlib
+ 	             cetlib_except::cetlib_except
+-                     ROOT_BASIC_LIB_LIST
+                      ROOT::Geom
++		     ROOT::Gpad
+                BASENAME_ONLY
+           )
+ 
+diff --git a/dunecore/Geometry/test/CMakeLists.txt b/dunecore/Geometry/test/CMakeLists.txt
+index d049e8d..9099a1f 100644
+--- a/dunecore/Geometry/test/CMakeLists.txt
++++ b/dunecore/Geometry/test/CMakeLists.txt
+@@ -15,7 +15,6 @@ cet_test(test_GeometryDune35t SOURCES test_GeometryDune35t.cxx
+     dunecore::ArtSupport
+     larcorealg::Geometry
+     ROOT::Geom
+-    ROOT_BASIC_LIB_LIST
+ )
+ 
+ cet_test(test_GeometryDune10kt SOURCES test_GeometryDune10kt.cxx
+@@ -23,7 +22,6 @@ cet_test(test_GeometryDune10kt SOURCES test_GeometryDune10kt.cxx
+     dunecore::ArtSupport
+     larcorealg::Geometry
+     ROOT::Geom
+-    ROOT_BASIC_LIB_LIST
+ )
+ 
+ cet_test(test_GeometryProtoDune SOURCES test_GeometryProtoDune.cxx
+@@ -31,7 +29,6 @@ cet_test(test_GeometryProtoDune SOURCES test_GeometryProtoDune.cxx
+     dunecore::ArtSupport
+     larcorealg::Geometry
+     ROOT::Geom
+-    ROOT_BASIC_LIB_LIST
+ )
+ 
+ cet_test(test_WireSelector SOURCES test_WireSelector.cxx
+@@ -41,5 +38,4 @@ cet_test(test_WireSelector SOURCES test_WireSelector.cxx
+     dunecore::DuneCommon_Utility
+     larcorealg::Geometry
+     ROOT::Geom
+-    ROOT_BASIC_LIB_LIST
+ )
 diff --git a/dunecore/HDF5Utils/CMakeLists.txt b/dunecore/HDF5Utils/CMakeLists.txt
 index 20e1555..fbd8ac7 100644
 --- a/dunecore/HDF5Utils/CMakeLists.txt
@@ -541,15 +1227,97 @@ index 8c0b9ca..52537aa 100644
  
  install_headers()
  install_source()
+diff --git a/dunecore/RawDecoding/CMakeLists.txt b/dunecore/RawDecoding/CMakeLists.txt
+index 0cf16be..52b5053 100644
+--- a/dunecore/RawDecoding/CMakeLists.txt
++++ b/dunecore/RawDecoding/CMakeLists.txt
+@@ -1,5 +1,4 @@
+ cet_build_plugin(FDHDDataInterface   art::tool
+-                        art_utilities
+                         canvas::canvas
+                         cetlib::cetlib
+                         cetlib_except::cetlib_except
+diff --git a/dunecore/Utilities/CMakeLists.txt b/dunecore/Utilities/CMakeLists.txt
+index 9108f28..bcf895f 100644
+--- a/dunecore/Utilities/CMakeLists.txt
++++ b/dunecore/Utilities/CMakeLists.txt
+@@ -1,25 +1,18 @@
+ #include_directories("${CMAKE_SOURCE_DIR/")
+ 
+-set( dune_util_lib_list lardata_Utilities_LArFFT_service
+-                        lardataalg_DetectorInfo
+-			larcorealg_Geometry
+-			larcore_Geometry_Geometry_service
+-			lardata_Utilities
+-  			ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
++set( dune_util_lib_list lardata::Utilities_LArFFT_service
++                        lardataalg::DetectorInfo
++			larcorealg::Geometry
++			larcore::Geometry_Geometry_service
++			lardata::Utilities
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+-			ART_ROOT_IO_TFILE_SUPPORT
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
+-			ART_FRAMEWORK_SERVICES_SYSTEM_FILECATALOGMETADATA_SERVICE
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+ 			
+ 			cetlib::cetlib cetlib_except
+-			ROOT_BASIC_LIB_LIST
+-                        ROOT_GEOM
++                        ROOT::Geom
+     )
+ 
+ 
+@@ -61,11 +54,10 @@ cet_build_plugin( TFileMetadataDUNE art::service
+ 
+ cet_build_plugin(CrpGainService   art::service
+                 dunecore_ArtSupport
+-                larcorealg_Geometry
+-		lardataobj_Simulation
++                larcorealg::Geometry
++		lardataobj::Simulation
+ 		art::Utilities canvas
+                 cetlib::cetlib cetlib_except
+-                ROOT_BASIC_LIB_LIST
+ 		BASENAME_ONLY
+              )
+ 
 diff --git a/dunecore/Utilities/test/CMakeLists.txt b/dunecore/Utilities/test/CMakeLists.txt
-index 294ea66..a7f2acd 100644
+index 294ea66..505475b 100644
 --- a/dunecore/Utilities/test/CMakeLists.txt
 +++ b/dunecore/Utilities/test/CMakeLists.txt
-@@ -21,7 +21,7 @@ art_make( NO_PLUGINS
-                         ROOT_XMLIO
-                         ROOT_GDML
- 			ROOT_BASIC_LIB_LIST
+@@ -3,13 +3,8 @@ cet_enable_asserts()
+ art_make( NO_PLUGINS
+           BASENAME_ONLY
+           LIBRARY_NAME  dunecore_Utilities
+-	  MODULE_LIBRARIES lardata_Utilities
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
++	  MODULE_LIBRARIES lardata::Utilities
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+@@ -17,11 +12,10 @@ art_make( NO_PLUGINS
+ 			
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        ROOT_GEOM
+-                        ROOT_XMLIO
+-                        ROOT_GDML
+-			ROOT_BASIC_LIB_LIST
 -        )
++                        ROOT::Geom
++                        ROOT::XMLIO
++                        ROOT::GDML
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  

@@ -40,18 +40,30 @@ class Duneana(CMakePackage):
 
     version("09_81_00d00", sha256="8c1fc6758232a9b4ba7a39924ea372d8e2698404bf4778c9b209a35d8888dcf4")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
     depends_on("duneanaobj")
     depends_on("duneopdet")
     depends_on("dunereco")
+    depends_on("nufinder")
+    depends_on("larfinder")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+            self.define("CMAKE_MODULE_PATH", "%s/Modules;%s/Modules" %
+                       (self.spec['larfinder'].prefix, self.spec['larfinder'].prefix))
+        ] 
         return args
+

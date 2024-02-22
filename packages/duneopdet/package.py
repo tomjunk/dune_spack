@@ -40,6 +40,14 @@ class Duneopdet(CMakePackage):
 
     version("09_81_00d00", sha256="ea4e39071507f9f1697ba2251481d2ff9396238a33ee38c0fe68070c2c1a9750")
 
+    variant(
+        "cxxstd",
+        default="17",
+        values=("14", "17", "20"),
+        multi=False,
+        description="Use the specified C++ standard when building.",
+    )
+
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
@@ -49,8 +57,8 @@ class Duneopdet(CMakePackage):
     depends_on("cmake", type="build")
 
     def cmake_args(self):
-        # FIXME: Add arguments other than
-        # FIXME: CMAKE_INSTALL_PREFIX and CMAKE_BUILD_TYPE
-        # FIXME: If not needed delete this function
-        args = []
+        args = [
+            self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+        ] 
         return args
+
