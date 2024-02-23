@@ -51,10 +51,14 @@ class Dunereco(CMakePackage):
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
+    depends_on("hep-hpc")
+    #depends_on("python")
+    #depends_on("py-tensorflow")
+    #depends_on("triton")
+    #depends_on("protobuf")
     depends_on("dunecore")
     depends_on("larfinder")
     depends_on("nufinder")
-    depends_on("hep-hpc")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
@@ -62,7 +66,21 @@ class Dunereco(CMakePackage):
         args = [
             self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
             self.define("CMAKE_MODULE_PATH", "%s/Modules;%s/Modules" %
-                       (self.spec['larfinder'].prefix, self.spec['larfinder'].prefix))
+                       (self.spec['nufinder'].prefix, self.spec['larfinder'].prefix)),
         ] 
         return args
 
+   # def setup_build_environment(self, spack_env):
+   #     spack_env.set("TRITON_DIR", str(self.spec["triton"].prefix.lib))
+   #     spack_env.set("TENSORFLOW_DIR", str(self.spec["py-tensorflow"].prefix.lib))
+   #     spack_env.set("PROTOBUF_DIR", str(self.spec["protobuf"].prefix.lib))
+   #     spack_env.set(
+   #         "TENSORFLOW_INC",
+   #         str(
+   #             join_path(
+   #                 self.spec["py-tensorflow"].prefix.lib,
+   #                 "python%s/site-packages/tensorflow/include"
+   #                 % self.spec["python"].version.up_to(2),
+   #             )
+   #         ),
+   #     )

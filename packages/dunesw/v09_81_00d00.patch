@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0f1a145..64c4210 100644
+index 0f1a1453..d259ef7a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,13 +4,14 @@
@@ -20,7 +20,7 @@ index 0f1a145..64c4210 100644
  
  include(CetCMakeEnv)
  cet_cmake_env()
-@@ -20,19 +21,18 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
+@@ -20,19 +21,19 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
    NO_UNDEFINED
    EXTRA_FLAGS -pedantic -Wno-unused-local-typedefs
  )
@@ -47,12 +47,13 @@ index 0f1a145..64c4210 100644
 +find_package( lardata REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardata ...) -> find_package(lardata REQUIRED ...)
 +find_package( larcorealg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcorealg ...) -> find_package(larcorealg REQUIRED ...)
 +find_package( lardataalg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataalg ...) -> find_package(lardataalg REQUIRED ...)
++find_package( nurandom REQUIRED )
 +
 +cet_report_compiler_flags() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - add args: REPORT_THRESHOLD VERBOSE
  
  # macros for artdaq_dictionary and simple_plugin
  include(ArtDictionary)
-@@ -42,8 +42,7 @@ include(BuildPlugins)
+@@ -42,8 +43,7 @@ include(BuildPlugins)
  # nothing yet
  
  #add_subdirectory(dunesw)
@@ -64,7 +65,7 @@ index 0f1a145..64c4210 100644
 +cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
 diff --git a/CMakePresets.json b/CMakePresets.json
 new file mode 100644
-index 0000000..b76fe8d
+index 00000000..b76fe8df
 --- /dev/null
 +++ b/CMakePresets.json
 @@ -0,0 +1,112 @@
@@ -180,9 +181,112 @@ index 0000000..b76fe8d
 +   ],
 +   "version" : 3
 +}
+diff --git a/test/ArtServices/CMakeLists.txt b/test/ArtServices/CMakeLists.txt
+index 51c3252f..68d954bc 100644
+--- a/test/ArtServices/CMakeLists.txt
++++ b/test/ArtServices/CMakeLists.txt
+@@ -1,59 +1,53 @@
+ cet_test(test_Geometry SOURCES test_Geometry.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    art::Utilities canvas
+-    larcorealg_Geometry
+-    ROOT_BASIC_LIB_LIST
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
++    larcorealg::Geometry
++    ROOT::Core
+     cetlib::cetlib cetlib_except
+ )
+ 
+ cet_test(test_DetectorClocksService SOURCES test_DetectorClocksService.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    art::Utilities canvas
+-    ROOT_BASIC_LIB_LIST
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
++    ROOT::Core
+     cetlib::cetlib cetlib_except
+ )
+ 
+ cet_test(test_DetectorProperties SOURCES test_DetectorProperties.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    ART_FRAMEWORK_SERVICES_REGISTRY
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
+     lardataalg_DetectorInfo
+-    art::Utilities canvas
+-    ROOT_BASIC_LIB_LIST
++    ROOT::Core
+     cetlib::cetlib cetlib_except
+ )
+ 
+ cet_test(test_LArProperties SOURCES test_LArProperties.cxx
+   LIBRARIES
+-    dunecore_ArtSupport
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    art::Utilities canvas
+-    ROOT_BASIC_LIB_LIST
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
++    ROOT::Core
+     cetlib::cetlib cetlib_except
+ )
+ 
+ cet_test(test_LArSeedService SOURCES test_LArSeedService.cxx
+   LIBRARIES
+     nurandom::RandomUtils_NuRandomService_service
+-    dunecore_ArtSupport
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    art::Utilities canvas
+-    ROOT_BASIC_LIB_LIST
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
++    ROOT::Core
+     cetlib::cetlib cetlib_except
+ )
+ 
+ cet_test(test_SignalShapingServiceDUNE SOURCES test_SignalShapingServiceDUNE.cxx
+   LIBRARIES
+     dunecore::SignalShapingServiceDUNE_service
+-    dunecore_ArtSupport
+-    ART_FRAMEWORK_SERVICES_REGISTRY
+-    art::Utilities canvas
+-    lardata_Utilities
+-    ROOT_BASIC_LIB_LIST
++    dunecore::ArtSupport
++    art::Framework_Services_Registry
++    lardata::Utilities
++    ROOT::Core
+     cetlib::cetlib cetlib_except
+ )
+ 
+diff --git a/test/Geometry/CMakeLists.txt b/test/Geometry/CMakeLists.txt
+index 69bd8af2..9e69beff 100644
+--- a/test/Geometry/CMakeLists.txt
++++ b/test/Geometry/CMakeLists.txt
+@@ -53,11 +53,11 @@ cet_test(geometry_crmchannelmapping_test
+             dunecore_Geometry
+             messagefacility::MF_MessageLogger
+             larcorealg::GeometryTestLib
+-            ART_FRAMEWORK_SERVICES_REGISTRY
++            art::Framework_Services_Registry
+             art::Utilities canvas
+-            ROOT_BASIC_LIB_LIST
++	    ROOT::Core
+             fhiclcpp::fhiclcpp
+-            cetlib::cetlib cetlib_except
++            cetlib::cetlib 
+   USE_BOOST_UNIT
+   DATAFILES test_geometry_dunedphase10kt.fcl
+   TEST_ARGS -- ./test_geometry_dunedphase10kt.fcl
 diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
 deleted file mode 100644
-index fe33cc7..0000000
+index fe33cc71..00000000
 --- a/ups/CMakeLists.txt
 +++ /dev/null
 @@ -1,6 +0,0 @@
@@ -194,7 +298,7 @@ index fe33cc7..0000000
 -cet_cmake_config()
 diff --git a/ups/product-config.cmake.in b/ups/product-config.cmake.in
 deleted file mode 100644
-index 4e22a3b..0000000
+index 4e22a3b3..00000000
 --- a/ups/product-config.cmake.in
 +++ /dev/null
 @@ -1,12 +0,0 @@
@@ -211,7 +315,7 @@ index 4e22a3b..0000000
 -check_required_components(@product@)
 -
 diff --git a/ups/product_deps b/ups/product_deps
-index f804b0a..4a717b4 100644
+index f804b0a4..4a717b42 100644
 --- a/ups/product_deps
 +++ b/ups/product_deps
 @@ -1,23 +1,322 @@
@@ -594,7 +698,7 @@ index f804b0a..4a717b4 100644
 +# vi:set ts=8 noexpandtab:
 diff --git a/ups/setup_deps b/ups/setup_deps
 deleted file mode 100644
-index 72c2e32..0000000
+index 72c2e321..00000000
 --- a/ups/setup_deps
 +++ /dev/null
 @@ -1,89 +0,0 @@
@@ -688,7 +792,7 @@ index 72c2e32..0000000
 -unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail
 -unset set_ setenv unsetenv_ tnotnull nullout vecho_
 diff --git a/ups/setup_for_development b/ups/setup_for_development
-index 8c5bedf..e46765f 100644
+index 8c5bedf1..e46765f5 100644
 --- a/ups/setup_for_development
 +++ b/ups/setup_for_development
 @@ -1,96 +1,260 @@

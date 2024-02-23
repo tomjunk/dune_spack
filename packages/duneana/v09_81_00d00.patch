@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e55fda5..6e725d3 100644
+index e55fda5..ad3f07d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,14 +4,15 @@
@@ -60,7 +60,7 @@ index e55fda5..6e725d3 100644
 +find_package( larsim REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larsim ...) -> find_package(larsim REQUIRED ...)
 +find_package( larevt REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larevt ...) -> find_package(larevt REQUIRED ...)
 +find_package( larpandora REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larpandora ...) -> find_package(larpandora REQUIRED ...)
-+find_package( srproxy REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(srproxy ...) -> find_package(srproxy REQUIRED ...)
++#find_package( srproxy REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(srproxy ...) -> find_package(srproxy REQUIRED ...)
 +find_package( systematicstools REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(systematicstools ...) -> find_package(systematicstools REQUIRED ...)
  find_package(GENIE REQUIRED EXPORT)
  #find_ups_product( dunepdlegacy )
@@ -78,37 +78,115 @@ index e55fda5..6e725d3 100644
 -include(UseCPack)
 +cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
 diff --git a/duneana/AnaTree/CMakeLists.txt b/duneana/AnaTree/CMakeLists.txt
-index 21edbb1..f7a8a54 100644
+index 21edbb1..c1b496c 100644
 --- a/duneana/AnaTree/CMakeLists.txt
 +++ b/duneana/AnaTree/CMakeLists.txt
-@@ -36,7 +36,7 @@ art_make( MODULE_LIBRARIES
-           ROOT_XMLIO
-           ROOT_GDML
- 	  ROOT_BASIC_LIB_LIST
+@@ -20,23 +20,23 @@ art_make( MODULE_LIBRARIES
+ 	  dunecore::SignalShapingServiceDUNE10kt_service
+ 	  dunecore::SignalShapingServiceDUNE35t_service
+           nusimdata::SimulationBase
+-          ART_FRAMEWORK_CORE
+-	  ART_FRAMEWORK_PRINCIPAL
+-	  ART_FRAMEWORK_SERVICES_REGISTRY
+-	  ART_ROOT_IO_TFILE_SUPPORT
++          art::Framework_Core
++	  art::Framework_Principal
++	  art::Framework_Services_Registry
++	  art_root_io::tfile_support
+ 	  ROOT::Core
+-	  ART_ROOT_IO_TFILESERVICE_SERVICE
++	  art_root_io::TFileService_service
+ 	  art::Persistency_Common canvas
+ 	  art::Persistency_Provenance canvas
+ 	  art::Utilities canvas
+ 	  messagefacility::MF_MessageLogger
+ 	  fhiclcpp::fhiclcpp
+ 	  cetlib::cetlib cetlib_except
+-          ROOT_GEOM
+-          ROOT_XMLIO
+-          ROOT_GDML
+-	  ROOT_BASIC_LIB_LIST
 -        )
++          ROOT::Geom
++          ROOT::XMLIO
++          ROOT::Gdml
++	  ROOT::Core ROOT::Hist ROOT::Tree
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/duneana/CAFMaker/CMakeLists.txt b/duneana/CAFMaker/CMakeLists.txt
-index 9e698ce..92901c0 100644
+index 9e698ce..2e1b70b 100644
 --- a/duneana/CAFMaker/CMakeLists.txt
 +++ b/duneana/CAFMaker/CMakeLists.txt
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,4 @@
 -include_directories ( $ENV{GENIE_INC}/GENIE )
-+include_directories ( $ENV{GENIE_INC}/GENIE ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
- 
+-
++if( DEFINED ENV{TENSORFLOW_DIR} )
  # nusystematics
  ##cet_find_library( SYSTTOOLS NAMES systematicstools_interface systematicstools_interpreters systematicstools_utility PATHS ENV SYSTEMATICSTOOLS_LIB NO_DEFAULT_PATH )
+ 
+@@ -9,18 +8,18 @@ cet_build_plugin(CAFMaker   art::module
+                         nugen::NuReweight
+                         nugen::NuReweight_art
+ 			nusimdata::SimulationBase
+-                        ART_FRAMEWORK_CORE
+-                        ART_FRAMEWORK_PRINCIPAL
+-                        ART_FRAMEWORK_SERVICES_REGISTRY
+-                        ART_ROOT_IO_TFILE_SUPPORT
++                        art::Framework_Core
++                        art::Framework_Principal
++                        art::Framework_Services_Registry
++                        art_root_io::tfile_support
+                         ROOT::Core
+-                        ART_ROOT_IO_TFILESERVICE_SERVICE
++                        art_root_io::TFileService_service
+                         art::Persistency_Common canvas
+                         art::Persistency_Provenance canvas
+                         art::Utilities canvas
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Hist ROOT::Tree
+ 			${GENIE_LIB_LIST}
+                         systematicstools::interface
+ 			systematicstools::interpreters
+@@ -28,6 +27,7 @@ cet_build_plugin(CAFMaker   art::module
+                         dunereco::CVN_func
+               BASENAME_ONLY
+ )
++endif()
+ 
+ install_headers()
+ install_fhicl()
 diff --git a/duneana/DAQSimAna/AbsRunningSumHitFinder/CMakeLists.txt b/duneana/DAQSimAna/AbsRunningSumHitFinder/CMakeLists.txt
 old mode 100755
 new mode 100644
-index d107b53..27f77e8
+index d107b53..7ca5ff5
 --- a/duneana/DAQSimAna/AbsRunningSumHitFinder/CMakeLists.txt
 +++ b/duneana/DAQSimAna/AbsRunningSumHitFinder/CMakeLists.txt
-@@ -28,7 +28,7 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+@@ -15,20 +15,20 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+   larsim::Simulation nug4::ParticleNavigation lardataobj_Simulation
+   lardata::ArtDataHelper
+   nusimdata::SimulationBase	
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
    cetlib::cetlib cetlib_except
-   ROOT_BASIC_LIB_LIST
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
    EXCLUDE read_packed.cxx AbsRunningSumTPFinderPass1_tool.cc
 -  )
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
@@ -116,12 +194,31 @@ index d107b53..27f77e8
  cet_build_plugin(AbsRunningSumTPFinderPass1 art::tool
    fhiclcpp cetlib::cetlib cetlib_except
 diff --git a/duneana/DAQSimAna/CMakeLists.txt b/duneana/DAQSimAna/CMakeLists.txt
-index 0bab6cb..a1bc8e4 100644
+index 0bab6cb..a778811 100644
 --- a/duneana/DAQSimAna/CMakeLists.txt
 +++ b/duneana/DAQSimAna/CMakeLists.txt
-@@ -33,7 +33,7 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+@@ -20,20 +20,20 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+   larsim::Simulation nug4::ParticleNavigation lardataobj_Simulation
+   lardata::ArtDataHelper
+   nusimdata::SimulationBase	
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
    cetlib::cetlib cetlib_except
-   ROOT_BASIC_LIB_LIST
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
    EXCLUDE read_packed.cxx TriggerPrimitiveFinderPass1_tool.cc TriggerPrimitiveFinderPass2_tool.cc TriggerPrimitiveFinderTemplate_tool.cc
 -  )
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
@@ -129,12 +226,31 @@ index 0bab6cb..a1bc8e4 100644
  cet_build_plugin(TriggerPrimitiveFinderPass1 art::tool
    fhiclcpp cetlib::cetlib cetlib_except
 diff --git a/duneana/DAQSimAna/RunningSumHitFinder/CMakeLists.txt b/duneana/DAQSimAna/RunningSumHitFinder/CMakeLists.txt
-index 91509f4..c3f12c4 100644
+index 91509f4..c8f7518 100644
 --- a/duneana/DAQSimAna/RunningSumHitFinder/CMakeLists.txt
 +++ b/duneana/DAQSimAna/RunningSumHitFinder/CMakeLists.txt
-@@ -28,7 +28,7 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+@@ -15,20 +15,20 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+   larsim::Simulation nug4::ParticleNavigation lardataobj_Simulation
+   lardata::ArtDataHelper
+   nusimdata::SimulationBase	
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
    cetlib::cetlib cetlib_except
-   ROOT_BASIC_LIB_LIST
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
    EXCLUDE read_packed.cxx RunningSumTPFinderPass1_tool.cc RunningSumTPFinderPass2_tool.cc RunningSumTPFinderPass3_tool.cc RunningSumTPFinderPass4_tool.cc
 -  )
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
@@ -142,18 +258,142 @@ index 91509f4..c3f12c4 100644
  cet_build_plugin(RunningSumTPFinderPass1 art::tool
    fhiclcpp cetlib::cetlib cetlib_except
 diff --git a/duneana/DAQSimAna/SNAnaClustering/CMakeLists.txt b/duneana/DAQSimAna/SNAnaClustering/CMakeLists.txt
-index 813488f..629355e 100644
+index 813488f..0ff4d78 100644
 --- a/duneana/DAQSimAna/SNAnaClustering/CMakeLists.txt
 +++ b/duneana/DAQSimAna/SNAnaClustering/CMakeLists.txt
-@@ -24,7 +24,7 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
-   ROOT_GEOM
+@@ -11,20 +11,20 @@ art_make( BASENAME_ONLY MODULE_LIBRARIES
+   nug4::ParticleNavigation
+   lardataobj::Simulation
+   nusimdata::SimulationBase	
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
+-  ROOT_GEOM
++  ROOT::Geom
    cetlib::cetlib cetlib_except
-   ROOT_BASIC_LIB_LIST
+-  ROOT_BASIC_LIB_LIST
 -  )
++  ROOT::Core ROOT::Hist ROOT::Tree
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_fhicl()
  install_headers()
+diff --git a/duneana/EnergyStudies/CMakeLists.txt b/duneana/EnergyStudies/CMakeLists.txt
+index d6dd459..2ab1877 100644
+--- a/duneana/EnergyStudies/CMakeLists.txt
++++ b/duneana/EnergyStudies/CMakeLists.txt
+@@ -4,18 +4,18 @@ cet_build_plugin(dunezsanalysis art::module
+   larcorealg::Geometry
+   lardataobj::RawData
+   nusimdata::SimulationBase
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
+   BASENAME_ONLY
+   )
+ 
+@@ -29,18 +29,18 @@ cet_build_plugin(dEdx art::module
+   nug4::ParticleNavigation 
+   lardataobj::Simulation
+   nusimdata::SimulationBase
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
+   BASENAME_ONLY
+   )
+ 
+@@ -57,18 +57,18 @@ cet_build_plugin(EMEnergyCalib art::module
+   lardataobj::Simulation
+   lardata::Utilities
+   nusimdata::SimulationBase
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
+   BASENAME_ONLY
+   )
+ 
+@@ -82,18 +82,18 @@ cet_build_plugin(EMPi0Energy art::module
+   larsim::Simulation nug4::ParticleNavigation lardataobj_Simulation
+   lardata::Utilities
+   nusimdata::SimulationBase
+-  ART_FRAMEWORK_CORE
+-  ART_FRAMEWORK_PRINCIPAL
+-  ART_FRAMEWORK_SERVICES_REGISTRY
+-  ART_ROOT_IO_TFILE_SUPPORT
++  art::Framework_Core
++  art::Framework_Principal
++  art::Framework_Services_Registry
++  art_root_io::tfile_support
+   ROOT::Core
+-  ART_ROOT_IO_TFILESERVICE_SERVICE
++  art_root_io::TFileService_service
+   art::Persistency_Common canvas
+   art::Persistency_Provenance canvas
+   art::Utilities canvas
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib cetlib_except
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Hist ROOT::Tree
+   BASENAME_ONLY
+   )
+ 
 diff --git a/duneana/EventDisplay3D/CMakeLists.txt b/duneana/EventDisplay3D/CMakeLists.txt
 index 03ff20b..73b5fc6 100644
 --- a/duneana/EventDisplay3D/CMakeLists.txt
@@ -173,93 +413,328 @@ index 03ff20b..73b5fc6 100644
  
  install_headers()
  install_fhicl()
+diff --git a/duneana/EventFilters/CMakeLists.txt b/duneana/EventFilters/CMakeLists.txt
+index 4e25c88..fac21d0 100644
+--- a/duneana/EventFilters/CMakeLists.txt
++++ b/duneana/EventFilters/CMakeLists.txt
+@@ -6,22 +6,22 @@ cet_build_plugin(DuneEventFilter art::module
+ 	                larcorealg::Geometry
+ 	                larcore::Geometry_Geometry_service
+                         lardata::Utilities    
+-                        ART_FRAMEWORK_CORE
+-			ART_FRAMEWORK_PRINCIPAL
+-			ART_FRAMEWORK_SERVICES_REGISTRY
+-			ART_ROOT_IO_TFILE_SUPPORT
++                        art::Framework_Core
++			art::Framework_Principal
++			art::Framework_Services_Registry
++			art_root_io::tfile_support
+ 			ROOT::Core
+-			ART_ROOT_IO_TFILESERVICE_SERVICE
++			art_root_io::TFileService_service
+ 			art::Persistency_Common canvas
+ 			art::Persistency_Provenance canvas
+ 			art::Utilities canvas
+ 			messagefacility::MF_MessageLogger
+ 	                fhiclcpp::fhiclcpp
+ 			cetlib::cetlib cetlib_except
+-                        ROOT_GEOM
+-                        ROOT_XMLIO
+-                        ROOT_GDML
+-			ROOT_BASIC_LIB_LIST
++                        ROOT::Geom
++                        ROOT::XMLIO
++                        ROOT::Gdml
++			ROOT::Core ROOT::Hist ROOT::Tree
+               BASENAME_ONLY
+ )
+ 
 diff --git a/duneana/HitAnalysis/CMakeLists.txt b/duneana/HitAnalysis/CMakeLists.txt
-index 8cf6ae9..899422d 100644
+index 8cf6ae9..be7f6f2 100644
 --- a/duneana/HitAnalysis/CMakeLists.txt
 +++ b/duneana/HitAnalysis/CMakeLists.txt
-@@ -23,7 +23,7 @@ art_make(BASENAME_ONLY
+@@ -11,19 +11,19 @@ art_make(BASENAME_ONLY
+ 	 larsim::MCCheater_BackTrackerService_service
+          larsim::MCCheater_ParticleInventoryService_service
+ 	 dunereco::HitFinderDUNE
+-         ART_FRAMEWORK_CORE
+-	 ART_FRAMEWORK_PRINCIPAL
+-	 ART_FRAMEWORK_SERVICES_REGISTRY
+-         ART_ROOT_IO_TFILE_SUPPORT
++         art::Framework_Core
++	 art::Framework_Principal
++	 art::Framework_Services_Registry
++         art_root_io::tfile_support
+          ROOT::Core
+-         ART_ROOT_IO_TFILESERVICE_SERVICE
++         art_root_io::TFileService_service
+  	 art::Persistency_Common canvas
+ 	 art::Persistency_Provenance canvas
+ 	 art::Utilities canvas
  	 messagefacility::MF_MessageLogger	 
  	 cetlib::cetlib cetlib_except
- 	 ROOT_BASIC_LIB_LIST
+-	 ROOT_BASIC_LIB_LIST
 -)
++	 ROOT::Core ROOT::Hist ROOT::Tree
 +) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/duneana/PandoraAnalysis/CMakeLists.txt b/duneana/PandoraAnalysis/CMakeLists.txt
-index 0b8f71e..12221ea 100644
+index 0b8f71e..159ed29 100644
 --- a/duneana/PandoraAnalysis/CMakeLists.txt
 +++ b/duneana/PandoraAnalysis/CMakeLists.txt
-@@ -35,7 +35,7 @@ art_make( MODULE_LIBRARIES
-           ROOT_XMLIO
-           ROOT_GDML
- 	  ROOT_BASIC_LIB_LIST
+@@ -19,23 +19,23 @@ art_make( MODULE_LIBRARIES
+ 	  dunecore::SignalShapingServiceDUNE35t_service
+           nusimdata::SimulationBase
+ 	  dunereco::AnaUtils
+-          ART_FRAMEWORK_CORE
+-	  ART_FRAMEWORK_PRINCIPAL
+-	  ART_FRAMEWORK_SERVICES_REGISTRY
+-	  ART_ROOT_IO_TFILE_SUPPORT
++          art::Framework_Core
++	  art::Framework_Principal
++	  art::Framework_Services_Registry
++	  art_root_io::tfile_support
+ 	  ROOT::Core
+-	  ART_ROOT_IO_TFILESERVICE_SERVICE
++	  art_root_io::TFileService_service
+ 	  art::Persistency_Common canvas
+ 	  art::Persistency_Provenance canvas
+ 	  art::Utilities canvas
+ 	  messagefacility::MF_MessageLogger
+ 	  fhiclcpp::fhiclcpp
+ 	  cetlib::cetlib cetlib_except
+-          ROOT_GEOM
+-          ROOT_XMLIO
+-          ROOT_GDML
+-	  ROOT_BASIC_LIB_LIST
 -        )
++          ROOT::Geom
++          ROOT::XMLIO
++          ROOT::Gdml
++	  ROOT::Core ROOT::Hist ROOT::Tree
 +        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/duneana/ProductFilters/CMakeLists.txt b/duneana/ProductFilters/CMakeLists.txt
-index 6b0b63c..6a56023 100644
+index 6b0b63c..ceb68e9 100644
 --- a/duneana/ProductFilters/CMakeLists.txt
 +++ b/duneana/ProductFilters/CMakeLists.txt
-@@ -25,7 +25,7 @@ art_make( BASENAME_ONLY
+@@ -10,12 +10,12 @@ art_make( BASENAME_ONLY
+          lardata::Utilities
+ 	 nurandom::RandomUtils_NuRandomService_service
+ 	 nusimdata::SimulationBase
+- 	 ART_FRAMEWORK_CORE
+-	 ART_FRAMEWORK_PRINCIPAL
+-	 ART_FRAMEWORK_SERVICES_REGISTRY
+-	 ART_ROOT_IO_TFILE_SUPPORT
++ 	 art::Framework_Core
++	 art::Framework_Principal
++	 art::Framework_Services_Registry
++	 art_root_io::tfile_support
+ 	 ROOT::Core
+-	 ART_ROOT_IO_TFILESERVICE_SERVICE
++	 art_root_io::TFileService_service
+ 	 art::Persistency_Common canvas
+ 	 art::Utilities 
+ 	 canvas
+@@ -23,9 +23,9 @@ art_make( BASENAME_ONLY
+ 	 fhiclcpp::fhiclcpp
+ 	 cetlib::cetlib 
  	 cetlib_except
-          ROOT_BASIC_LIB_LIST
-          ROOT_GEOM
+-         ROOT_BASIC_LIB_LIST
+-         ROOT_GEOM
 -         )
++         ROOT::Core ROOT::Hist ROOT::Tree
++         ROOT::Geom
 +         ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
+diff --git a/duneana/ShowerAna/CMakeLists.txt b/duneana/ShowerAna/CMakeLists.txt
+index fdaf05a..989ea6a 100644
+--- a/duneana/ShowerAna/CMakeLists.txt
++++ b/duneana/ShowerAna/CMakeLists.txt
+@@ -9,12 +9,12 @@ cet_build_plugin(ShowerAnalysis art::module
+ 			     larsim::MCCheater_BackTrackerService_service
+                              larsim::MCCheater_ParticleInventoryService_service
+ 			     nusimdata::SimulationBase
+-                             ART_FRAMEWORK_CORE
+-			     ART_FRAMEWORK_PRINCIPAL
+-			     ART_FRAMEWORK_SERVICES_REGISTRY
+-                             ART_ROOT_IO_TFILE_SUPPORT
++                             art::Framework_Core
++			     art::Framework_Principal
++			     art::Framework_Services_Registry
++                             art_root_io::tfile_support
+                              ROOT::Core
+-                             ART_ROOT_IO_TFILESERVICE_SERVICE
++                             art_root_io::TFileService_service
+  			     art::Persistency_Common 
+ 			     art::Persistency_Provenance 
+ 			     art::Utilities 
+@@ -22,7 +22,7 @@ cet_build_plugin(ShowerAnalysis art::module
+ 			     messagefacility::MF_MessageLogger
+ 			     cetlib::cetlib 
+ 			     cetlib_except
+-			     ROOT_BASIC_LIB_LIST
++			     ROOT::Core ROOT::Hist ROOT::Tree
+ )
+ 
+ 
+@@ -52,7 +52,7 @@ install_scripts()
+ # 	 	       ${messagefacility::MF_MessageLogger}
+ # 	 	       
+ # 	 	       cetlib::cetlib cetlib_except
+-# 	 	       ROOT_BASIC_LIB_LIST
++# 	 	       ROOT::Core ROOT::Hist ROOT::Tree
+ # 		       ShowerAna
+ # )
+ 
 diff --git a/duneana/SolarNuAna/CMakeLists.txt b/duneana/SolarNuAna/CMakeLists.txt
-index f21f289..84ced43 100644
+index f21f289..a488c21 100644
 --- a/duneana/SolarNuAna/CMakeLists.txt
 +++ b/duneana/SolarNuAna/CMakeLists.txt
-@@ -28,7 +28,7 @@ art_make(BASENAME_ONLY
+@@ -11,24 +11,23 @@ art_make(BASENAME_ONLY
+          larsim::MCCheater_PhotonBackTrackerService_service
+          larsim::MCCheater_ParticleInventoryService_service
+          nug4::ParticleNavigation
+-         ART_FRAMEWORK_CORE
+-         ART_FRAMEWORK_PRINCIPAL
+-         ART_FRAMEWORK_SERVICES_REGISTRY
+-         ART_ROOT_IO_TFILE_SUPPORT
++         art::Framework_Core
++         art::Framework_Principal
++         art::Framework_Services_Registry
++         art_root_io::tfile_support
+          ROOT::Core
+-         ART_ROOT_IO_TFILESERVICE_SERVICE
++         art_root_io::TFileService_service
+          art::Persistency_Common
+          art::Persistency_Provenance
+          art::Utilities 
+ 	 canvas
+-         ART_PERSISTENCY_COMMON
+-         ART_PERSISTENCY_PROVENANCE
+-         ART_UTILITIES
++         art::Persistency_Common
++         art::Persistency_Provenance
+          messagefacility::MF_MessageLogger
           cetlib::cetlib 
  	 cetlib_except
-          ROOT_BASIC_LIB_LIST
+-         ROOT_BASIC_LIB_LIST
 -         )
++         ROOT::Core ROOT::Hist ROOT::Tree
 +         ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_fhicl()
  install_headers()
 diff --git a/duneana/SupernovaAna/CMakeLists.txt b/duneana/SupernovaAna/CMakeLists.txt
-index 4d14ac1..08388ac 100644
+index 4d14ac1..bc42c6a 100644
 --- a/duneana/SupernovaAna/CMakeLists.txt
 +++ b/duneana/SupernovaAna/CMakeLists.txt
-@@ -22,7 +22,7 @@ art_make(BASENAME_ONLY
+@@ -5,24 +5,23 @@ art_make(BASENAME_ONLY
+          larcorealg::Geometry
+          lardataobj::RawData
+          nusimdata::SimulationBase
+-         ART_FRAMEWORK_CORE
+-         ART_FRAMEWORK_PRINCIPAL
+-         ART_FRAMEWORK_SERVICES_REGISTRY
+-         ART_ROOT_IO_TFILE_SUPPORT
++         art::Framework_Core
++         art::Framework_Principal
++         art::Framework_Services_Registry
++         art_root_io::tfile_support
+          ROOT::Core
+-         ART_ROOT_IO_TFILESERVICE_SERVICE
++         art_root_io::TFileService_service
+          art::Persistency_Common
+          art::Persistency_Provenance
+          art::Utilities 
+ 	 canvas
+-         ART_PERSISTENCY_COMMON
+-         ART_PERSISTENCY_PROVENANCE
+-         ART_UTILITIES
++         art::Persistency_Common
++         art::Persistency_Provenance
+          messagefacility::MF_MessageLogger
           cetlib::cetlib 
  	 cetlib_except
-          ROOT_BASIC_LIB_LIST
+-         ROOT_BASIC_LIB_LIST
 -         )
++         ROOT::Core ROOT::Hist ROOT::Tree
 +         ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_fhicl()
  install_headers()
 diff --git a/duneana/TrackingAna/CMakeLists.txt b/duneana/TrackingAna/CMakeLists.txt
-index ce79834..1223ec3 100644
+index ce79834..a2f2d0f 100644
 --- a/duneana/TrackingAna/CMakeLists.txt
 +++ b/duneana/TrackingAna/CMakeLists.txt
-@@ -22,7 +22,7 @@ art_make(BASENAME_ONLY
+@@ -9,20 +9,20 @@ art_make(BASENAME_ONLY
+ 	 larsim::MCCheater_BackTrackerService_service
+ 	 larsim::MCCheater_ParticleInventoryService_service
+ 	 nusimdata::SimulationBase
+-	 ART_FRAMEWORK_CORE
+-	 ART_FRAMEWORK_PRINCIPAL
+-	 ART_FRAMEWORK_SERVICES_REGISTRY
+-	 ART_ROOT_IO_TFILE_SUPPORT
++	 art::Framework_Core
++	 art::Framework_Principal
++	 art::Framework_Services_Registry
++	 art_root_io::tfile_support
+ 	 ROOT::Core
+-	 ART_ROOT_IO_TFILESERVICE_SERVICE
++	 art_root_io::TFileService_service
+ 	 art::Persistency_Common canvas
+ 	 art::Persistency_Provenance canvas
+ 	 art::Utilities canvas
+ 	 messagefacility::MF_MessageLogger
  	 cetlib::cetlib cetlib_except
- 	 ROOT_BASIC_LIB_LIST
- 	 ROOT_GEOM
+-	 ROOT_BASIC_LIB_LIST
+-	 ROOT_GEOM
 -)
++	 ROOT::Core ROOT::Hist ROOT::Tree
++	 ROOT::Geom
 +) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/duneana/WireClusterAnalysis/CMakeLists.txt b/duneana/WireClusterAnalysis/CMakeLists.txt
-index de54615..3b3c68b 100644
+index de54615..bff0221 100644
 --- a/duneana/WireClusterAnalysis/CMakeLists.txt
 +++ b/duneana/WireClusterAnalysis/CMakeLists.txt
-@@ -28,7 +28,7 @@ art_make(BASENAME_ONLY
- 
+@@ -12,23 +12,21 @@ art_make(BASENAME_ONLY
+          larsim_MCCheater_BackTrackerService_service
+          larsim_MCCheater_ParticleInventoryService_service
+          dunereco::HitFinderDUNE
+-         ART_FRAMEWORK_CORE
+-         ART_FRAMEWORK_PRINCIPAL
+-         ART_FRAMEWORK_SERVICES_REGISTRY
+-         ART_ROOT_IO_TFILE_SUPPORT
++         art::Framework_Core
++         art::Framework_Principal
++         art::Framework_Services_Registry
++         art_root_io::tfile_support
+          ROOT::Core
+-         ART_ROOT_IO_TFILESERVICE_SERVICE
++         art_root_io::TFileService_service
+          art::Persistency_Common canvas
+          art::Persistency_Provenance canvas
+          art::Utilities canvas
+          messagefacility::MF_MessageLogger	 
+-         ART_PERSISTENCY_COMMON
+-         ART_PERSISTENCY_PROVENANCE
+-         ART_UTILITIES
+-
++         art::Persistency_Common
++         art::Persistency_Provenance
           cetlib::cetlib cetlib_except
-          ROOT_BASIC_LIB_LIST
+-         ROOT_BASIC_LIB_LIST
 -)
++         ROOT::Core ROOT::Hist ROOT::Tree
 +) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()

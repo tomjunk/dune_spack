@@ -48,17 +48,21 @@ class Protoduneana(CMakePackage):
         description="Use the specified C++ standard when building.",
     )
 
-    patch('v09_81_00d00.patch', when='@1_01_00')
+    patch('v09_81_00d00.patch', when='@09_81_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("duneprototypes")
-    #depends_on("geant4reweight")
+    depends_on("geant4reweight")
+    depends_on("nusystematics")
+    depends_on("systematicstools")
+    depends_on("larfinder", type="build")
+    depends_on("nufinder", type="build")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
         args = [
             self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
+            self.define("CMAKE_MODULE_PATH", "%s/Modules;%s/Modules" %
+                       (self.spec['nufinder'].prefix, self.spec['larfinder'].prefix)),
         ] 
         return args
-

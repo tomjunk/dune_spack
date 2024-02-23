@@ -1,61 +1,146 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 047062d..a32bf59 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,13 +12,14 @@
+ #  make package (builds distribution tarfile)
+ # ======================================================================
+ 
+-cmake_minimum_required (VERSION 3.19 FATAL_ERROR)
++cmake_minimum_required (VERSION 3.20 FATAL_ERROR) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION 3.19 -> 3.20
++# cmake_policy(VERSION 3.19) ### MIGRATE-ACTION-COMPATIBILITY (migrate-3.22.02) - Uncomment to preserve compatibility with older CMake versions
+ 
+-project(protoduneana LANGUAGES CXX)
++find_package(cetmodules REQUIRED) ### MIGRATE-ADDED (migrate-3.22.02) - find_package(cetmodules) must precede project()
++project(protoduneana LANGUAGES CXX) ### MIGRATE-CHANGED (migrate-3.22.02) - VERSION -> set(CMAKE_PROJECT_VERSION_STRING ...)
+ set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 09.81.00d00)
+ 
+ # cetbuildtools contains our cmake modules
+-find_package(cetbuildtools REQUIRED)
+ 
+ include(CetCMakeEnv)
+ cet_cmake_env()
+@@ -32,59 +33,58 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
+   EXTRA_FLAGS -pedantic -Wno-unused-local-typedefs -Wno-expansion-to-defined
+ )
+ 
+-cet_report_compiler_flags()
++cet_report_compiler_flags() ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - add args: REPORT_THRESHOLD VERBOSE
+ 
+ # these are minimum required versions, not the actual product versions
+-find_ups_boost( ) # Needs to be first to cover for a missing transitive
++find_package( Boost REQUIRED ) # Needs to be first to cover for a missing transitive ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
+                   # dependency from artdaq_core.
+-find_ups_geant4( )
+-find_ups_root()
++find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
++find_package(ROOT REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
+ 
+-find_ups_product( dunecore )
+-find_ups_product( duneprototypes )
+-find_ups_product( dunecalib )
+-find_ups_product( duneopdet )
+-find_ups_product( dunesim )
+-find_ups_product( larcoreobj )
+-find_ups_product( larcore  )
+-find_ups_product( larevt )
+-find_ups_product( lardataobj )
+-find_ups_product( lardataalg )
+-find_ups_product( lardata  )
+-find_ups_product( larsim )
+-find_ups_product( larpandora  )
+-find_ups_product( pandora )
+-find_ups_product( larreco )
+-find_ups_product( larrecodnn )
+-find_ups_product( larana )
+-find_ups_product( nutools )
+-find_ups_product( nug4 )
+-find_ups_product( nugen )
+-find_ups_product( genie )
+-find_ups_product( nurandom )
+-find_ups_product( art )
+-find_ups_product( art_root_io)
+-find_ups_product( clhep )
+-find_ups_product( messagefacility )
+-find_ups_product( cetbuildtools )
+-find_ups_product( postgresql )
+-find_ups_product( dunepdlegacy )
+-find_ups_product( artdaq_core )
+-find_ups_product( TRACE )
+-find_ups_product( ifdh_art )
+-find_ups_product( ifdhc )
+-find_ups_product( systematicstools )
+-find_ups_product( nusystematics )
+-find_ups_product( geant4reweight )
+-find_ups_product( valgrind )
++find_package( dunecore REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunecore ...) -> find_package(dunecore REQUIRED ...)
++find_package( duneprototypes REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(duneprototypes ...) -> find_package(duneprototypes REQUIRED ...)
++find_package( dunecalib REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunecalib ...) -> find_package(dunecalib REQUIRED ...)
++find_package( duneopdet REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(duneopdet ...) -> find_package(duneopdet REQUIRED ...)
++find_package( dunesim REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunesim ...) -> find_package(dunesim REQUIRED ...)
++find_package( larcoreobj REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcoreobj ...) -> find_package(larcoreobj REQUIRED ...)
++find_package( larcore  REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larcore ...) -> find_package(larcore REQUIRED ...)
++find_package( larevt REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larevt ...) -> find_package(larevt REQUIRED ...)
++find_package( lardataobj REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataobj ...) -> find_package(lardataobj REQUIRED ...)
++find_package( lardataalg REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardataalg ...) -> find_package(lardataalg REQUIRED ...)
++find_package( lardata  REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lardata ...) -> find_package(lardata REQUIRED ...)
++find_package( larsim REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larsim ...) -> find_package(larsim REQUIRED ...)
++find_package( larpandora  REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larpandora ...) -> find_package(larpandora REQUIRED ...)
++#find_package( pandora REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(pandora ...) -> find_package(pandora REQUIRED ...)
++find_package( larreco REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larreco ...) -> find_package(larreco REQUIRED ...)
++find_package( larrecodnn REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larrecodnn ...) -> find_package(larrecodnn REQUIRED ...)
++find_package( larana REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larana ...) -> find_package(larana REQUIRED ...)
++find_package( nutools REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nutools ...) -> find_package(nutools REQUIRED ...)
++find_package( nug4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nug4 ...) -> find_package(nug4 REQUIRED ...)
++find_package( nugen REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nugen ...) -> find_package(nugen REQUIRED ...)
++find_package( GENIE REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(genie ...) -> find_package(genie REQUIRED ...)
++find_package( nurandom REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nurandom ...) -> find_package(nurandom REQUIRED ...)
++find_package( art REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art ...) -> find_package(art REQUIRED ...)
++find_package( art_root_io REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(art_root_io ...) -> find_package(art_root_io REQUIRED ...)
++find_package( CLHEP REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(clhep ...) -> find_package(clhep REQUIRED ...)
++find_package( messagefacility REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(messagefacility ...) -> find_package(messagefacility REQUIRED ...)
++find_package( PostgreSQL REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(postgresql ...) -> find_package(postgresql REQUIRED ...)
++find_package( dunepdlegacy REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(dunepdlegacy ...) -> find_package(dunepdlegacy REQUIRED ...)
++find_package( artdaq_core REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(artdaq_core ...) -> find_package(artdaq_core REQUIRED ...)
++find_package( TRACE REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(TRACE ...) -> find_package(TRACE REQUIRED ...)
++find_package( ifdh_art REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(ifdh_art ...) -> find_package(ifdh_art REQUIRED ...)
++find_package( ifdhc REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(ifdhc ...) -> find_package(ifdhc REQUIRED ...)
++find_package( systematicstools REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(systematicstools ...) -> find_package(systematicstools REQUIRED ...)
++find_package( nusystematics REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(nusystematics ...) -> find_package(nusystematics REQUIRED ...)
++find_package( geant4reweight REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(geant4reweight ...) -> find_package(geant4reweight REQUIRED ...)
++#find_package( valgrind REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(valgrind ...) -> find_package(valgrind REQUIRED ...)
+ #find_ups_product( canvas )
+ #find_ups_product( cetlib_except )
+ #find_ups_product( cetlib )
+ #find_ups_product( fhiclcpp )
+ 
+ if(DEFINED ENV{HEP_HPC_DIR} )
+-  find_ups_product( hdf5 )
+-  find_ups_product( hep_hpc )
++  find_package( hdf5 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(hdf5 ...) -> find_package(hdf5 REQUIRED ...)
++  find_package( hep_hpc REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(hep_hpc ...) -> find_package(hep_hpc REQUIRED ...)
+ endif()
+ 
+ # macros for dictionary and cet_build_plugin
+@@ -100,7 +100,6 @@ add_subdirectory(fcl)
+ #add_subdirectory(test)
+ 
+ # ups - table and config files
+-add_subdirectory(ups)
+ 
+ # packaging utility
+-include(UseCPack)
++cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
 diff --git a/CMakePresets.json b/CMakePresets.json
 new file mode 100644
-index 0000000..584b88e
+index 0000000..b0ac8f7
 --- /dev/null
 +++ b/CMakePresets.json
-@@ -0,0 +1,176 @@
+@@ -0,0 +1,128 @@
 +{
 +   "configurePresets" : [
 +      {
 +         "cacheVariables" : {
-+            "CETB_COMPAT_bin_dir" : {
-+               "type" : "STRING",
-+               "value" : "BIN_DIR"
-+            },
-+            "CETB_COMPAT_cmakemodule_dir" : {
-+               "type" : "STRING",
-+               "value" : "CMAKE_MODULES_DIR"
-+            },
-+            "CETB_COMPAT_fcl_dir" : {
-+               "type" : "STRING",
-+               "value" : "FHICL_DIR"
-+            },
-+            "CETB_COMPAT_fw_dir" : {
-+               "type" : "STRING",
-+               "value" : "FW_DIR"
-+            },
-+            "CETB_COMPAT_gdml_dir" : {
-+               "type" : "STRING",
-+               "value" : "GDML_DIR"
-+            },
-+            "CETB_COMPAT_inc_dir" : {
-+               "type" : "STRING",
-+               "value" : "INCLUDE_DIR"
-+            },
-+            "CETB_COMPAT_lib_dir" : {
-+               "type" : "STRING",
-+               "value" : "LIBRARY_DIR"
-+            },
-+            "CETB_COMPAT_perllib" : {
-+               "type" : "STRING",
-+               "value" : "PERLLIB_DIR"
-+            },
-+            "CETB_COMPAT_set_fw_dir" : {
-+               "type" : "STRING",
-+               "value" : "FW_SEARCH_PATH"
-+            },
-+            "CETB_COMPAT_set_wp_dir" : {
-+               "type" : "STRING",
-+               "value" : "WIRECELL_PATH"
-+            },
-+            "CETB_COMPAT_test_dir" : {
-+               "type" : "STRING",
-+               "value" : "TEST_DIR"
-+            },
-+            "CETB_COMPAT_wp_dir" : {
-+               "type" : "STRING",
-+               "value" : "WP_DIR"
-+            },
 +            "CMAKE_BUILD_TYPE" : {
 +               "type" : "STRING",
 +               "value" : "RelWithDebInfo"
@@ -142,7 +227,7 @@ index 0000000..584b88e
 +            },
 +            "protoduneana_UPS_BUILD_ONLY_DEPENDENCIES_INIT" : {
 +               "type" : "STRING",
-+               "value" : "cetbuildtools"
++               "value" : "cetmodules"
 +            },
 +            "protoduneana_UPS_PRODUCT_FLAVOR_INIT" : {
 +               "type" : "STRING",
@@ -180,3 +265,1810 @@ index 0000000..584b88e
 +   ],
 +   "version" : 3
 +}
+diff --git a/protoduneana/DataDump/CMakeLists.txt b/protoduneana/DataDump/CMakeLists.txt
+index db9c69a..2703dcd 100644
+--- a/protoduneana/DataDump/CMakeLists.txt
++++ b/protoduneana/DataDump/CMakeLists.txt
+@@ -23,8 +23,8 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
+-  )
++  ROOT::Core ROOT::Tree ROOT::Hist
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ if(DEFINED ENV{HEP_HPC_DIR})
+   add_subdirectory(hdf)
+ endif()
+diff --git a/protoduneana/DataDump/hdf/CMakeLists.txt b/protoduneana/DataDump/hdf/CMakeLists.txt
+index 0956441..e50a232 100644
+--- a/protoduneana/DataDump/hdf/CMakeLists.txt
++++ b/protoduneana/DataDump/hdf/CMakeLists.txt
+@@ -21,10 +21,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   hep_hpc_hdf5
+   ${HDF5_LIBRARIES}
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/protoduneana/EventGenerator/CMakeLists.txt b/protoduneana/EventGenerator/CMakeLists.txt
+index 952e3ca..a226d2f 100644
+--- a/protoduneana/EventGenerator/CMakeLists.txt
++++ b/protoduneana/EventGenerator/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ 
+-include_directories( $ENV{IFDHC_FQ_DIR}/inc )
+-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
++include_directories( $ENV{IFDHC_FQ_DIR}/inc ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ art_make( BASENAME_ONLY
+           MODULE_LIBRARIES 
+ 	  dunesim::EventGenerator_ProtoDUNEbeamDataProducts
+@@ -25,7 +25,7 @@ art_make( BASENAME_ONLY
+           cetlib::cetlib 
+ 	  cetlib_except::cetlib_except
+           ${CLHEP}
+-          ROOT_BASIC_LIB_LIST
++          ROOT::Core ROOT::Tree ROOT::Hist
+           ${SQLITE3}
+           ${ROOT_EG}
+           ifdh::ifdh 
+@@ -34,7 +34,7 @@ art_make( BASENAME_ONLY
+           art_root_io::tfile_support
+ 	  ROOT::Core
+           art_root_io::TFileService_service
+- )
++ ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ 
+ install_headers()
+diff --git a/protoduneana/PhysicsWeek/CMakeLists.txt b/protoduneana/PhysicsWeek/CMakeLists.txt
+index 01f8ddb..4c9b7a7 100644
+--- a/protoduneana/PhysicsWeek/CMakeLists.txt
++++ b/protoduneana/PhysicsWeek/CMakeLists.txt
+@@ -16,7 +16,7 @@ cet_build_plugin(MichelHitCounter art::module
+               art::Persistency_Provenance
+               messagefacility::MF_MessageLogger
+               cetlib::cetlib
+-              ROOT_BASIC_LIB_LIST
++              ROOT::Core ROOT::Tree ROOT::Hist
+               BASENAME_ONLY
+ )
+ 
+@@ -38,7 +38,7 @@ cet_build_plugin(VtxScore art::module
+               art::Persistency_Provenance
+               messagefacility::MF_MessageLogger
+               cetlib::cetlib
+-              ROOT_BASIC_LIB_LIST
++              ROOT::Core ROOT::Tree ROOT::Hist
+               BASENAME_ONLY
+ )
+ 
+@@ -56,12 +56,12 @@ cet_build_plugin(MichelEventSelection art::module
+               art::Framework_Principal
+               art::Framework_Services_Registry
+               art_root_io::tfile_support
+-              ROOT::Core
++	      ROOT::Gpad
+               art_root_io::TFileService_service
+               art::Persistency_Provenance
+               messagefacility::MF_MessageLogger
+               cetlib::cetlib
+-              ROOT_BASIC_LIB_LIST
++              ROOT::Core ROOT::Tree ROOT::Hist
+               BASENAME_ONLY
+ )
+ 
+diff --git a/protoduneana/TutorialExamples/CMakeLists.txt b/protoduneana/TutorialExamples/CMakeLists.txt
+index 54f04b6..8366e9c 100644
+--- a/protoduneana/TutorialExamples/CMakeLists.txt
++++ b/protoduneana/TutorialExamples/CMakeLists.txt
+@@ -6,7 +6,7 @@ cet_build_plugin(ClusterCounter art::module
+                         ROOT::Core
+                         art_root_io::TFileService_service
+ 			messagefacility::MF_MessageLogger
+-			ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Tree ROOT::Hist
+ 			BASENAME_ONLY
+ )
+ 
+@@ -19,7 +19,7 @@ cet_build_plugin(ClusterCounter2 art::module
+                         ROOT::Core
+                         art_root_io::TFileService_service
+ 			messagefacility::MF_MessageLogger
+-			ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Tree ROOT::Hist
+ 			BASENAME_ONLY
+ )
+ 
+@@ -32,7 +32,7 @@ cet_build_plugin(ClusterCounter3 art::module
+                         ROOT::Core
+                         art_root_io::TFileService_service
+ 			messagefacility::MF_MessageLogger
+-			ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Tree ROOT::Hist
+ 			BASENAME_ONLY
+ )
+ 
+@@ -49,7 +49,7 @@ cet_build_plugin(ClusterCounter4 art::module
+                         ROOT::Core
+                         art_root_io::TFileService_service
+ 			messagefacility::MF_MessageLogger
+-			ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Tree ROOT::Hist
+ 			BASENAME_ONLY
+ )
+ 
+@@ -68,7 +68,7 @@ cet_build_plugin(ClusterCounter5 art::module
+                         ROOT::Core
+                         art_root_io::TFileService_service
+ 			messagefacility::MF_MessageLogger
+-			ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Tree ROOT::Hist
+ 			BASENAME_ONLY
+ )
+ 
+@@ -83,7 +83,7 @@ cet_build_plugin(ReadSpacePointAndCnn art::module
+                         ROOT::Core
+                         art_root_io::TFileService_service
+ 			messagefacility::MF_MessageLogger
+-			ROOT_BASIC_LIB_LIST
++			ROOT::Core ROOT::Tree ROOT::Hist
+ 			BASENAME_ONLY
+ )
+ 
+@@ -95,7 +95,7 @@ cet_build_plugin(ReadBeamInfo art::module
+       ROOT::Core
+       art_root_io::TFileService_service
+       messagefacility::MF_MessageLogger
+-      ROOT_BASIC_LIB_LIST
++      ROOT::Core ROOT::Tree ROOT::Hist
+       BASENAME_ONLY
+ )
+ 
+diff --git a/protoduneana/TutorialExamples/MoreExamples/CMakeLists.txt b/protoduneana/TutorialExamples/MoreExamples/CMakeLists.txt
+index 0202af2..54082ce 100644
+--- a/protoduneana/TutorialExamples/MoreExamples/CMakeLists.txt
++++ b/protoduneana/TutorialExamples/MoreExamples/CMakeLists.txt
+@@ -21,11 +21,11 @@ art_make(
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   art_root_io::tfile_support
+   ROOT::Core
+   art_root_io::TFileService_service
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/Utilities/BeamExample/CMakeLists.txt b/protoduneana/Utilities/BeamExample/CMakeLists.txt
+index b68c8fb..839a2cb 100644
+--- a/protoduneana/Utilities/BeamExample/CMakeLists.txt
++++ b/protoduneana/Utilities/BeamExample/CMakeLists.txt
+@@ -19,10 +19,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   ProtoDUNEAnaUtils
+   duneprototypes::ProtoDUNEDataUtils
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/Utilities/CMakeLists.txt b/protoduneana/Utilities/CMakeLists.txt
+index 961e825..4ec8733 100644
+--- a/protoduneana/Utilities/CMakeLists.txt
++++ b/protoduneana/Utilities/CMakeLists.txt
+@@ -39,10 +39,10 @@ art_make( LIBRARY_NAME ProtoDUNEUtilities
+                         fhiclcpp::fhiclcpp
+                         cetlib::cetlib
+ 			cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+ 	  MODULE_LIBRARIES
+           ProtoDUNEUtilities
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/protoduneana/Utilities/FitUtils/CMakeLists.txt b/protoduneana/Utilities/FitUtils/CMakeLists.txt
+index ac44df5..e0d2285 100644
+--- a/protoduneana/Utilities/FitUtils/CMakeLists.txt
++++ b/protoduneana/Utilities/FitUtils/CMakeLists.txt
+@@ -1,5 +1,5 @@
+-include_directories ( ${CMAKE_CURRENT_SOURCE_DIR} )
+-include_directories(AFTER $ENV{VALGRIND_INC})
++include_directories ( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++include_directories(AFTER $ENV{VALGRIND_INC}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
+ 
+ FILE (GLOB src_files *.cxx)
+ 
+@@ -12,19 +12,19 @@ art_make_library( LIBRARY_NAME protodune_fitutils
+ 			    ${ART_ROOT_IO_TFILE_SUPPORT} 
+ 			    ${ART_ROOT_IO_TFILESERVICE_SERVICE}
+ 			    ${ART_PERSISTENCY_COMMON}
+-			    canvas
+-			    art_Persistency_Provenance
+-			    cetlib cetlib_except
++			    canvas::canvas
++			    art::Persistency_Provenance
++			    cetlib::cetlib cetlib_except::cetlib_except
+ 			    ${ART_UTILITIES}
+ 			    ${MF_MESSAGELOGGER}
+ 			    ${FHICLCPP}
+ 			    ${CETLIB}
+-			    ROOT_BASIC_LIB_LIST
+-                            
++			    ROOT::Core ROOT::Tree ROOT::Hist
++			    ROOT::RooFit
+ 			    ${ROOT_ROOFITCORE}
+ 			    ${ROOT_ROOFIT}
+-			    ${ROOT_ROOSTATS}
+-			    ${ROOT_HISTFACTORY}
++			    ROOT::RooStats
++			    ROOT::HistFactory
+ 			    ${ROOT_FOAM}
+ 			    ${ROOT_GEOM}
+ 			    ${ROOT_MINUIT}
+@@ -35,28 +35,28 @@ art_make_library( LIBRARY_NAME protodune_fitutils
+ 	    )
+             #message(WARNING ${ROOT_TREEPLAYER})
+ 
+-art_make_exec( NAME runProtoDUNEFit
++cet_make_exec( NAME runProtoDUNEFit
+ 	       SOURCE runProtoDUNEFit.cc
+ 	       LIBRARIES protodune_fitutils
+-	    )
++	    ) ### MIGRATE-CHANGED (migrate-3.22.02) - art_make_exec() -> cet_make_exec()
+ 
+-art_make_exec( NAME runEventSelection
++cet_make_exec( NAME runEventSelection
+ 	       SOURCE runEventSelection.cc
+ 	       LIBRARIES protodune_fitutils
+                          ${ROOT_ROOTDATAFRAME}
+                          ${ROOT_TREEPLAYER}
+                          ${ROOT_ROOTVECOPS}
+-	    )
++	    ) ### MIGRATE-CHANGED (migrate-3.22.02) - art_make_exec() -> cet_make_exec()
+ 
+-art_make_exec( NAME Geant4ReweightSysts 
++cet_make_exec( NAME Geant4ReweightSysts 
+ 	       SOURCE Geant4ReweightSysts.cc
+ 	       LIBRARIES protodune_fitutils
+-	    )
++	    ) ### MIGRATE-CHANGED (migrate-3.22.02) - art_make_exec() -> cet_make_exec()
+ 
+-art_make_exec( NAME runPDSPThinSliceFit
++cet_make_exec( NAME runPDSPThinSliceFit
+ 	       SOURCE runPDSPThinSliceFit.c++
+ 	       LIBRARIES protodune_fitutils
+-	     )
++	     ) ### MIGRATE-CHANGED (migrate-3.22.02) - art_make_exec() -> cet_make_exec()
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/protoduneana/Utilities/FitUtils/ProtoDUNEFit.cxx b/protoduneana/Utilities/FitUtils/ProtoDUNEFit.cxx
+index 16469f7..6319651 100644
+--- a/protoduneana/Utilities/FitUtils/ProtoDUNEFit.cxx
++++ b/protoduneana/Utilities/FitUtils/ProtoDUNEFit.cxx
+@@ -19,7 +19,7 @@
+ #include <RooStats/ModelConfig.h>
+ #include <RooStats/HistFactory/Sample.h>
+ #include <RooStats/HistFactory/Systematics.h>
+-#include <RooStats/HistFactory/HistoToWorkspaceFactory.h>
++//#include <RooStats/HistFactory/HistoToWorkspaceFactory.h>
+ #include <RooStats/HistFactory/HistoToWorkspaceFactoryFast.h>
+ #include <RooStats/HistFactory/MakeModelAndMeasurementsFast.h>
+ #include <RooStats/HistFactory/PiecewiseInterpolation.h>
+diff --git a/protoduneana/Utilities/FitUtils/fcl_cfg_files/CMakeLists.txt b/protoduneana/Utilities/FitUtils/fcl_cfg_files/CMakeLists.txt
+index c4b4fa0..961b02a 100644
+--- a/protoduneana/Utilities/FitUtils/fcl_cfg_files/CMakeLists.txt
++++ b/protoduneana/Utilities/FitUtils/fcl_cfg_files/CMakeLists.txt
+@@ -2,4 +2,4 @@ install_fhicl()
+ install_scripts()
+ 
+ INSTALL(FILES asimov.cfg
+-        DESTINATION ${product}/${version}/cfg_files)
++        DESTINATION cfg_files) ### MIGRATE-CHANGED (migrate-3.22.02) - ${product}/+${version}/* -> ""
+diff --git a/protoduneana/dualphase/checks/CMakeLists.txt b/protoduneana/dualphase/checks/CMakeLists.txt
+index ee3f0b9..fe38a8c 100644
+--- a/protoduneana/dualphase/checks/CMakeLists.txt
++++ b/protoduneana/dualphase/checks/CMakeLists.txt
+@@ -16,7 +16,7 @@ cet_build_plugin(       HitNormCheck art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         BASENAME_ONLY
+ )
+ 
+@@ -37,7 +37,7 @@ cet_build_plugin(	CosmicsdQdx art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         duneprototypes::ProtoDUNEDataUtils
+ 			ProtoDUNEUtilities
+                         BASENAME_ONLY
+@@ -60,7 +60,7 @@ cet_build_plugin(	TrackHitInfo art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         duneprototypes::ProtoDUNEDataUtils
+ 			ProtoDUNEUtilities
+                         BASENAME_ONLY
+diff --git a/protoduneana/dualphase/diffusion/CMakeLists.txt b/protoduneana/dualphase/diffusion/CMakeLists.txt
+index 0876e7c..8c65450 100644
+--- a/protoduneana/dualphase/diffusion/CMakeLists.txt
++++ b/protoduneana/dualphase/diffusion/CMakeLists.txt
+@@ -15,7 +15,7 @@ cet_build_plugin(	PlotSelectedTracks art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         BASENAME_ONLY
+ )
+ 
+@@ -36,7 +36,7 @@ cet_build_plugin(       GetAnodeCathodePulses art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         BASENAME_ONLY
+ )
+ 
+diff --git a/protoduneana/singlephase/Analysis/CMakeLists.txt b/protoduneana/singlephase/Analysis/CMakeLists.txt
+index e77a182..563c63e 100644
+--- a/protoduneana/singlephase/Analysis/CMakeLists.txt
++++ b/protoduneana/singlephase/Analysis/CMakeLists.txt
+@@ -12,7 +12,7 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   ProtoDUNEUtilities
+   geant4reweight::ReweightBaseLib
+   geant4reweight::PropBaseLib
+@@ -30,7 +30,7 @@ art_make(BASENAME_ONLY
+   hep_hpc_hdf5
+   hep_hpc_Utilities
+   ${HDF5_LIBRARIES}
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/singlephase/EMTaskForce/CMakeLists.txt b/protoduneana/singlephase/EMTaskForce/CMakeLists.txt
+index 3f6e973..13af059 100644
+--- a/protoduneana/singlephase/EMTaskForce/CMakeLists.txt
++++ b/protoduneana/singlephase/EMTaskForce/CMakeLists.txt
+@@ -22,13 +22,13 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+   art_root_io::tfile_support
+   ROOT::Core
+   art_root_io::TFileService_service
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/singlephase/PDCNN/CMakeLists.txt b/protoduneana/singlephase/PDCNN/CMakeLists.txt
+index 0202af2..54082ce 100644
+--- a/protoduneana/singlephase/PDCNN/CMakeLists.txt
++++ b/protoduneana/singlephase/PDCNN/CMakeLists.txt
+@@ -21,11 +21,11 @@ art_make(
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   art_root_io::tfile_support
+   ROOT::Core
+   art_root_io::TFileService_service
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/singlephase/PhotonDetectors/CMakeLists.txt b/protoduneana/singlephase/PhotonDetectors/CMakeLists.txt
+index 3ecb55e..eb724ad 100644
+--- a/protoduneana/singlephase/PhotonDetectors/CMakeLists.txt
++++ b/protoduneana/singlephase/PhotonDetectors/CMakeLists.txt
+@@ -19,7 +19,7 @@ cet_build_plugin(PDSPmatch art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         dunepdlegacy_rce_dataaccess
+                         BASENAME_ONLY
+ )
+@@ -47,7 +47,7 @@ cet_build_plugin(PDSPmatchmc art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         dunepdlegacy_rce_dataaccess
+                         BASENAME_ONLY
+ )
+diff --git a/protoduneana/singlephase/Pion/CMakeLists.txt b/protoduneana/singlephase/Pion/CMakeLists.txt
+index 8f53fc7..094db3a 100644
+--- a/protoduneana/singlephase/Pion/CMakeLists.txt
++++ b/protoduneana/singlephase/Pion/CMakeLists.txt
+@@ -12,7 +12,7 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   ProtoDUNEUtilities
+   geant4reweight::ReweightBaseLib
+   geant4reweight::PropBaseLib
+@@ -29,7 +29,7 @@ art_make(BASENAME_ONLY
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/singlephase/SCEAna/CMakeLists.txt b/protoduneana/singlephase/SCEAna/CMakeLists.txt
+index b7d85a7..3e1d1b8 100644
+--- a/protoduneana/singlephase/SCEAna/CMakeLists.txt
++++ b/protoduneana/singlephase/SCEAna/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ cet_make_exec( plotdeltaz
+                SOURCE plotdeltaz.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
+-               ${FHICLCPP}
++               ROOT::Core ROOT::Tree ROOT::Hist
++               fhiclcpp::fhiclcpp
+                )
+ 
+ install_scripts()
+diff --git a/protoduneana/singlephase/T0Ana/CMakeLists.txt b/protoduneana/singlephase/T0Ana/CMakeLists.txt
+index 8b6b174..56c4409 100644
+--- a/protoduneana/singlephase/T0Ana/CMakeLists.txt
++++ b/protoduneana/singlephase/T0Ana/CMakeLists.txt
+@@ -23,11 +23,11 @@ art_make( MODULE_LIBRARIES
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-			ROOT_BASIC_LIB_LIST
+-                        ROOT_GENVECTOR
+-                        ROOT_GEOM
++			ROOT::Core ROOT::Tree ROOT::Hist
++                        ROOT::GenVector
++                        ROOT::Geom
+                         ProtoDUNEUtilities
+-)
++) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ install_headers()
+ install_fhicl()
+diff --git a/protoduneana/singlephase/XYZcalibration/CMakeLists.txt b/protoduneana/singlephase/XYZcalibration/CMakeLists.txt
+index 620f2fc..0aa73a4 100644
+--- a/protoduneana/singlephase/XYZcalibration/CMakeLists.txt
++++ b/protoduneana/singlephase/XYZcalibration/CMakeLists.txt
+@@ -24,7 +24,7 @@ art_make(
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+   fhiclcpp::fhiclcpp
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   MODULE_LIBRARIES larana::OpticalDetector_OpDigiProperties_service
+   larana::OpticalDetector_OpHitFinder
+   larana::OpticalDetector
+@@ -59,13 +59,13 @@ art_make(
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+   fhiclcpp::fhiclcpp
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   SERVICE_LIBRARIES
+   larcorealg::Geometry
+   larcore::Geometry_Geometry_service
+   CLHEP
+-  ROOT_BASIC_LIB_LIST
+-  )
++  ROOT::Core ROOT::Tree ROOT::Hist
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/diffusion/CMakeLists.txt b/protoduneana/singlephase/diffusion/CMakeLists.txt
+index 2da8eb2..6e0611d 100644
+--- a/protoduneana/singlephase/diffusion/CMakeLists.txt
++++ b/protoduneana/singlephase/diffusion/CMakeLists.txt
+@@ -22,10 +22,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/driftvel/CMakeLists.txt b/protoduneana/singlephase/driftvel/CMakeLists.txt
+index 2da8eb2..6e0611d 100644
+--- a/protoduneana/singlephase/driftvel/CMakeLists.txt
++++ b/protoduneana/singlephase/driftvel/CMakeLists.txt
+@@ -22,10 +22,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/efficiencystudy/CMakeLists.txt b/protoduneana/singlephase/efficiencystudy/CMakeLists.txt
+index 50dc536..ecd5162 100644
+--- a/protoduneana/singlephase/efficiencystudy/CMakeLists.txt
++++ b/protoduneana/singlephase/efficiencystudy/CMakeLists.txt
+@@ -21,13 +21,13 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+   art_root_io::tfile_support
+   ROOT::Core
+   art_root_io::TFileService_service
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/singlephase/michelremoving/CMakeLists.txt b/protoduneana/singlephase/michelremoving/CMakeLists.txt
+index d020fbe..67662ab 100644
+--- a/protoduneana/singlephase/michelremoving/CMakeLists.txt
++++ b/protoduneana/singlephase/michelremoving/CMakeLists.txt
+@@ -24,7 +24,7 @@ art_make(
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+   fhiclcpp::fhiclcpp
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   MODULE_LIBRARIES larana::OpticalDetector_OpDigiProperties_service
+   larana::OpticalDetector_OpHitFinder
+   larana::OpticalDetector
+@@ -61,7 +61,7 @@ art_make(
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+   fhiclcpp::fhiclcpp
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   ProtoDUNEUtilities
+   SERVICE_LIBRARIES
+   larcorealg::Geometry
+@@ -81,8 +81,8 @@ art_make(
+   cetlib_except::cetlib_except
+   fhiclcpp::fhiclcpp
+   CLHEP
+-  ROOT_BASIC_LIB_LIST
+-  )
++  ROOT::Core ROOT::Tree ROOT::Hist
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/michelremoving/Xcalo/CMakeLists.txt b/protoduneana/singlephase/michelremoving/Xcalo/CMakeLists.txt
+index 4e83df0..99ed61d 100644
+--- a/protoduneana/singlephase/michelremoving/Xcalo/CMakeLists.txt
++++ b/protoduneana/singlephase/michelremoving/Xcalo/CMakeLists.txt
+@@ -1,8 +1,8 @@
+-find_library(CaloTools ../scripts)
++find_library(CaloTools ../scripts) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - prefer find_package() with custom Find<pkg>.cmake for transitivity, relocatability
+ cet_make_exec( make_x_correction
+                SOURCE protoDUNE_X_calib.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                CaloTools              
+                )
+ install_headers()
+diff --git a/protoduneana/singlephase/michelremoving/YZcalo/CMakeLists.txt b/protoduneana/singlephase/michelremoving/YZcalo/CMakeLists.txt
+index 43a2ce1..558e5e5 100644
+--- a/protoduneana/singlephase/michelremoving/YZcalo/CMakeLists.txt
++++ b/protoduneana/singlephase/michelremoving/YZcalo/CMakeLists.txt
+@@ -2,6 +2,6 @@
+ cet_make_exec( make_yz_correction
+                SOURCE protoDUNE_YZ_calib.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                )
+ install_scripts()
+diff --git a/protoduneana/singlephase/michelremoving/dEdX/CMakeLists.txt b/protoduneana/singlephase/michelremoving/dEdX/CMakeLists.txt
+index a54d723..9be9812 100644
+--- a/protoduneana/singlephase/michelremoving/dEdX/CMakeLists.txt
++++ b/protoduneana/singlephase/michelremoving/dEdX/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cet_make_exec( dEdX_calibration 
+                SOURCE protoDUNE_dEdx_calib.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++	       ROOT::Core ROOT::Tree ROOT::Hist ROOT::Gpad
+                CaloTools
+ 	       cetlib::cetlib 
+ 	       cetlib_except::cetlib_except
+@@ -11,37 +11,16 @@ cet_make_exec( dEdX_calibration
+ 
+ art_make_library( LIBRARY_NAME protodune_dedx_fit
+ 		  SOURCE ProtoDUNEdEdXFitter.cxx 
+-		  LIBRARIES ${ART_FRAMEWORK_CORE}
+-	       		    ${ART_FRAMEWORK_PRINCIPAL}
+-			    ${ART_FRAMEWORK_SERVICES_REGISTRY}
+-			    ${ART_FRAMEWORK_SERVICES_BASIC}
+-			    ${ART_ROOT_IO_TFILE_SUPPORT} 
+-			    ${ART_ROOT_IO_TFILESERVICE_SERVICE}
+-			    ${ART_PERSISTENCY_COMMON}
+-			    canvas
+-			    art_Persistency_Provenance
+-			    cetlib cetlib_except
+-			    ${ART_UTILITIES}
+-			    ${MF_MESSAGELOGGER}
+-			    ${FHICLCPP}
+-			    ${CETLIB}
+-			    ROOT_BASIC_LIB_LIST
++		  LIBRARIES 
++			    art::Persistency_Provenance
++			    cetlib::cetlib
++			    fhiclcpp::fhiclcpp
++			    ROOT::Core ROOT::Tree ROOT::Hist ROOT::Gpad
+                             CaloTools
+-                            
+-			    ${ROOT_ROOFITCORE}
+-			    ${ROOT_ROOFIT}
+-			    ${ROOT_ROOSTATS}
+-			    ${ROOT_HISTFACTORY}
+-			    ${ROOT_FOAM}
+-			    ${ROOT_GEOM}
+-			    ${ROOT_MINUIT}
+-			    ${ROOT_MINUIT2}
+-			    ${ROOT_CORE}
+-			    ${ROOT_MATHCORE}
+ 	    )
+ 
+-art_make_exec( NAME runProtoDUNEdEdXFit
++cet_make_exec( NAME runProtoDUNEdEdXFit
+ 	       SOURCE runProtoDUNEdEdXFit.c++
+ 	       LIBRARIES protodune_dedx_fit 
+-	    )
++	    ) ### MIGRATE-CHANGED (migrate-3.22.02) - art_make_exec() -> cet_make_exec()
+ install_scripts()
+diff --git a/protoduneana/singlephase/michelremoving/scripts/CMakeLists.txt b/protoduneana/singlephase/michelremoving/scripts/CMakeLists.txt
+index f54521f..d8f09da 100644
+--- a/protoduneana/singlephase/michelremoving/scripts/CMakeLists.txt
++++ b/protoduneana/singlephase/michelremoving/scripts/CMakeLists.txt
+@@ -1,76 +1,74 @@
+ cet_make_exec( validate_calibration
+                SOURCE protoDUNE_validate_calib.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
+-               ${FHICLCPP}
++               ROOT::Core ROOT::Tree ROOT::Hist
++	       ROOT::Physics
++               fhiclcpp::fhiclcpp
+                )
+ 
+ cet_make_exec( calculate_calibration_constants
+                SOURCE calconst.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++	       ROOT::Core ROOT::Tree ROOT::Hist ROOT::Gpad
+                )
+ 
+ cet_make_library( LIBRARY_NAME CaloTools
+                   SOURCE
+                   LanGausFit.C CaloUtils.cxx
+                   LIBRARIES
+-                  ROOT_BASIC_LIB_LIST
++                  ROOT::Core ROOT::Tree ROOT::Hist
+                   )
+ 
+ cet_make_exec( fitlangaumpv
+                SOURCE fitlangaumpv.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++	       ROOT::Core ROOT::Tree ROOT::Hist ROOT::Gpad
+                CaloTools
+                )
+ 
+ cet_make_exec( murecombfit
+                SOURCE murecombfit.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                ROOT_LIBRARIES
+ 	       ROOT::Minuit
+ 	       cetlib::cetlib cetlib_except::cetlib_except
+-	       FHICLCPP
+-               MF_MESSAGELOGGER
++	       fhiclcpp::fhiclcpp
+                CaloTools
+                )
+ 
+ cet_make_exec( plotmurecombfitresult
+                SOURCE plotmurecombfitresult.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                ROOT_LIBRARIES
+                ROOT::Minuit
+                cetlib::cetlib cetlib_except::cetlib_except
+-               FHICLCPP
+-               MF_MESSAGELOGGER
++               fhiclcpp::fhiclcpp
+                CaloTools
+                )
+ 
+ cet_make_exec( resrangefit
+                SOURCE resrangefit.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                ROOT_LIBRARIES
+ 	       ROOT::Minuit
+                cetlib::cetlib cetlib_except::cetlib_except
+-	       FHICLCPP
+-               MF_MESSAGELOGGER
++	       fhiclcpp::fhiclcpp
+                CaloTools
+                )
+ 
+ cet_make_exec( ConvertXCorrection
+                SOURCE ConvertXCorrection.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                )
+ 
+ cet_make_exec( ConvertYZCorrection
+                SOURCE ConvertYZCorrection.C
+                LIBRARIES
+-               ROOT_BASIC_LIB_LIST
++               ROOT::Core ROOT::Tree ROOT::Hist
+                )
+ 
+ install_scripts()
+diff --git a/protoduneana/singlephase/pionanalysis/CMakeLists.txt b/protoduneana/singlephase/pionanalysis/CMakeLists.txt
+index 51a5761..7eb2972 100644
+--- a/protoduneana/singlephase/pionanalysis/CMakeLists.txt
++++ b/protoduneana/singlephase/pionanalysis/CMakeLists.txt
+@@ -23,11 +23,11 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   ProtoDUNEUtilities
+   duneprototypes::ProtoDUNEDataUtils
+   geant4reweight::ReweightBaseLib
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/pionanalysismc/CMakeLists.txt b/protoduneana/singlephase/pionanalysismc/CMakeLists.txt
+index 74d2646..66bfcec 100644
+--- a/protoduneana/singlephase/pionanalysismc/CMakeLists.txt
++++ b/protoduneana/singlephase/pionanalysismc/CMakeLists.txt
+@@ -22,10 +22,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ install_headers()
+ install_fhicl()
+ install_source()
+diff --git a/protoduneana/singlephase/protonanalysis/CMakeLists.txt b/protoduneana/singlephase/protonanalysis/CMakeLists.txt
+index f5eb69f..e2e1963 100644
+--- a/protoduneana/singlephase/protonanalysis/CMakeLists.txt
++++ b/protoduneana/singlephase/protonanalysis/CMakeLists.txt
+@@ -25,11 +25,11 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+   geant4reweight::ReweightBaseLib
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/truepion/CMakeLists.txt b/protoduneana/singlephase/truepion/CMakeLists.txt
+index 3bb9722..90a0f68 100644
+--- a/protoduneana/singlephase/truepion/CMakeLists.txt
++++ b/protoduneana/singlephase/truepion/CMakeLists.txt
+@@ -24,10 +24,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/truepionXsection/CMakeLists.txt b/protoduneana/singlephase/truepionXsection/CMakeLists.txt
+index 98845f2..0616711 100644
+--- a/protoduneana/singlephase/truepionXsection/CMakeLists.txt
++++ b/protoduneana/singlephase/truepionXsection/CMakeLists.txt
+@@ -9,7 +9,7 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+   larsim::Simulation
+@@ -28,7 +28,7 @@ art_make(BASENAME_ONLY
+   messagefacility::MF_MessageLogger
+   cetlib::cetlib 
+   cetlib_except::cetlib_except
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/singlephase/velocity/CMakeLists.txt b/protoduneana/singlephase/velocity/CMakeLists.txt
+index 3a4c4bc..4a6d404 100644
+--- a/protoduneana/singlephase/velocity/CMakeLists.txt
++++ b/protoduneana/singlephase/velocity/CMakeLists.txt
+@@ -23,10 +23,10 @@ art_make(BASENAME_ONLY
+   larsim::MCCheater_BackTrackerService_service           
+   larsim::MCCheater_ParticleInventoryService_service
+   larreco::RecoAlg
+-  ROOT_BASIC_LIB_LIST
++  ROOT::Core ROOT::Tree ROOT::Hist
+   duneprototypes::ProtoDUNEDataUtils
+   ProtoDUNEUtilities
+-  )
++  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+ 
+ cet_remove_compiler_flags(CXX -pedantic)
+ 
+diff --git a/protoduneana/verticaldrift/checks/CMakeLists.txt b/protoduneana/verticaldrift/checks/CMakeLists.txt
+index 607b774..1524b7f 100644
+--- a/protoduneana/verticaldrift/checks/CMakeLists.txt
++++ b/protoduneana/verticaldrift/checks/CMakeLists.txt
+@@ -15,7 +15,7 @@ cet_build_plugin(	FitdQdx art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         duneprototypes::ProtoDUNEDataUtils
+ 			ProtoDUNEUtilities
+                         BASENAME_ONLY
+@@ -38,7 +38,7 @@ cet_build_plugin(       CheckHitsAndTracks art::module
+                         messagefacility::MF_MessageLogger
+                         cetlib::cetlib 
+                         cetlib_except::cetlib_except
+-                        ROOT_BASIC_LIB_LIST
++                        ROOT::Core ROOT::Tree ROOT::Hist
+                         duneprototypes::ProtoDUNEDataUtils
+                         ProtoDUNEUtilities
+                         BASENAME_ONLY
+diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
+deleted file mode 100644
+index fe33cc7..0000000
+--- a/ups/CMakeLists.txt
++++ /dev/null
+@@ -1,6 +0,0 @@
+-
+-# create package configuration and version files
+-
+-process_ups_files()
+-
+-cet_cmake_config()
+diff --git a/ups/product-config.cmake.in b/ups/product-config.cmake.in
+deleted file mode 100644
+index 4e22a3b..0000000
+--- a/ups/product-config.cmake.in
++++ /dev/null
+@@ -1,12 +0,0 @@
+-
+-set( @product@_VERSION @cet_dot_version@ )
+-set( @product@_UPS_VERSION @version@ )
+-
+-@PACKAGE_INIT@
+-
+-@CONFIG_FIND_UPS_COMMANDS@
+-
+-@CONFIG_FIND_LIBRARY_COMMANDS@
+-
+-check_required_components(@product@)
+-
+diff --git a/ups/product_deps b/ups/product_deps
+index 78c7f08..1fe8d23 100644
+--- a/ups/product_deps
++++ b/ups/product_deps
+@@ -1,29 +1,323 @@
+-# This @product_deps@ file defines dependencies for this package.
++########################################################################
++# product_deps
++#
++#   Define attributes of a package to be built and distributed as a UPS
++#   product.
++#
++# This file is parsed as a consequence of sourcing the
++# setup_for_development or setup_deps shell-agnostic scripts.
++#
++# Generated by cetmodules 3.22.02 at Wed Sep 13 16:53:29 CDT 2023
++########################################################################
++
++####################################
++# Basic information.
++
++##################
++# parent
++##################
++#
++# The parent line - if present - must be the first non-comment line in
++# the file, defining the product's name and version. Any information not
++# specified will be taken from the CMake project(<project-name> VERSION
++# <dot-version>) call in the CMakeLists.txt in the parent directory to
++# the one containing this file.
++#
++# Recommended:
++#
++#>  parent <product-name>
++#
++# Deprecated (will produce a warning):
++#
++#>  parent <product-name> <product-ups-version> [<chain>]...
+ 
+-# The *parent* line must the first non-commented line and defines this product and version
+-# The version must be of the form vxx_yy_zz (e.g. v01_02_03).
++##################
++# chain[s]
++##################
++#
++# List the UPS chains ("-c", -t, "new," "current," "old...") to be defined
++# for the package. The trailing `s' is optional and without meaning.
++# Multiple chains may be specified with one or more declarations.
++#
++#>  chains <chain>...
++
++##################
++# defaultqual
++##################
++#
++# The default colon-delimited qualifier set used if one is not provided
++# to setup_for_development. Build type (debug, opt or prof) is optional.
++#
++# Deprecated - a qualifier should generally be provided to the
++# invocation of setup_for_development or setup_deps.
++#
++#>  defaultqual <qualifiers>
+ 
+-parent protoduneana
++##################
++# noarch
++##################
++#
++# Specify this keyword if the package is architecture-independent. This
++# does not necessarily imply a lack of qualifiers or of a
++# fully-qualified (fq) subdirectory in the installed package.
++#
++#>  noarch
+ 
+-defaultqual e26
++##################
++# no_fq_dir
++##################
++#
++# Specify this keyword if the UPS package should not have a
++# fully-qualified (fq) subdirectory in the installed package. This does
++# not necessarily imply noarch or a lack of qualifiers, but caution
++# should be observed if using this keyword for architecture-dependent
++# packages or those with qualifiers to avoid overwritten files when
++# multiple different variants of the package are installed in the same
++# UPS area.
++#
++#>  no_fq_dir
+ 
+-# These optional lines define where headers, libraries, and executables go and should
+-# be used only if your product does not conform to the defaults.
+-# Format: directory_type directory_path directory_name
+-#   where directory_type is one of incdir, libdir, or bindir
+-#   where directory_path is one of product_dir, fq_dir and -
+-# Defaults:
+-# incdir  product_dir  include
+-# fcldir  product_dir  fcl
+-# libdir  fq_dir       lib
+-# bindir  fq_dir       bin
+-#
+-fcldir  product_dir job
+-gdmldir product_dir gdml
+-fwdir  product_dir config_data
++##################
++# define_pythonpath
++##################
++#
++# If define_pythonpath is enabled, the appropriate path will be appended
++# to PYTHONPATH.
++#
++#>  define_pythonpath
++####################################
++parent		protoduneana
++defaultqual	e26
++####################################
+ 
+-# table fragment to set FW_SEARCH_PATH needed
+-# to find gdml files:
++####################################
++# Directory specifications.
++#
++# These optional definitions specify the installed directories where
++# various files headers, libraries, and executables will be found. Some
++# have defaults; others must be specified if files of that type are to
++# be installed. Minimize configuration complexity by using only those
++# definitions necessary for the package.
++#
++##################
++# Notes:
++#
++# * Use directory specifications only if the defaults are inappropriate
++#   for your product.
++#
++# * A specification with defaults may be obviated by specifying a base
++#   of `-' as the only argument.
++#
++# * A directory will be created and appropriate UPS table file entries
++#   made *if and only if* files of that type are installed using the
++#   appropriate directive.
++#
++##################
++# Format:
++#
++#>  <spec>		<base>		[<subdir-name>]
++#
++# <base> may be `-' (negate defaults), "product_dir", or "fq_dir" as
++# desired.
++#
++# Available <spec>s and defaults:
++#
++#>  bindir		fq_dir		bin
++#
++#     Built binaries for public use.
++#
++#>  cmakemoduledir	product_dir	Modules
++#
++#     CMake modules.
++#
++#>  fcldir		product_dir	fcl
++#
++#     FHiCL framework configuration files.
++#
++#>  fwdir
++#
++#     Framework data.
++#
++#>  gdmldir		product_dir	gdml
++#
++#     GDML geometry description files.
++#
++#>  incdir		product_dir	include
++#
++#     Headers.
++#
++#>  libdir		fq_dir		lib
++#
++#     Compiled and other libraries.
++#
++#>  perllib		product_dir	perl5lib
++#
++#     Perl modules, etc.
++#
++#>  set_fwdir
++#
++#     An additional location for framework data to be added to
++#     FW_SEARCH_PATH; may be specified multiple times.
++#
++#>  set_wpdir
++#
++#     An additional location for wirecell data to be added to
++#     WIRECELL_PATH; may be specified multiple times.
++#
++#>  testdir		product_dir	test
++#
++#     Tests.
++#
++#>  wpdir
++#
++#     Wirecell data.
++#
++####################################
++fcldir	product_dir	job
++fwdir	product_dir	config_data
++gdmldir	product_dir	gdml
++####################################
++
++####################################
++# Product table.
++#
++# Table defining *all* direct UPS package dependencies.
++#
++##################
++# Format:
++#
++#>  product		version		qual	["<table_format=#>"]
++#>  <ups-product_name>	<ups-version>	[<qual-trigger>]	[<flag>]
++#>...
++#>  end_product_list
++#
++# <ups-version> may be a UPS version, a chain option (-c, -t, etc.) or a
++# chain name with a preceding `-'.
++#
++# Valid <qual-trigger> values:
++#
++# * [!]<single-qual>
++#
++#   A single qualifier whose presence in the parent's qualifier will
++#   trigger the setup of the specified version of the product. A prefix
++#   of `!' will negate the match.
++#
++# * <empty>|-
++#
++#   The specified version of the product will always be set up
++#   regardless of the parent's qualifiers. Use `-' as a placeholder if
++#   <flag> is to be specified.
++#
++# * -nq-
++#
++#   Specify explicitly that this product should be set up when the
++#   parent is unqualified.
++#
++# * -default-
++#
++#   The specified version of the product will be set up if no other
++#   product table entry for this product is applicable to the parent's
++#   qualifiers.
++#
++# Valid <flag> values:
++#
++# * only_for_build
++#
++#   The specified product will be set up for building only, and will not
++#   be added to the table file.
++#
++# * optional
++#
++#   It will not be an error if the specified product is not available to
++#   be set up.
++#
++##################
++# Notes.
++#
++# * Under older versions of the product table format ("<table_format=1>"
++#   or unspecified), -nq- had the same meaning as `-' above. When
++#   updating a product_deps file these entries should be reviewed when
++#   <table_format=2> is selected.
++#
++# * "<format>" is a valid alias for "<table_format>".
++#
++# * Under most circumstances (the parent is anything other than
++#   cetmodules), an entry for cetmodules is required.
++#
++# * It is an error for more than one non-(<qual-trigger> == "-default-")
++#   entry to match for a given product.
++#
++####################################
++product		version		qual	flags		<table_format=2>
++duneprototypes	v09_81_00d00	-
++geant4reweight	v01_20_00	-
++cetmodules	v3_22_02	-	only_for_build
++end_product_list
++####################################
++
++####################################
++# Qualifier table.
++#
++# For each valid qualifer set of the parent, specify how dependencies
++# should be set up.
++#
++# Format:
++#
++#>  qualifier		<prod-spec>...	[<notes>]
++#>  <parent-qual>	<spec>...   [<text...>]
++#>...
++#>  end_qualifier_list
++#
++# <prod-spec> may be a product name or "compiler."
++#
++# <parent-qual> may be a colon-delimited qualifier set, or "-nq-" as a
++# column placeholder in the case of no parent qualifiers.
++#
++# Unless <prod-spec> is "compiler", <spec> may be a colon-delimited
++# qualifier set, or:
++#
++# * -
++#
++#   The dependency is not required for this <parent-qual> and will not
++#   be set up.
++#
++# * -nq-
++#
++#   The dependency will be set up without qualifiers.
++#
++# * -b- (deprecated)
++#
++#   A build-only dependency for this <parent-qual>. If the dependency is
++#   set up in this way, it will be set up without qualifiers. For more
++#   flexibility, use the product table to specify the only_for_build
++#   nature of the dependency and the qualifier table to specifiy how it
++#   should be set up.
++#
++# If <prod-spec> is "compiler", <spec> must be `-' (no compiler
++# required) or the name of the UPS product for the desired compiler. Any
++# qualifiers required to set up the compiler should be specified in the
++# appropriate column for that product.
++#
++##################
++# Notes.
++#
++# * A column for every product in the product table (see above) is
++#   *required* unless the only_for_build flag is specified, in which
++#   case it is optional.
++#
++####################################
++qualifier	duneprototypes	geant4reweight	notes
++c14:debug	c14:debug	c14:s120a:debug	-nq-
++c14:prof	c14:prof	c14:s120a:prof	-nq-
++e26:debug	e26:debug	e26:s120a:debug	-nq-
++e26:prof	e26:prof	e26:s120a:prof	-nq-
++end_qualifier_list
++####################################
++
++####################################
++# Table fragment.
++#
++####################################
+ table_fragment_begin
+ #    pathPrepend(FW_SEARCH_PATH, ${PROTODUNEANA_DIR}/scripts)
+ #    pathPrepend(FW_SEARCH_PATH, ${PROTODUNEANA_DIR}/gdml)
+@@ -55,31 +349,18 @@ table_fragment_begin
+ #    envSet(DBIPORT, 5451)
+ #    envSet(DBIWSURLINT, http://dbdata0vm.fnal.gov:9090/dune_con_prod/app/)
+ table_fragment_end
++####################################
+ 
+-
+-# With "product  version" table below, we now define depdendencies
+-
+-# Add the dependent product and version
+-
+-product          version
+-duneprototypes   v09_81_00d00
+-cetbuildtools	 v8_20_00	-	only_for_build
+-geant4reweight   v01_20_00
+-end_product_list
+-
+-
+-# We now define allowed qualifiers and the corresponding qualifiers for the depdencies.
+-# Make a table by adding columns before "notes".
+-# e15  - with gcc 6.4.0 and -std=c++14
+-qualifier	duneprototypes          geant4reweight          notes
+-c14:debug	c14:debug               c14:debug:s120a           -nq-
+-c14:prof	c14:prof                c14:prof:s120a            -nq-
+-e26:debug	e26:debug               e26:debug:s120a           -nq-
+-e26:prof	e26:prof                e26:prof:s120a            -nq-
+-end_qualifier_list
++####################################
++# Backmatter.
++#
++# Comments and editor-specific metadata.
+ 
+ # Preserve tabs and formatting in emacs and vi / vim:
+ 
+ ### Local Variables:
++### mode: sh
+ ### tab-width: 8
+ ### End:
++
++# vi:set ts=8 noexpandtab:
+diff --git a/ups/setup_deps b/ups/setup_deps
+deleted file mode 100644
+index 72c2e32..0000000
+--- a/ups/setup_deps
++++ /dev/null
+@@ -1,89 +0,0 @@
+-# NO USER-SERVICEABLE PARTS BELOW.
+-#
+-# There should be as little as possible here,
+-# with most of the heavy lifting done by other small scripts
+-#
+-# When sourcing this file from a script, you may have to tell this
+-# source file where it is via the fw_db shell (or env) variable.
+-# I.e.:
+-#    set fw_db=/some/path; source /some/path/this_file
+-# or  fw_db=/some/path; . /some/path/this_file
+-
+-test $?shell = 1 && set ss=csh || ss=sh
+-#echo Shell type is $ss.
+-
+-# make some things similar. need to use set_ because sh builtin set would hide function set
+-# Note: perhaps the trickiest thing in this file is the sh set_ function tries to return the same status
+-#       as at the start of the function (which most likely is the result of a back-tick expression
+-test "$ss" = csh && alias set_ set && alias vecho_ 'if ($?vv == 1) echo \!*' || eval 'vecho_() { test -n "${vv-}" && echo "$@"; return 0; }'
+-test "$ss" =  sh && eval 'set_() { sts=$?;for xx in "$@";do var=`expr "$xx" : "\([^=]*\)"`;val=`expr "$xx" : "[^=]*=\(.*\)"`;eval "$var=\"$val\"";done;return $sts; }'
+-test "$ss" =  sh && eval 'setenv() { export $1;eval "$1=\"\${2-}\""; }; source() { file=$1; shift; . $file "$@"; }; unsetenv_() { unset "$@"; }'
+-test "$ss" =  sh && eval 'tnotnull() { eval "test -n \"\${$1-}\""; }'                             && eval 'nullout() { "$@" >/dev/null 2>&1; }'
+-test "$ss" = csh && alias tnotnull "eval '"'test $?'"\!* -eq 1' && eval '"'test -n "$'"\!*"'"'"'" && alias nullout "\!* >& /dev/null" && alias unsetenv_ unsetenv
+-test "$ss" = csh && alias return exit
+-
+-set_ msg1='ERROR: You MUST setup ups'
+-test -z $UPS_DIR && ( echo ""; echo "$msg1"; echo "" ) && return
+-
+-set_ msg3='ERROR: You MUST specify either -o, -p, or -d'
+-set_ msg4='Usage: setup_deps <-d|-o|-p> <qualifier list>'
+-test -z "$1" && ( echo ""; echo "$msg4"; echo "$msg3"; echo "" ) && return
+-
+-# make sure we know where this script lives
+-# now if we were passed a path or if not, we can figure it out (maybe if we are interactive)
+-#   bash, zsh, ksh and tcsh pass params to a source file, csh does not. but someone will be writing csh scripts
+-set_ msg2='Please set shell or env. variable fw_db (to be the path to the framework source code). Fix this and other errors may go away.'
+-tnotnull fw_db && set_ db=`sh -c "cd $fw_db >/dev/null 2>&1 && pwd"` && vecho_ 'setting db from fw_db variable' || set_ db=
+-
+-test -z "$db" && tnotnull BASH_SOURCE && set_ me=`dirname $BASH_SOURCE` && set_ db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via BASH_SOURCE'
+-
+-# history is applicable only for interactive t/csh
+-test -z "$db" -a "$ss" = csh && test $?history = 0 && set history=5  # make sure history 1 works
+-test -z "$db" -a "$ss" = csh && set me=`history 1|sed 's/^[ 	0-9:]*//'` && test -n "$me" && set me=`dirname $me[2]` \
+-    && set db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via interactive history'
+-#echo This script lives in $db
+-
+-test -z "$db" && echo "$msg2" || vecho_ "db=$db"
+-test -n "$db" && setenv CETPKG_SOURCE `dirname $db`
+-
+-# make sure we know the current directory
+-set_ myname=`whoami`
+-setenv CETPKG_BUILD /tmp/$myname/setup_deps
+-rm -rf $CETPKG_BUILD
+-mkdir -p $CETPKG_BUILD
+-#echo Build directory is $CETPKG_BUILD
+-
+-echo The source code directory is $CETPKG_SOURCE
+-
+-set_ msg5='ERROR: setup of required products has failed'
+-
+-echo ----------- check this block for errors -----------------------
+-set_ setup_fail="false"
+-set_ exit_now="false"
+-set_ cetb=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $1 }' `
+-set_ cetv=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $2 }' `
+-#echo Found $cetb $cetv
+-setup -B $cetb $cetv
+-test "$?" = 0 || set_ setup_fail="true"
+-# now get the rest of the products
+-set_ cmd="$CETBUILDTOOLS_DIR/bin/set_dev_products $CETPKG_SOURCE $CETPKG_BUILD $*"
+-#echo Ready to run $cmd
+-source `$cmd`
+-test "$?" = 0 || set_ setup_fail="true"
+-#echo "$cmd returned $setup_fail"
+-test "$setup_fail" = "true" && echo "$msg5"
+-test "$setup_fail" = "true" && set_ exit_now="true"
+-test -e "$CETPKG_BUILD/diag_report" && cat $CETPKG_BUILD/diag_report
+-echo ----------------------------------------------------------------
+-
+-test "${exit_now}" = "true" && test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-test "${exit_now}" = "true" && unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail set_ setenv unsetenv_ tnotnull nullout vecho_
+-test "${exit_now}" = "true" && return 1
+-
+-# final sanity check and report
+-source $CETBUILDTOOLS_DIR/bin/set_dep_check_report
+-
+-# cleanup before exiting
+-test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail
+-unset set_ setenv unsetenv_ tnotnull nullout vecho_
+diff --git a/ups/setup_for_development b/ups/setup_for_development
+index 8c5bedf..e46765f 100644
+--- a/ups/setup_for_development
++++ b/ups/setup_for_development
+@@ -1,96 +1,260 @@
+-# NO USER-SERVICEABLE PARTS BELOW.
++########################################################################
++# This script is shell-agnostic, which involves much acrobatics to avoid
++# causing errors in one interpreter or another (*stares in csh*).
+ #
+-# There should be as little as possible here,
+-# with most of the heavy lifting done by other small scripts
++# There should be as little as possible here, with most of the heavy
++# lifting done by other small scripts.
+ #
+ # When sourcing this file from a script, you may have to tell this
+-# source file where it is via the fw_db shell (or env) variable.
+-# I.e.:
++# source file where it is via the fw_db shell (or env) variable, i.e.
+ #    set fw_db=/some/path; source /some/path/this_file
+ # or  fw_db=/some/path; . /some/path/this_file
++#
++# Generated by cetmodules 3.22.02 at Wed Sep 13 16:53:29 CDT 2023
++########################################################################
++
++########################################################################
++# NO USER-SERVICEABLE PARTS BELOW.
++########################################################################
++
++# Determine shell flavor.
++true && test $?shell = 1 && set _cetpkg_shell_flavor=csh || _cetpkg_shell_flavor=sh
++
++####################################
++# A common set of commands to use to hide as many shell flavor
++# differences as possible.
++
++##################
++# IMPORTANT NOTE:
++#
++# Following extensive tests in multiple shells, I have reached the
++# conclusion that it is not actually possible for a function to mirror
++# the semantics of an assignment with respect to the status code of ``
++# and compound statements joined with "||" or "&&". To handle this, we
++# write a large chunk of shell code to a temporary file in the current
++# directory a.k.a. CETPKG_BUILD with shell variable assignments correct
++# according to the shell flavor, and then source it. This also allows us
++# to deal with the fact that some shells don't pass arguments to sourced
++# scripts *stares harder in csh*.
++#
++# 2020-06-24 CHG.
++##################
++
++# If we're C-flavored, set up the commands using alias.
++test "$_cetpkg_shell_flavor" = csh && \
++  set _cetpkg_nobuild="" && \
++  set _cetpkg_shell_var_set=set\\1 && \
++  set _cetpkg_to_stderr="| sh -c 'cat 1>\\&2'" && \
++  alias vecho_ 'if ($?vv == 1) echo \>\> \!*' && \
++  alias unsetenv_ unsetenv && \
++  alias tnotnull "eval '"'test $?'"\!* -eq 1' && eval '"'test -n "$'"\!*"'"'"'" && \
++  alias nullout "\!* >& /dev/null" && \
++  alias __TOP_EOF__ '' && \
++  alias return exit
++
++# For Bourne-flavored shells, use functions.
++test "$_cetpkg_shell_flavor" = sh && \
++  _cetpkg_nobuild="" && \
++  _cetpkg_shell_var_set= && \
++  _cetpkg_to_stderr='1>\&2' && \
++  eval 'vecho_() { test -n "${vv-}" && echo ">> $*"; return 0; }' && \
++  eval 'setenv() { eval "$1=\"\${2-}\"; export $1"; }' && \
++  eval 'unsetenv_() { unset "$@"; }' && \
++  eval 'source() { . "$@"; }' && \
++  eval 'tnotnull() { eval "test -n \"\${$1-}\""; }' && \
++  eval 'nullout() { "$@" >/dev/null 2>&1; }'
++####################################
++
++##################
++# Check for UPS (uses alias for return in C-flavored shells).
++test -z "$UPS_DIR" && \
++  ( echo ""; echo "ERROR: you MUST set up UPS"; echo "" ) && \
++  return 1 || true
++##################
++
++####################################
++# Need to find ourselves to set CETPKG_SOURCE.
++
++# Define empty variables for C-flavor shells to make things easier.
++test "$_cetpkg_shell_flavor" = csh && \
++  set _cetpkg_fw_db= _cetpkg_myself= _cetpkg_mydir=
++
++# If user has set fw_db, identify our top-level source directory now.
++test "$_cetpkg_shell_flavor" = csh && tnotnull fw_db && \
++  set _cetpkg_fw_db=`sh -c "cd $fw_db:q >/dev/null 2>&1 && /bin/pwd -P"` && \
++  vecho_ "found ourselves through fw_db" || true
++test "$_cetpkg_shell_flavor" = sh && tnotnull fw_db && \
++  _cetpkg_fw_db=`sh -c "cd \"$fw_db\" >/dev/null 2>&1 && /bin/pwd -P"` && \
++  vecho_ "found ourselves through fw_db" || true
++
++##################
++# For Bash and zsh, identify ourselves now so we don't have to go
++# through acrobatics later in the sourced script.
++test "$_cetpkg_shell_flavor" = sh && tnotnull BASH_SOURCE && \
++  _cetpkg_myself="$BASH_SOURCE" && test -n "$BASH_SOURCE" && \
++  vecho_ "found ourselves through BASH_SOURCE" || true
++test "$_cetpkg_shell_flavor" = sh -a -z "$_cetpkg_myself" && \
++  tnotnull ZSH_VERSION && eval '_cetpkg_myself="${(%):-%x}"' && \
++  test -n "$_cetpkg_myself" && \
++  vecho_ "found ourselves through ZSH prompt logic" || true
++test "$_cetpkg_shell_flavor" = sh && tnotnull _cetpkg_myself && \
++  _cetpkg_mydir=`dirname "$_cetpkg_myself"` && \
++  _cetpkg_fw_db=`sh -c "cd $_cetpkg_mydir >/dev/null 2>&1 && /bin/pwd -P"` || true
++##################
++
++##################
++# History is applicable only for interactive t/csh.
++test -z "$_cetpkg_fw_db" -a "$_cetpkg_shell_flavor" = csh -a $?history = 0 && \
++  set history=5  || true
++test -z "$_cetpkg_fw_db" -a "$_cetpkg_shell_flavor" = csh && \
++  set _cetpkg_mydir=`history 1|sed -Ee 's/^[[:space:][:digit:]:]*.*\bsource[[:space:]]+//'` && \
++  test -n "$_cetpkg_mydir" && set _cetpkg_mydir=`dirname $_cetpkg_mydir[1]:q` && \
++  set _cetpkg_fw_db=`sh -c "cd $_cetpkg_mydir:q >/dev/null 2>&1 && /bin/pwd -P"` && \
++  vecho_ 'setting db via interactive history' || true
++##################
++
++# Set CETPKG_SOURCE.
++test -n "$_cetpkg_fw_db" && \
++  vecho_ "_cetpkg_fw_db=$_cetpkg_fw_db" && \
++  setenv CETPKG_SOURCE `dirname $_cetpkg_fw_db` || \
++  printf "WARNING: please set shell or env. variable fw_db (to be the path to the\n\
++         framework source code). Fix this and other errors may go away.\n"
++####################################
++
++##################
++# Set CETPKG_BUILD.
++setenv CETPKG_BUILD `/bin/pwd -P`
++##################
++
++########################################################################
++# Write the rest of ourselves to a file and source it to handle status
++# code semantics for variable assignments.
++#
++# Note that even here we have to play a trick or two due to the fact
++# that we have to deal with the difference in the way sh- and csh-flavor
++# shells handle a quoted delimiter word for a HERE document: the latter
++# expect the delimiter to include the quoting; the former do not. This
++# is the reason for the C-flavored __TOP_EOF__ alias, and the explicit
++# return at the end of the sourced script.
++#
++########################################################################
++
++sed -Ee 's&(^|[^[:alnum:]_])__SET__([[:space:]]+)&'$_cetpkg_shell_var_set'&g' \
++  -e 's&__SETUP_ARGS__&'"$*"'&g' \
++  -e 's&__TO_STDERR__&'"$_cetpkg_to_stderr"'&g' \
++  > ./setup_common.$_cetpkg_shell_flavor <<\__TOP_EOF__
++########################################################################
++
++####################################
++# Personality check: are we setup_deps or setup_for_development?
++#
++# If we're sourcing setup.in directly (e.g. for cetmodules itself) then
++# we select "setup_for_development" behavior, otherwise _cetpkg_nobuild
++# will be set appropriately by CMake's CONFIGURE() command for
++# setup_for_development or setup_deps.
++
++test -z "$_cetpkg_nobuild" -o "$_cetpkg_nobuild" = "--nobuild" || \
++  __SET__ _cetpkg_nobuild="" || true
++####################################
++
++####################################
++# Initial info.
++
++printf "\n";
++test -z "$_cetpkg_nobuild" && \
++  echo "The working build directory is $CETPKG_BUILD" || true
++cat <<EOF
++The source code directory is $CETPKG_SOURCE
++
++---------------------- check this block for errors ---------------------
++EOF
++
++__SET__ _cetpkg_status=""
++####################################
++
++####################################
++# Attempt to find a suitable cetmodules to set up.
++
++__SET__ _cetpkg_cetmsetup=`sed -nE 's&^[[:space:]]*(cetmodules)[[:space:]]+([^[:space:]]+).*\bonly_for_build\b.*$&\1 \2&p' "$CETPKG_SOURCE/ups/product_deps"`
++test -z "_cetpkg_cetmsetup" -a ! -x "$CETPKG_SOURCE/libexec/set_dev_products" && \
++  __SET__ _cetpkg_status=1 && \
++  echo "ERROR: unable to find suitable cetmodules >= 2.00.00" || true
++test -n "$_cetpkg_status" -o -z "$_cetpkg_cetmsetup" || setup -B $_cetpkg_cetmsetup
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of $_cetpkg_cetmsetup has failed" || true
++test -z "$_cetpkg_status$_cetpkg_cetmsetup" && setenv PATH `dropit -sfe "$CETPKG_SOURCE/bin"` && __SET__ _cetpkg_cettop="$CETPKG_SOURCE" || true
++test -z "$_cetpkg_status$_cetpkg_cettop" -a -n "$CETMODULES_DIR" && __SET__ _cetpkg_cettop="$CETMODULES_DIR"
++####################################
++
++########################################################################
++# A bootstrapped Perl environment is only needed if we're building
++# cetmodules itself.
++
++test -n "$_cetpkg_status" || test -n "$CETMODULES_DIR" || \
++  setup cetpkgsupport
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of cetpkgsupport has failed" || true
++test -n "$_cetpkg_status" || test -n "$CETMODULES_DIR" || \
++  yes n | "$_cetpkg_cettop/libexec/bootstrap-perl-env" > \
++  "$CETPKG_BUILD/bootstrap.log"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: bootstrap of Perl environment for cetmodules has failed: see $CETPKG_BUILD/bootstrap.log" || true
++test -n "$_cetpkg_status" || test -n "$CETMODULES_DIR" || \
++  eval "`perl -I\"$CETPKG_BUILD/$CET_SUBDIR/CPAN/lib/perl5\" -Mlocal::lib=\"$CETPKG_BUILD/$CET_SUBDIR/CPAN\",\"$CETPKG_BUILD/$CET_SUBDIR/cpan_build\"\`test \$?shell = 1 && printf \",--shelltype=csh\"\``"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of Perl environment for cetmodules has failed" || true
++
++####################################
++# Generate the setup script to set up dependencies.
++
++test -n "$_cetpkg_status" || \
++  __SET__ _cetpkg_setup="`${_cetpkg_cettop}/libexec/set_dev_products $_cetpkg_nobuild __SETUP_ARGS__`"
++test $? != 0 -o -z "$_cetpkg_setup" && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: generation of setup script has failed" || true
++####################################
++
++####################################
++# Source the setup script to set up dependencies.
++
++test -n "$_cetpkg_status" || source "$_cetpkg_setup"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: setup of required products has failed" || true
++__SET__ _cetpkg_setup_errlog="$CETPKG_BUILD/cetpkg_setup.err"
++test -s "$_cetpkg_setup_errlog" && cat "$_cetpkg_setup_errlog" || \
++  rm -f "$_cetpkg_setup_errlog"
++####################################
++
++cat <<EOF
++------------------------------------------------------------------------
++
++EOF
++
++# Final sanity check and report.
++test -n "$_cetpkg_status" -o -n "$_cetpkg_nobuild" || \
++  "$_cetpkg_cettop/libexec/verify_build_environment" "$CETPKG_BUILD"
++test $? != 0 && __SET__ _cetpkg_status=1 && \
++  echo "ERROR: unable to verify build environment" || true
++
++####################################
++# Clean up before exiting.
++
++# Clean up C-flavor aliases and prepare to return^H^H^H^H^H^Hexit.
++test "$_cetpkg_shell_flavor" = csh && \
++  unalias vecho_ unsetenv_ tnotnull nullout __TOP_EOF__ return && \
++  set return=exit || return=return
++
++# Finish cleanup and exit. Note the use of eval so we can unset
++# everything including $return and $_cetpkg_status.
++eval "unset vecho_ setenv unsetenv_ source tnotnull nullout "\
++"_cetpkg_nobuild _cetpkg_shell_var_set _cetpkg_to_stderr"\
++"_cetpkg_fw_db _cetpkg_myself _cetpkg_mydir _cetpkg_cetmsetup "\
++"_cetpkg_cettop _cetpkg_setup _cetpkg_setup_errlog "\
++"_cetpkg_shell_flavor return _cetpkg_status; \
++$return $_cetpkg_status"
++####################################
++
++########################################################################
++\__TOP_EOF__
++__TOP_EOF__
+ 
+-test $?shell = 1 && set ss=csh || ss=sh
+-#echo Shell type is $ss.
+-
+-# make some things similar. need to use set_ because sh builtin set would hide function set
+-# Note: perhaps the trickiest thing in this file is the sh set_ function tries to return the same status
+-#       as at the start of the function (which most likely is the result of a back-tick expression
+-test "$ss" = csh && alias set_ set && alias vecho_ 'if ($?vv == 1) echo \!*' || eval 'vecho_() { test -n "${vv-}" && echo "$@"; return 0; }'
+-test "$ss" =  sh && eval 'set_() { sts=$?;for xx in "$@";do var=`expr "$xx" : "\([^=]*\)"`;val=`expr "$xx" : "[^=]*=\(.*\)"`;eval "$var=\"$val\"";done;return $sts; }'
+-test "$ss" =  sh && eval 'setenv() { export $1;eval "$1=\"\${2-}\""; }; source() { file=$1; shift; . $file "$@"; }; unsetenv_() { unset "$@"; }'
+-test "$ss" =  sh && eval 'tnotnull() { eval "test -n \"\${$1-}\""; }'                             && eval 'nullout() { "$@" >/dev/null 2>&1; }'
+-test "$ss" = csh && alias tnotnull "eval '"'test $?'"\!* -eq 1' && eval '"'test -n "$'"\!*"'"'"'" && alias nullout "\!* >& /dev/null" && alias unsetenv_ unsetenv
+-test "$ss" = csh && alias return exit
+-
+-set_ msg1='ERROR: You MUST setup ups'
+-test -z $UPS_DIR && ( echo ""; echo "$msg1"; echo "" ) && return
+-
+-set_ msg3='ERROR: You MUST specify either -o, -p, or -d'
+-set_ msg4='Usage: setup_for_development <-d|-o|-p> <qualifier list>'
+-test -z "$1" && ( echo ""; echo "$msg4"; echo "$msg3"; echo "" ) && return
+-
+-# make sure we know where this script lives
+-# now if we were passed a path or if not, we can figure it out (maybe if we are interactive)
+-#   bash, zsh, ksh and tcsh pass params to a source file, csh does not. but someone will be writing csh scripts
+-set_ msg2='Please set shell or env. variable fw_db (to be the path to the framework source code). Fix this and other errors may go away.'
+-tnotnull fw_db && set_ db=`sh -c "cd $fw_db >/dev/null 2>&1 && pwd"` && vecho_ 'setting db from fw_db variable' || set_ db=
+-
+-test -z "$db" && tnotnull BASH_SOURCE && set_ me=`dirname $BASH_SOURCE` && set_ db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via BASH_SOURCE'
+-
+-# history is applicable only for interactive t/csh
+-test -z "$db" -a "$ss" = csh && test $?history = 0 && set history=5  # make sure history 1 works
+-test -z "$db" -a "$ss" = csh && set me=`history 1|sed 's/^[ 	0-9:]*//'` && test -n "$me" && set me=`dirname $me[2]` \
+-    && set db=`sh -c "cd $me >/dev/null 2>&1 && pwd"` && vecho_ 'setting db via interactive history'
+-#echo This script lives in $db
+-
+-test -z "$db" && echo "$msg2" || vecho_ "db=$db"
+-test -n "$db" && setenv CETPKG_SOURCE `dirname $db`
+-
+-# make sure we know the current directory
+-setenv CETPKG_BUILD `pwd`
+-#echo Build directory is $CETPKG_BUILD
+-
+-echo The working build directory is $CETPKG_BUILD
+-echo The source code directory is $CETPKG_SOURCE
+-
+-set_ msg5='ERROR: setup of required products has failed'
+-
+-echo ----------- check this block for errors -----------------------
+-set_ setup_fail="false"
+-set_ exit_now="false"
+-set_ cetb=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $1 }' `
+-set_ cetv=` grep -e '^[ \t]*cetbuildtools' $CETPKG_SOURCE/ups/product_deps | grep  only_for_build| awk '{ print $2 }' `
+-#echo Found $cetb $cetv
+-setup -B $cetb $cetv
+-test "$?" = 0 || set_ setup_fail="true"
+-# now get the rest of the products
+-set_ cmd="$CETBUILDTOOLS_DIR/bin/set_dev_products $CETPKG_SOURCE $CETPKG_BUILD $*"
+-#echo Ready to run $cmd
+-source `$cmd`
+-test "$?" = 0 || set_ setup_fail="true"
+-#echo "$cmd returned $setup_fail"
+-test "$setup_fail" = "true" && echo "$msg5"
+-test "$setup_fail" = "true" && set_ exit_now="true"
+-test -e "$CETPKG_BUILD/diag_report" && cat $CETPKG_BUILD/diag_report
+-echo ----------------------------------------------------------------
+-
+-test "${exit_now}" = "true" && test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-test "${exit_now}" = "true" && unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail set_ setenv unsetenv_ tnotnull nullout vecho_
+-test "${exit_now}" = "true" && return 1
+-
+-# add lib to LD_LIBRARY_PATH
+-source $CETBUILDTOOLS_DIR/bin/set_dev_lib
+-# add bin to path
+-source $CETBUILDTOOLS_DIR/bin/set_dev_bin
+-# set FHICL_FILE_PATH
+-source $CETBUILDTOOLS_DIR/bin/set_dev_fhicl
+-# set FW_SEARCH_PATH
+-source $CETBUILDTOOLS_DIR/bin/set_dev_fwsearch
+-
+-# final sanity check and report
+-source $CETBUILDTOOLS_DIR/bin/set_dev_check_report
+-
+-# cleanup before exiting
+-test "$ss" = csh && unalias tnotnull nullout set_ vecho_ return
+-unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail
+-unset set_ setenv unsetenv_ tnotnull nullout vecho_
++source ./setup_common.$_cetpkg_shell_flavor

@@ -56,6 +56,9 @@ class Duneana(CMakePackage):
     depends_on("dunereco")
     depends_on("nufinder")
     depends_on("larfinder")
+    #depends_on("py-tensorflow")
+    #depends_on("python")
+    depends_on("systematicstools")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 
@@ -63,7 +66,19 @@ class Duneana(CMakePackage):
         args = [
             self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
             self.define("CMAKE_MODULE_PATH", "%s/Modules;%s/Modules" %
-                       (self.spec['larfinder'].prefix, self.spec['larfinder'].prefix))
+                       (self.spec['nufinder'].prefix, self.spec['larfinder'].prefix))
         ] 
         return args
 
+    #def setup_build_environment(self, spack_env):
+    #    spack_env.set("TENSORFLOW_DIR", str(self.spec["py-tensorflow"].prefix.lib))
+    #    spack_env.set(
+    #        "TENSORFLOW_INC",
+    #        str(
+    #            join_path(
+    #                self.spec["py-tensorflow"].prefix.lib,
+    #                "python%s/site-packages/tensorflow/include"
+    #                % self.spec["python"].version.up_to(2),
+    #            )
+    #        ),
+    #    )

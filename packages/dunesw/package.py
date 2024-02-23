@@ -56,6 +56,7 @@ class Dunesw(CMakePackage):
     depends_on("dunedataprep")
     depends_on("duneexamples")
     depends_on("protoduneana")
+    depends_on("nurandom")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 

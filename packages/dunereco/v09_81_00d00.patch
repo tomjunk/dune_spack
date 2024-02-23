@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ece399..3dc1138 100644
+index 5ece3996..ae1b3ff0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,17 +4,18 @@
@@ -87,12 +87,12 @@ index 5ece399..3dc1138 100644
 +find_package( GSL REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(gsl ...) -> find_package(gsl REQUIRED ...)
 +find_package( hep_hpc REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(hep_hpc ...) -> find_package(hep_hpc REQUIRED ...)
 +find_package( Geant4 REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(...) -> find_package(REQUIRED ...)
-+if(DEFINED CAFFE_LIB)
++if(DEFINED ENV{CAFFE_LIB})
 +  find_package(caffe REQUIRED) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(caffe ...) -> find_package(caffe REQUIRED ...)
  endif()
 -if(DEFINED ENV{LAPACK_LIB} )
 -  find_ups_product( lapack )
-+if(DEFINED LAPACK_LIB)
++if(DEFINED ENV{LAPACK_LIB})
 +  find_package( lapack REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(lapack ...) -> find_package(lapack REQUIRED ...)
  endif()
 -find_package(TRITON QUIET EXPORT)
@@ -105,7 +105,7 @@ index 5ece399..3dc1138 100644
 +find_package(TritonClient EXPORT QUIET)
 +find_package( larrecodnn REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(larrecodnn ...) -> find_package(larrecodnn REQUIRED ...)
 +find_package(TensorFlow EXPORT QUIET)
-+if(DEFINED LIBTORCH_DIR)
++if(DEFINED ENV{LIBTORCH_DIR})
 +  find_package( libtorch REQUIRED ) ### MIGRATE-CHANGED (migrate-3.22.02) - find_ups_product(libtorch ...) -> find_package(libtorch REQUIRED ...)
    find_package(Torch REQUIRED)
  endif()
@@ -120,7 +120,7 @@ index 5ece399..3dc1138 100644
 +cet_cmake_config() ### MIGRATE-ADDED (migrate-3.22.02) - required cmd
 diff --git a/CMakePresets.json b/CMakePresets.json
 new file mode 100644
-index 0000000..7e76e2c
+index 00000000..7e76e2cf
 --- /dev/null
 +++ b/CMakePresets.json
 @@ -0,0 +1,120 @@
@@ -245,12 +245,27 @@ index 0000000..7e76e2c
 +   "version" : 3
 +}
 diff --git a/dunereco/AnaUtils/CMakeLists.txt b/dunereco/AnaUtils/CMakeLists.txt
-index f351738..69b4c8a 100644
+index f351738d..9ef4b8e4 100644
 --- a/dunereco/AnaUtils/CMakeLists.txt
 +++ b/dunereco/AnaUtils/CMakeLists.txt
-@@ -8,12 +8,7 @@ art_make(
-     lardataobj_AnalysisBase
-     lardata_Utilities
+@@ -1,31 +1,24 @@
+ art_make( 
+-    LIB_LIBRARIES larcorealg_Geometry
+-    larcore_Geometry_Geometry_service
+-    larsim_Simulation lardataobj_Simulation
+-    lardataalg_DetectorInfo
+-    lardataobj_RawData
+-    lardataobj_RecoBase
+-    lardataobj_AnalysisBase
+-    lardata_Utilities
++    LIB_LIBRARIES larcorealg::Geometry
++    larcore::Geometry_Geometry_service
++    larsim::Simulation lardataobj::Simulation
++    lardataalg::DetectorInfo
++    lardataobj::RawData
++    lardataobj::RecoBase
++    lardataobj::AnalysisBase
++    lardata::Utilities
      nusimdata::SimulationBase
 -    ART_FRAMEWORK_CORE
 -    ART_FRAMEWORK_PRINCIPAL
@@ -261,12 +276,13 @@ index f351738..69b4c8a 100644
      art::Persistency_Common
      art::Persistency_Provenance
      art::Utilities
-@@ -21,11 +16,9 @@ art_make(
+     canvas::canvas
      messagefacility::MF_MessageLogger
      fhiclcpp::fhiclcpp
-     cetlib::cetlib cetlib_except
+-    cetlib::cetlib cetlib_except
 -    
 -    ROOT_BASIC_LIB_LIST
++    cetlib::cetlib
      dunereco_CVN_func
      dunereco_TrackPID_products
 -)
@@ -274,29 +290,11 @@ index f351738..69b4c8a 100644
  
  install_headers()
  install_fhicl()
-diff --git a/dunereco/CVN/CMakeLists.txt b/dunereco/CVN/CMakeLists.txt
-index 122a46f..28eefc0 100644
---- a/dunereco/CVN/CMakeLists.txt
-+++ b/dunereco/CVN/CMakeLists.txt
-@@ -1,6 +1,6 @@
- add_subdirectory(levelDB)
- # not ready for c2 yet
--if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
-+if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
-   add_subdirectory(art)
-   add_subdirectory(adcutils)
-   add_subdirectory(tf)
 diff --git a/dunereco/CVN/adcutils/CMakeLists.txt b/dunereco/CVN/adcutils/CMakeLists.txt
-index 8866b40..f153b1a 100644
+index 8866b408..1cf8f0de 100644
 --- a/dunereco/CVN/adcutils/CMakeLists.txt
 +++ b/dunereco/CVN/adcutils/CMakeLists.txt
-@@ -1,13 +1,11 @@
- 
--if( DEFINED ENV{TENSORFLOW_DIR} )
-+if( DEFINED TENSORFLOW_DIR )
- 
- art_make_library( 
-   LIBRARY_NAME     GlobImage
+@@ -6,8 +6,6 @@ art_make_library(
    LIBRARY_NAME_VAR GLOBIMAGE
    SOURCE EventImageData.h EventImageData.cxx
    LIBRARIES    dunereco_CVN_func
@@ -326,27 +324,9 @@ index 8866b40..f153b1a 100644
  )
  endif()
 diff --git a/dunereco/CVN/art/CMakeLists.txt b/dunereco/CVN/art/CMakeLists.txt
-index 88b0c9d..e625de6 100644
+index 88b0c9d8..c08300ef 100644
 --- a/dunereco/CVN/art/CMakeLists.txt
 +++ b/dunereco/CVN/art/CMakeLists.txt
-@@ -1,14 +1,14 @@
- # Tensorflow stuff
--if (DEFINED ENV{TENSORFLOW_DIR})
-+if (DEFINED TENSORFLOW_DIR)
- # For some reason we apparently need to care if larreco is checked out.
- #if (larreco_not_in_ups)
- #set (LARRECO_RECOALG_IMAGEPATTERNALGS_TF larrecodnn_ImagePatternAlgs_Tensorflow_TF)
- #else (larreco_not_in_ups)
- #cet_find_library( LARRECO_RECOALG_IMAGEPATTERNALGS_TF NAMES larrecodnn_ImagePatternAlgs_Tensorflow_TF PATHS ENV LARRECO_LIB NO_DEFAULT_PATH)
- #endif (larreco_not_in_ups)
--else(DEFINED ENV{TENSORFLOW_DIR})
-+else(DEFINED TENSORFLOW_DIR)
- set (EXCLUDE_TF TFNetHandler.cxx)
--endif (DEFINED ENV{TENSORFLOW_DIR})
-+endif (DEFINED TENSORFLOW_DIR)
- 
- art_make(BASENAME_ONLY
- #  LIBRARY_NAME      CVNArt
 @@ -35,7 +35,7 @@ art_make(BASENAME_ONLY
    lardata::Utilities
    nusimdata::SimulationBase
@@ -366,7 +346,7 @@ index 88b0c9d..e625de6 100644
  
  install_headers()
 diff --git a/dunereco/CVN/func/CMakeLists.txt b/dunereco/CVN/func/CMakeLists.txt
-index 735d293..1e5cc04 100644
+index 735d2930..a38b8cd8 100644
 --- a/dunereco/CVN/func/CMakeLists.txt
 +++ b/dunereco/CVN/func/CMakeLists.txt
 @@ -1,31 +1,28 @@
@@ -397,24 +377,26 @@ index 735d293..1e5cc04 100644
 -  art::Persistency_Common canvas
 -  art::Persistency_Provenance canvas
 -  art::Utilities canvas
+-  cetlib::cetlib cetlib_except
 +  art::Persistency_Common
 +  art::Persistency_Provenance
 +  art::Utilities
-   cetlib::cetlib cetlib_except
++  cetlib::cetlib
    canvas::canvas
    Boost::filesystem            
 -  
 -  ROOT_BASIC_LIB_LIST
+-  DICT_LIBRARIES   lardataobj_RecoBase
 +  ROOT::Hist  
-   DICT_LIBRARIES   lardataobj_RecoBase
++  DICT_LIBRARIES   lardataobj::RecoBase
    dunereco_CVN_func
 -  )
-+  ) ### MIGRATE ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
++  ) ### MIGRATE ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_source()
 diff --git a/dunereco/CVN/levelDB/CMakeLists.txt b/dunereco/CVN/levelDB/CMakeLists.txt
-index a083f55..20f070c 100644
+index a083f555..20f070cb 100644
 --- a/dunereco/CVN/levelDB/CMakeLists.txt
 +++ b/dunereco/CVN/levelDB/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -444,12 +426,12 @@ index a083f55..20f070c 100644
  
  install_source()
 diff --git a/dunereco/CVN/tf/CMakeLists.txt b/dunereco/CVN/tf/CMakeLists.txt
-index 990aa9d..c60d2ef 100644
+index 990aa9db..622c18a9 100644
 --- a/dunereco/CVN/tf/CMakeLists.txt
 +++ b/dunereco/CVN/tf/CMakeLists.txt
 @@ -1,4 +1,4 @@
 -include_directories ( $ENV{TENSORFLOW_INC}/absl )
-+include_directories ( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++include_directories ( $ENV{TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  cet_add_compiler_flags(CXX -Wno-pedantic)
  
@@ -463,7 +445,7 @@ index 990aa9d..c60d2ef 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/ClusterFinderDUNE/CMakeLists.txt b/dunereco/ClusterFinderDUNE/CMakeLists.txt
-index 4cf759f..ed822aa 100644
+index 4cf759f1..ed822aa1 100644
 --- a/dunereco/ClusterFinderDUNE/CMakeLists.txt
 +++ b/dunereco/ClusterFinderDUNE/CMakeLists.txt
 @@ -19,7 +19,6 @@
@@ -475,7 +457,7 @@ index 4cf759f..ed822aa 100644
  #                           art_root_io::TFileService_service
  #                           art::Persistency_Common canvas
 diff --git a/dunereco/DUNEPandora/CMakeLists.txt b/dunereco/DUNEPandora/CMakeLists.txt
-index abe8280..091dffa 100644
+index abe82800..091dffa9 100644
 --- a/dunereco/DUNEPandora/CMakeLists.txt
 +++ b/dunereco/DUNEPandora/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -524,18 +506,9 @@ index abe8280..091dffa 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/FDSelections/CMakeLists.txt b/dunereco/FDSelections/CMakeLists.txt
-index 514a068..0bc39de 100644
+index 514a0689..ded88d00 100644
 --- a/dunereco/FDSelections/CMakeLists.txt
 +++ b/dunereco/FDSelections/CMakeLists.txt
-@@ -2,7 +2,7 @@ add_subdirectory(pandrizzle)
- add_subdirectory(pandizzle)
- add_subdirectory(FDSelectionData)
- 
--if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
-+if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
-   
- art_make( LIBRARY_NAME FDSelection
- 	  LIB_LIBRARIES larcorealg_Geometry
 @@ -20,33 +20,17 @@ art_make( LIBRARY_NAME FDSelection
           			larreco_Calorimetry
  	  	        larpandora_LArPandoraInterface
@@ -572,19 +545,24 @@ index 514a068..0bc39de 100644
      endif ()
      
 diff --git a/dunereco/FDSelections/FDSelectionData/CMakeLists.txt b/dunereco/FDSelections/FDSelectionData/CMakeLists.txt
-index 63c9759..a0dda54 100644
+index 63c9759e..f26240e3 100644
 --- a/dunereco/FDSelections/FDSelectionData/CMakeLists.txt
 +++ b/dunereco/FDSelections/FDSelectionData/CMakeLists.txt
-@@ -4,6 +4,6 @@ art_make(
-      ${ROOT_GENVECTOR} #LorentzVector
+@@ -1,9 +1,9 @@
+ # this will create both the library and the dictionary
+ art_make(
+   LIB_LIBRARIES
+-     ${ROOT_GENVECTOR} #LorentzVector
++     ROOT::GenVector #LorentzVector
    DICT_LIBRARIES
-      lardataobj_RecoBase #just for associations
+-     lardataobj_RecoBase #just for associations
 -  )
++     lardataobj::headers #just for associations
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  install_source()
  install_headers()
 diff --git a/dunereco/FDSelections/pandizzle/CMakeLists.txt b/dunereco/FDSelections/pandizzle/CMakeLists.txt
-index 69db092..4f43bd1 100644
+index 69db0925..4f43bd1f 100644
 --- a/dunereco/FDSelections/pandizzle/CMakeLists.txt
 +++ b/dunereco/FDSelections/pandizzle/CMakeLists.txt
 @@ -1,45 +1,28 @@
@@ -659,7 +637,7 @@ index 69db092..4f43bd1 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/FDSelections/pandrizzle/CMakeLists.txt b/dunereco/FDSelections/pandrizzle/CMakeLists.txt
-index a4826e4..0c66dd8 100644
+index a4826e4c..0c66dd8f 100644
 --- a/dunereco/FDSelections/pandrizzle/CMakeLists.txt
 +++ b/dunereco/FDSelections/pandrizzle/CMakeLists.txt
 @@ -1,46 +1,29 @@
@@ -734,77 +712,110 @@ index a4826e4..0c66dd8 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/FDSelections/tools/CMakeLists.txt b/dunereco/FDSelections/tools/CMakeLists.txt
-index 3b42b59..55962f9 100644
+index 3b42b590..1dd7c08b 100644
 --- a/dunereco/FDSelections/tools/CMakeLists.txt
 +++ b/dunereco/FDSelections/tools/CMakeLists.txt
-@@ -2,23 +2,15 @@ simple_plugin(LongestRecoVertexTrackSelector "tool"
- dunereco_AnaUtils
-     	  	        lardataobj_RecoBase
-     	  	        larpandora_LArPandoraInterface
+@@ -1,63 +1,45 @@
+ simple_plugin(LongestRecoVertexTrackSelector "tool"
+-dunereco_AnaUtils
+-    	  	        lardataobj_RecoBase
+-    	  	        larpandora_LArPandoraInterface
 -                ${ROOT_BASIC_LIB_LIST}
 -                ${ART_FRAMEWORK_PRINCIPAL}
 -                ${ART_FRAMEWORK_CORE}
 -		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
-  	  	           art_Persistency_Common canvas
-  	  	           art_Persistency_Provenance canvas
- 
-  	  	           art_Utilities canvas
+- 	  	           art_Persistency_Common canvas
+- 	  	           art_Persistency_Provenance canvas
+-
+- 	  	           art_Utilities canvas
 -             )
++                      dunereco_AnaUtils
++                      lardataobj::RecoBase
++                      larpandora::LArPandoraInterface
++                      art::Persistency_Common 
++                      art::Persistency_Provenance 
++
++                       
 +             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
  
  simple_plugin(HighestPandrizzleScoreRecoVertexShowerSelector "tool"
-     	  	        lardataobj_RecoBase
-     	  	        larpandora_LArPandoraInterface
+-    	  	        lardataobj_RecoBase
+-    	  	        larpandora_LArPandoraInterface
 -                ${ROOT_BASIC_LIB_LIST}
 -                ${ART_FRAMEWORK_PRINCIPAL}
 -                ${ART_FRAMEWORK_CORE}
 -		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
-  	  	           art_Persistency_Common canvas
-  	  	           art_Persistency_Provenance canvas
+- 	  	           art_Persistency_Common canvas
+- 	  	           art_Persistency_Provenance canvas
++                      lardataobj::RecoBase
++                      larpandora::LArPandoraInterface
++                      art::Persistency_Common 
++                      art::Persistency_Provenance 
  
-@@ -26,22 +18,18 @@ simple_plugin(HighestPandrizzleScoreRecoVertexShowerSelector "tool"
+- 	  	           art_Utilities canvas
++                       
  
-                    PandrizzleAlg    
-                 #dune_FDSelections_pandizzle
+-                   PandrizzleAlg    
+-                #dune_FDSelections_pandizzle
 -             )
++                      PandrizzleAlg    
++                      #dune_FDSelections_pandizzle
 +             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
  
  
  simple_plugin(HighestPandizzleScoreRecoVertexTrackSelector "tool"
-     	  	        lardataobj_RecoBase
-     	  	        larpandora_LArPandoraInterface
+-    	  	        lardataobj_RecoBase
+-    	  	        larpandora_LArPandoraInterface
 -                ${ROOT_BASIC_LIB_LIST}
 -                ${ART_FRAMEWORK_PRINCIPAL}
 -                ${ART_FRAMEWORK_CORE}
 -		       	   ${ART_FRAMEWORK_SERVICES_REGISTRY}
-  	  	           art_Persistency_Common canvas
-  	  	           art_Persistency_Provenance canvas
- 
-  	  	           art_Utilities canvas
-                    PandizzleAlg
+- 	  	           art_Persistency_Common canvas
+- 	  	           art_Persistency_Provenance canvas
+-
+- 	  	           art_Utilities canvas
+-                   PandizzleAlg
 -             )
++                      lardataobj::RecoBase
++                      larpandora::LArPandoraInterface
++                      art::Persistency_Common 
++                      art::Persistency_Provenance 
++
++                       
++                      PandizzleAlg
 +             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
  
  simple_plugin(HighestEnergyRecoVertexShowerSelector "tool"
-     	  	        lardataobj_RecoBase
-@@ -50,14 +38,8 @@ simple_plugin(HighestEnergyRecoVertexShowerSelector "tool"
-                 larreco_RecoAlg
-     	  	        larpandora_LArPandoraInterface
- dunereco_AnaUtils
+-    	  	        lardataobj_RecoBase
+-                larcorealg_Geometry
+-                larcore_Geometry_Geometry_service
+-                larreco_RecoAlg
+-    	  	        larpandora_LArPandoraInterface
+-dunereco_AnaUtils
 -                ${ROOT_BASIC_LIB_LIST}
 -                ${ART_FRAMEWORK_PRINCIPAL}
 -                ${ART_FRAMEWORK_CORE}
 -		       	${ART_FRAMEWORK_SERVICES_REGISTRY}
 -	  	       	${ART_FRAMEWORK_SERVICES_OPTIONAL}
 -			    ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
-  	  	           art_Persistency_Common canvas
-  	  	           art_Persistency_Provenance canvas
- 
-  	  	           art_Utilities canvas
+- 	  	           art_Persistency_Common canvas
+- 	  	           art_Persistency_Provenance canvas
+-
+- 	  	           art_Utilities canvas
 -             )
++                      lardataobj::RecoBase
++                      larcorealg::Geometry
++                      larcore::Geometry_Geometry_service
++                      larreco::RecoAlg
++                      larpandora::LArPandoraInterface
++                      dunereco_AnaUtils
++                      art::Persistency_Common 
++                      art::Persistency_Provenance 
++
++                       
 +             ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use cet_build_plugin() with explicit source lists and plugin base types
 diff --git a/dunereco/FDSensOpt/CMakeLists.txt b/dunereco/FDSensOpt/CMakeLists.txt
-index 210d40a..bf9fe6e 100644
+index 210d40a7..310a57a6 100644
 --- a/dunereco/FDSensOpt/CMakeLists.txt
 +++ b/dunereco/FDSensOpt/CMakeLists.txt
 @@ -26,6 +26,7 @@ cet_build_plugin(NueAna   art::module
@@ -823,12 +834,14 @@ index 210d40a..bf9fe6e 100644
                BASENAME_ONLY
  )
  
-@@ -54,8 +54,7 @@ cet_build_plugin(MVASelect   art::module
+@@ -53,9 +53,8 @@ cet_build_plugin(MVASelect   art::module
+                         art::Utilities 
                          canvas::canvas
                          messagefacility::MF_MessageLogger
-                         cetlib::cetlib cetlib_except
+-                        cetlib::cetlib cetlib_except
 -                        ROOT_BASIC_LIB_LIST
 -                        ${GENIE_LIB_LIST}
++                        cetlib::cetlib 
 +			${GENIE_LIB_LIST}
                BASENAME_ONLY
  )
@@ -879,7 +892,7 @@ index 210d40a..bf9fe6e 100644
  )
  
 diff --git a/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt b/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt
-index 749bb95..b9ff355 100644
+index 749bb959..b9ff3558 100644
 --- a/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt
 +++ b/dunereco/FDSensOpt/FDSensOptData/CMakeLists.txt
 @@ -1,9 +1,9 @@
@@ -896,43 +909,60 @@ index 749bb95..b9ff355 100644
  install_source()
  install_headers()
 diff --git a/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt b/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt
-index 009cf98..dc4fa52 100644
+index 009cf989..5ba5eb46 100644
 --- a/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt
 +++ b/dunereco/FDSensOpt/IniSegAlg/CMakeLists.txt
-@@ -1,4 +1,4 @@
+@@ -1,33 +1,26 @@
 -include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 +include_directories(${CMAKE_CURRENT_SOURCE_DIR}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  art_make( BASENAME_ONLY
            LIBRARY_NAME  IniSegAlg
-@@ -11,23 +11,17 @@ art_make( BASENAME_ONLY
- 			larreco_RecoAlg_PMAlg
-                         lardata_Utilities
+-          LIB_LIBRARIES larcorealg_Geometry
+-                        larcore_Geometry_Geometry_service
+-                        larsim_Simulation nug4::ParticleNavigation lardataobj_Simulation
+-                        lardataobj_RawData
+-                        lardataobj_RecoBase
+-			larreco_RecoAlg
+-			larreco_RecoAlg_PMAlg
+-                        lardata_Utilities
++          LIB_LIBRARIES larcorealg::Geometry
++                        larcore::Geometry_Geometry_service
++                        larsim::Simulation nug4::ParticleNavigation lardataobj::Simulation
++                        lardataobj::RawData
++                        lardataobj::RecoBase
++			larreco::RecoAlg
++			larreco::RecoAlg_PMAlg
++                        lardata::Utilities
                          nusimdata::SimulationBase
 -                        ART_FRAMEWORK_CORE
 -                        ART_FRAMEWORK_PRINCIPAL
-                         art::Persistency_Common canvas
+-                        art::Persistency_Common canvas
 -                        ART_FRAMEWORK_SERVICES_REGISTRY
 -                        ART_ROOT_IO_TFILE_SUPPORT
++                        art::Persistency_Common
                          ROOT::Core
 -                        ART_ROOT_IO_TFILESERVICE_SERVICE
-                         art::Persistency_Common canvas
-                         art::Persistency_Provenance canvas
+-                        art::Persistency_Common canvas
+-                        art::Persistency_Provenance canvas
+-                        art::Utilities canvas
++                        art::Persistency_Provenance
 +			art_root_io::tfile_support
-                         art::Utilities canvas
++                        art::Utilities
                          fhiclcpp::fhiclcpp
  			messagefacility::MF_MessageLogger
--			
-                         cetlib::cetlib cetlib_except
--                        ROOT_BASIC_LIB_LIST
++                        cetlib::cetlib
  			
+-                        cetlib::cetlib cetlib_except
+-                        ROOT_BASIC_LIB_LIST
+-			
 -          )
 +          ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  
  install_headers()
 diff --git a/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt b/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt
-index dbf28ef..02a53fd 100644
+index dbf28ef0..02a53fd2 100644
 --- a/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt
 +++ b/dunereco/FDSensOpt/MVAAlg/CMakeLists.txt
 @@ -1,40 +1,32 @@
@@ -998,44 +1028,72 @@ index dbf28ef..02a53fd 100644
  
  install_headers()
 diff --git a/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt b/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt
-index 1afbf87..376eedd 100644
+index 1afbf870..d484f28b 100644
 --- a/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt
 +++ b/dunereco/FDSensOpt/NeutrinoEnergyRecoAlg/CMakeLists.txt
-@@ -1,4 +1,4 @@
+@@ -1,42 +1,31 @@
 -include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 +include_directories(${CMAKE_CURRENT_SOURCE_DIR}) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  art_make( BASENAME_ONLY
    LIBRARY_NAME  NeutrinoEnergyRecoAlg
-@@ -18,25 +18,15 @@ art_make( BASENAME_ONLY
-   larsim_MCCheater_BackTrackerService_service
-   larsim_MCCheater_ParticleInventoryService_service
+   LIB_LIBRARIES 
+-  larcorealg_Geometry
++  larcorealg::Geometry
+   dunereco_AnaUtils
+-  larcore_Geometry_Geometry_service
+-  larsim_Simulation nug4::ParticleNavigation lardataobj_Simulation
+-  lardataobj_RawData
+-  lardataobj_RecoBase
+-  lardata_ArtDataHelper
+-  larreco_RecoAlg
+-  larreco_RecoAlg_PMAlg
+-  lardata_Utilities
+-  larreco_Calorimetry
++  larcore::Geometry_Geometry_service
++  larsim::Simulation nug4::ParticleNavigation lardataobj::Simulation
++  lardataobj::RawData
++  lardataobj::RecoBase
++  lardata::ArtDataHelper
++  larreco::RecoAlg
++  larreco::RecoAlg_PMAlg
++  lardata::Utilities
++  larreco::Calorimetry
+   IniSegAlg
+-  larsim_MCCheater_BackTrackerService_service
+-  larsim_MCCheater_ParticleInventoryService_service
++  larsim::MCCheater_BackTrackerService_service
++  larsim::MCCheater_ParticleInventoryService_service
    nusimdata::SimulationBase
 -  ART_FRAMEWORK_CORE
 -  ART_FRAMEWORK_PRINCIPAL
-   art::Persistency_Common canvas
+-  art::Persistency_Common canvas
 -  ART_FRAMEWORK_SERVICES_REGISTRY
 -  ART_ROOT_IO_TFILE_SUPPORT
    ROOT::Core
 -  ART_ROOT_IO_TFILESERVICE_SERVICE
-   art::Persistency_Common canvas
-   art::Persistency_Provenance canvas
-   art::Utilities canvas
+-  art::Persistency_Common canvas
+-  art::Persistency_Provenance canvas
+-  art::Utilities canvas
++  art::Persistency_Common
++  art::Persistency_Provenance
++  art::Utilities
    fhiclcpp::fhiclcpp
    messagefacility::MF_MessageLogger
 -  
 -  ROOT_EG
-   cetlib::cetlib cetlib_except
+-  cetlib::cetlib cetlib_except
 -  ROOT_BASIC_LIB_LIST
 -  
 -  ROOT_TMVA
 -  )
++  cetlib::cetlib 
 +  ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  
  install_headers()
 diff --git a/dunereco/HitFinderDUNE/CMakeLists.txt b/dunereco/HitFinderDUNE/CMakeLists.txt
-index d70bd82..e1c76c2 100644
+index d70bd82d..b124631c 100644
 --- a/dunereco/HitFinderDUNE/CMakeLists.txt
 +++ b/dunereco/HitFinderDUNE/CMakeLists.txt
 @@ -1,61 +1,45 @@
@@ -1130,17 +1188,17 @@ index d70bd82..e1c76c2 100644
 +                           nurandom::RandomUtils_NuRandomService_service
 +                           nusimdata::SimulationBase
 +                           ROOT::Core
-+                           art::Persistency_Common canvas
-+                           art::Utilities canvas
++                           art::Persistency_Common 
++                           art::Utilities 
 +                           messagefacility::MF_MessageLogger
 +                           fhiclcpp::fhiclcpp
-+                           cetlib::cetlib cetlib_except
++                           cetlib::cetlib
 +         ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
  
  install_headers()
  install_fhicl()
 diff --git a/dunereco/InfillChannels/art/CMakeLists.txt b/dunereco/InfillChannels/art/CMakeLists.txt
-index fff7ec1..9378665 100644
+index fff7ec1b..9378665d 100644
 --- a/dunereco/InfillChannels/art/CMakeLists.txt
 +++ b/dunereco/InfillChannels/art/CMakeLists.txt
 @@ -1,8 +1,8 @@
@@ -1191,7 +1249,7 @@ index fff7ec1..9378665 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/PointResTree/CMakeLists.txt b/dunereco/PointResTree/CMakeLists.txt
-index 1c3c24f..b1be7f9 100644
+index 1c3c24fb..b1be7f9a 100644
 --- a/dunereco/PointResTree/CMakeLists.txt
 +++ b/dunereco/PointResTree/CMakeLists.txt
 @@ -1,30 +1,23 @@
@@ -1243,7 +1301,7 @@ index 1c3c24f..b1be7f9 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/RecoAlgDUNE/CMakeLists.txt b/dunereco/RecoAlgDUNE/CMakeLists.txt
-index d8886ba..8f70e8e 100644
+index d8886bac..8f70e8ea 100644
 --- a/dunereco/RecoAlgDUNE/CMakeLists.txt
 +++ b/dunereco/RecoAlgDUNE/CMakeLists.txt
 @@ -21,27 +21,17 @@ art_make(
@@ -1277,7 +1335,7 @@ index d8886ba..8f70e8e 100644
  #add_subdirectory(Cluster3DAlgs)
  
 diff --git a/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt b/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt
-index f6c46bf..2b91b23 100644
+index f6c46bfb..2b91b233 100644
 --- a/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt
 +++ b/dunereco/RecoAlgDUNE/Cluster3DAlgs/CMakeLists.txt
 @@ -10,27 +10,17 @@ art_make(
@@ -1310,18 +1368,8 @@ index f6c46bf..2b91b23 100644
  
  install_headers()
  install_fhicl()
-diff --git a/dunereco/RegCNN/CMakeLists.txt b/dunereco/RegCNN/CMakeLists.txt
-index 7352355..a18dd5a 100644
---- a/dunereco/RegCNN/CMakeLists.txt
-+++ b/dunereco/RegCNN/CMakeLists.txt
-@@ -1,4 +1,4 @@
--if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
-+if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
-   add_subdirectory(art)
-   add_subdirectory(func)
- endif()
 diff --git a/dunereco/RegCNN/art/CMakeLists.txt b/dunereco/RegCNN/art/CMakeLists.txt
-index ae530d6..0161c89 100644
+index ae530d63..0161c896 100644
 --- a/dunereco/RegCNN/art/CMakeLists.txt
 +++ b/dunereco/RegCNN/art/CMakeLists.txt
 @@ -20,13 +20,7 @@ art_make(BASENAME_ONLY
@@ -1356,7 +1404,7 @@ index ae530d6..0161c89 100644
  # use add or remove
  ##cet_set_compiler_flags(DIAGS CAUTIOUS
 diff --git a/dunereco/RegCNN/func/CMakeLists.txt b/dunereco/RegCNN/func/CMakeLists.txt
-index f84a62d..d76dfac 100644
+index f84a62d6..55677e7b 100644
 --- a/dunereco/RegCNN/func/CMakeLists.txt
 +++ b/dunereco/RegCNN/func/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -1364,7 +1412,7 @@ index f84a62d..d76dfac 100644
  # not ready for c2 yet
  
 -include_directories( $ENV{TENSORFLOW_INC}/absl )
-+include_directories( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++include_directories( $ENV{TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  cet_add_compiler_flags(CXX -Wno-pedantic)
  
@@ -1387,7 +1435,7 @@ index f84a62d..d76dfac 100644
  install_headers()
  install_source()
 diff --git a/dunereco/RegCNN/macro/CMakeLists.txt b/dunereco/RegCNN/macro/CMakeLists.txt
-index be4bb42..9eec255 100644
+index be4bb42c..9eec2551 100644
 --- a/dunereco/RegCNN/macro/CMakeLists.txt
 +++ b/dunereco/RegCNN/macro/CMakeLists.txt
 @@ -1,31 +1,25 @@
@@ -1436,7 +1484,7 @@ index be4bb42..9eec255 100644
  
  install_headers()
 diff --git a/dunereco/SNSlicer/CMakeLists.txt b/dunereco/SNSlicer/CMakeLists.txt
-index 3d3ad55..bc3a4e4 100644
+index 3d3ad550..bc3a4e43 100644
 --- a/dunereco/SNSlicer/CMakeLists.txt
 +++ b/dunereco/SNSlicer/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -1479,7 +1527,7 @@ index 3d3ad55..bc3a4e4 100644
  
  art_dictionary( DICTIONARY_LIBRARIES ) # dunereco_SNSlicer )
 diff --git a/dunereco/TrackFinderDUNE/CMakeLists.txt b/dunereco/TrackFinderDUNE/CMakeLists.txt
-index ebf333b..1279ef3 100644
+index ebf333bc..1279ef3e 100644
 --- a/dunereco/TrackFinderDUNE/CMakeLists.txt
 +++ b/dunereco/TrackFinderDUNE/CMakeLists.txt
 @@ -1,28 +1,23 @@
@@ -1526,20 +1574,17 @@ index ebf333b..1279ef3 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/TrackPID/CMakeLists.txt b/dunereco/TrackPID/CMakeLists.txt
-index 6e74fb0..7ba7885 100644
+index 6e74fb06..79ee19ab 100644
 --- a/dunereco/TrackPID/CMakeLists.txt
 +++ b/dunereco/TrackPID/CMakeLists.txt
-@@ -1,6 +1,6 @@
+@@ -1,4 +1,4 @@
 -include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 +include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
--if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
-+if(( DEFINED TENSORFLOW_DIR ) AND ( DEFINED TRITON_DIR ))
+ if(( DEFINED ENV{TENSORFLOW_DIR} ) AND ( DEFINED ENV{TRITON_DIR} ))
    add_subdirectory(algorithms)
-   add_subdirectory(fcls)
-   add_subdirectory(modules)
 diff --git a/dunereco/TrackPID/algorithms/CMakeLists.txt b/dunereco/TrackPID/algorithms/CMakeLists.txt
-index dd283d4..47e19a7 100644
+index dd283d46..47e19a78 100644
 --- a/dunereco/TrackPID/algorithms/CMakeLists.txt
 +++ b/dunereco/TrackPID/algorithms/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -1563,7 +1608,7 @@ index dd283d4..47e19a7 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/TrackPID/fcls/CMakeLists.txt b/dunereco/TrackPID/fcls/CMakeLists.txt
-index edb2842..03ccca0 100644
+index edb28420..03ccca02 100644
 --- a/dunereco/TrackPID/fcls/CMakeLists.txt
 +++ b/dunereco/TrackPID/fcls/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -1573,7 +1618,7 @@ index edb2842..03ccca0 100644
  install_fhicl()
  
 diff --git a/dunereco/TrackPID/modules/CMakeLists.txt b/dunereco/TrackPID/modules/CMakeLists.txt
-index d0e69a7..6399c6d 100644
+index d0e69a78..6399c6d1 100644
 --- a/dunereco/TrackPID/modules/CMakeLists.txt
 +++ b/dunereco/TrackPID/modules/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -1612,7 +1657,7 @@ index d0e69a7..6399c6d 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/TrackPID/products/CMakeLists.txt b/dunereco/TrackPID/products/CMakeLists.txt
-index 7dee305..670ce93 100644
+index 7dee305b..0c4e4777 100644
 --- a/dunereco/TrackPID/products/CMakeLists.txt
 +++ b/dunereco/TrackPID/products/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -1621,6 +1666,15 @@ index 7dee305..670ce93 100644
  
  art_make( 
      LIB_LIBRARIES 
+@@ -6,7 +6,7 @@ art_make(
+ #    larcore_Geometry_Geometry_service
+ #    larsim_Simulation lardataobj_Simulation
+ #    lardataobj_RawData
+-#    lardataobj_RecoBase
++    lardataobj::RecoBase
+ #    lardataobj_AnalysisBase
+ #    lardata_Utilities
+ #    nusimdata::SimulationBase
 @@ -15,7 +15,6 @@ art_make(
  #    art::Framework_Core
  #    art::Framework_Principal
@@ -1641,13 +1695,13 @@ index 7dee305..670ce93 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/TrackPID/tf/CMakeLists.txt b/dunereco/TrackPID/tf/CMakeLists.txt
-index a710ebe..2671cb5 100644
+index a710ebee..eaefd0dc 100644
 --- a/dunereco/TrackPID/tf/CMakeLists.txt
 +++ b/dunereco/TrackPID/tf/CMakeLists.txt
 @@ -1,5 +1,5 @@
  
 -include_directories ( $ENV{TENSORFLOW_INC}/absl )
-+include_directories ( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++include_directories ( $ENV{TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  cet_add_compiler_flags(CXX -Wno-pedantic)
  
@@ -1660,34 +1714,8 @@ index a710ebe..2671cb5 100644
  
  install_headers()
  install_fhicl()
-diff --git a/dunereco/VLNets/CMakeLists.txt b/dunereco/VLNets/CMakeLists.txt
-index 496534c..3b5a524 100644
---- a/dunereco/VLNets/CMakeLists.txt
-+++ b/dunereco/VLNets/CMakeLists.txt
-@@ -1,7 +1,7 @@
- add_subdirectory(art)
- add_subdirectory(data)
- 
--if ((DEFINED ENV{TENSORFLOW_DIR}) AND (DEFINED ENV{TRITON_DIR}))
-+if ((DEFINED TENSORFLOW_DIR) AND (DEFINED TRITON_DIR))
-     add_subdirectory(models)
- endif ()
- 
-diff --git a/dunereco/VLNets/art/CMakeLists.txt b/dunereco/VLNets/art/CMakeLists.txt
-index f169ff7..3dab93c 100644
---- a/dunereco/VLNets/art/CMakeLists.txt
-+++ b/dunereco/VLNets/art/CMakeLists.txt
-@@ -2,7 +2,7 @@ add_subdirectory(products)
- add_subdirectory(var_extractors)
- add_subdirectory(data_generators)
- 
--if ((DEFINED ENV{TENSORFLOW_DIR}) AND (DEFINED ENV{TRITON_DIR}))
-+if ((DEFINED TENSORFLOW_DIR) AND (DEFINED TRITON_DIR))
-     add_subdirectory(evaluators)
- endif ()
- 
 diff --git a/dunereco/VLNets/art/data_generators/CMakeLists.txt b/dunereco/VLNets/art/data_generators/CMakeLists.txt
-index c4d53ac..4031f64 100644
+index c4d53acd..4031f646 100644
 --- a/dunereco/VLNets/art/data_generators/CMakeLists.txt
 +++ b/dunereco/VLNets/art/data_generators/CMakeLists.txt
 @@ -6,7 +6,7 @@ art_make(
@@ -1700,7 +1728,7 @@ index c4d53ac..4031f64 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/VLNets/art/evaluators/CMakeLists.txt b/dunereco/VLNets/art/evaluators/CMakeLists.txt
-index 3360203..8ecfbde 100644
+index 33602036..8ecfbdea 100644
 --- a/dunereco/VLNets/art/evaluators/CMakeLists.txt
 +++ b/dunereco/VLNets/art/evaluators/CMakeLists.txt
 @@ -6,7 +6,7 @@ art_make(
@@ -1713,7 +1741,7 @@ index 3360203..8ecfbde 100644
  install_headers()
  install_fhicl()
 diff --git a/dunereco/VLNets/art/products/CMakeLists.txt b/dunereco/VLNets/art/products/CMakeLists.txt
-index 925625f..cd8fc63 100644
+index 925625f9..cd8fc632 100644
 --- a/dunereco/VLNets/art/products/CMakeLists.txt
 +++ b/dunereco/VLNets/art/products/CMakeLists.txt
 @@ -3,7 +3,7 @@ art_make(
@@ -1725,20 +1753,33 @@ index 925625f..cd8fc63 100644
  
  install_headers()
  install_source()
+diff --git a/dunereco/VLNets/art/var_extractors/CMakeLists.txt b/dunereco/VLNets/art/var_extractors/CMakeLists.txt
+index 25a8b6b8..2aa6b3f4 100644
+--- a/dunereco/VLNets/art/var_extractors/CMakeLists.txt
++++ b/dunereco/VLNets/art/var_extractors/CMakeLists.txt
+@@ -13,7 +13,7 @@ art_make_library(
+         utils.cxx
+     LIBRARIES
+         dunereco_AnaUtils
+-        larreco_Calorimetry
++        larreco::Calorimetry
+ )
+ 
+ install_headers()
 diff --git a/dunereco/VLNets/models/CMakeLists.txt b/dunereco/VLNets/models/CMakeLists.txt
-index 6dbe419..84b31e4 100644
+index 6dbe4191..dc3d5b5d 100644
 --- a/dunereco/VLNets/models/CMakeLists.txt
 +++ b/dunereco/VLNets/models/CMakeLists.txt
 @@ -1,5 +1,5 @@
  
 -include_directories( $ENV{TENSORFLOW_INC}/absl )
-+include_directories( ${TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
++include_directories( $ENV{TENSORFLOW_INC}/absl ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.22.02) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
  
  cet_add_compiler_flags(CXX -Wno-pedantic)
  
 diff --git a/ups/CMakeLists.txt b/ups/CMakeLists.txt
 deleted file mode 100644
-index fe33cc7..0000000
+index fe33cc71..00000000
 --- a/ups/CMakeLists.txt
 +++ /dev/null
 @@ -1,6 +0,0 @@
@@ -1750,7 +1791,7 @@ index fe33cc7..0000000
 -cet_cmake_config()
 diff --git a/ups/product-config.cmake.in b/ups/product-config.cmake.in
 deleted file mode 100644
-index 4e22a3b..0000000
+index 4e22a3b3..00000000
 --- a/ups/product-config.cmake.in
 +++ /dev/null
 @@ -1,12 +0,0 @@
@@ -1767,7 +1808,7 @@ index 4e22a3b..0000000
 -check_required_components(@product@)
 -
 diff --git a/ups/product_deps b/ups/product_deps
-index 3c6d848..0772f37 100644
+index 3c6d8489..0772f372 100644
 --- a/ups/product_deps
 +++ b/ups/product_deps
 @@ -1,53 +1,338 @@
@@ -2145,7 +2186,7 @@ index 3c6d848..0772f37 100644
 +# vi:set ts=8 noexpandtab:
 diff --git a/ups/setup_deps b/ups/setup_deps
 deleted file mode 100644
-index 72c2e32..0000000
+index 72c2e321..00000000
 --- a/ups/setup_deps
 +++ /dev/null
 @@ -1,89 +0,0 @@
@@ -2239,7 +2280,7 @@ index 72c2e32..0000000
 -unset ss db me thisdir msg1 msg2 msg3 msg4 msg5 setup_fail
 -unset set_ setenv unsetenv_ tnotnull nullout vecho_
 diff --git a/ups/setup_for_development b/ups/setup_for_development
-index 8c5bedf..e46765f 100644
+index 8c5bedf1..e46765f5 100644
 --- a/ups/setup_for_development
 +++ b/ups/setup_for_development
 @@ -1,96 +1,260 @@
