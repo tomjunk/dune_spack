@@ -68,3 +68,17 @@ class Duneexamples(CMakePackage):
 
     def setup_build_environment(self, spack_env):
         spack_env.set("LD_LIBRARY_PATH", "%s/root" % self.spec["root"].prefix.lib)
+
+    def setup_run_environment(self, run_env, dspec):
+        run_env.prepend_path("CET_PLUGIN_PATH", self.prefix.lib)
+        run_env.prepend_path("PATH", self.prefix.bin)
+        run_env.prepend_path("ROOT_INCLUDE_PATH", self.prefix.include)
+        run_env.append_path("FHICL_FILE_PATH", "{0}/fcl".format(self.prefix))
+        run_env.append_path("FW_SEARCH_PATH", "{0}/gdml".format(self.prefix))
+
+    def setup_dependent_run_environment(self, run_env, dspec):
+        run_env.prepend_path("CET_PLUGIN_PATH", self.prefix.lib)
+        run_env.prepend_path("PATH", self.prefix.bin)
+        run_env.prepend_path("ROOT_INCLUDE_PATH", self.prefix.include)
+        run_env.append_path("FHICL_FILE_PATH", "{0}/fcl".format(self.prefix))
+        run_env.append_path("FW_SEARCH_PATH", "{0}/gdml".format(self.prefix))
