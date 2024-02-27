@@ -68,7 +68,7 @@ class Duneanaobj(CMakePackage):
         spack_env.set("DUNEANAOBJ_DIR", "%s" % self.stage.source_path)
         spack_env.set("MRB_BUILDDIR", "%s" % self.build_directory)
 
-    def setup_run_environment(self, run_env, dspec):
+    def setup_run_environment(self, run_env):
         run_env.prepend_path("CET_PLUGIN_PATH", self.prefix.lib)
         run_env.prepend_path("PATH", self.prefix.bin)
         run_env.prepend_path("ROOT_INCLUDE_PATH", self.prefix.include)
