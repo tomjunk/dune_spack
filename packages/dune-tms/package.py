@@ -1,3 +1,8 @@
+# This package.py written by Liam O'Sullivan <liam.osullivan@uni-mainz.de>
+# For reasons™, explicitly including root and geant4 as dependencies
+# causes the build to fail (missing blas or whatevs).
+# If you spack load root and geant4 it builds fine though.
+
 from spack.package import *
 
 class DuneTms(CMakePackage):

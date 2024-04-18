@@ -1,7 +1,7 @@
-# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
-# Spack Project Developers. See the top-level COPYRIGHT file for details.
-#
-# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+# This package.py written by Liam O'Sullivan <liam.osullivan@uni-mainz.de>
+# For reasons™, explicitly including root and geant4 as dependencies
+# causes the build to fail (missing blas or whatevs).
+# If you spack load root and geant4 it builds fine though.
 
 from spack.package import *
 
