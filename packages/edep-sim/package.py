@@ -39,6 +39,7 @@ class EdepSim(CMakePackage):
     def setup_run_environment(self, env): 
         env.set("EDEP_ROOT", self.prefix)
         env.set("EDEPSIM_LIB", self.prefix.lib)
+        env.set("EDEPSIM_INC", self.prefix.include)
 
 
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
