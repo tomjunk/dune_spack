@@ -28,7 +28,7 @@ class Duneexamples(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneexamples/archive/refs/tags/v09_81_00d00.tar.gz"
+    url = "https://github.com/DUNE/duneexamples/archive/refs/tags/v09_89_01d01.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -38,6 +38,7 @@ class Duneexamples(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
+    version("09_89_01d01", sha256="fadad2d0d0f363bd9f52191ab0b6e0534f34b086098a16cafe9c93e5843cd99b")
     version("09_81_00d00", sha256="5ca163fe371aee48601d4ee63da447f26901a610d3bb175070aac113f93a5779")
 
     variant(

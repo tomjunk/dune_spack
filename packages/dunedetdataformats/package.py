@@ -28,7 +28,7 @@ class Dunedetdataformats(Package):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunedetdataformats/archive/refs/tags/v4_1_0.tar.gz"
+    url = "https://github.com/DUNE/dunedetdataformats/archive/refs/tags/v4_4_0.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -38,6 +38,7 @@ class Dunedetdataformats(Package):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
+    version("4_4_0", sha256="1312f255869f6b021df8c9a7885925192e62094f46808d3b7f6bd99d6efc0a20")
     version("4_1_0", sha256="479de5f1392b6303c258bced663b9aebd22ccd4a0aab2dd2910a9e1e295808b8")
 
     def install(self, spec, prefix):
