@@ -22,13 +22,14 @@
 
 from spack.package import *
 
+import spack.util.spack_json as sjson
 
 class Duneopdet(CMakePackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneopdet/archive/refs/tags/v09_81_00d00.tar.gz"
+    url = "https://github.com/DUNE/duneopdet/archive/refs/tags/v09_89_01d01.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
@@ -38,7 +39,9 @@ class Duneopdet(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
+    version("09_89_01d01", sha256="d39bf58d4dedf985f51d8b2d272354047603fc520145b282d17c85cd7877fdbe")
     version("09_81_00d00", sha256="ea4e39071507f9f1697ba2251481d2ff9396238a33ee38c0fe68070c2c1a9750")
+
 
     variant(
         "cxxstd",
