@@ -28,6 +28,7 @@ class Duneanaobj(CMakePackage):
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
+    git = "https://github.com/DUNE/duneanaobj/"
     url = "https://github.com/DUNE/duneanaobj/archive/refs/tags/v03_03_00.tar.gz"
 
     # FIXME: Add a list of GitHub accounts to
@@ -38,6 +39,9 @@ class Duneanaobj(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
+    version("03_05_spack", branch="feature/spack-build")
+    version("03_05_00", sha256="00e227bccf02ef0c8faa5931b39b6f6c65ff88563e2c328e35e1c3109bcf8c63")
+    version("03_04_00", sha256="3cfc96a0aae4fab7e51f501b071d9b9bfe32cfaa9bd288a3a9b159fde18b4f3b")
     version("03_03_00", sha256="4d00eaa72997b8ff6a6f59e9eedadd11806ab06c83d28064d523dfa9f00e15e5")
 
     variant(
@@ -52,8 +56,9 @@ class Duneanaobj(CMakePackage):
     # FIXME: Add dependencies if required.
     depends_on("root")
     depends_on("canvas-root-io")
-    depends_on("py-srproxy@00.43:", when="@03_03_00")
+    depends_on("py-srproxy@00.43:", when="@03_03_00:")
     depends_on("cetmodules", type="build")
+    depends_on("cetbuildtools", type="build")
     depends_on("cmake", type="build")
 
     def cmake_args(self):
