@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunedataprep(CMakePackage):
+class Dunedataprep(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/dunedataprep/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    repo = "DUNE/dunedataprep"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -41,6 +42,7 @@ class Dunedataprep(CMakePackage):
     version("09_92_00d00", sha256="6f636aa889a8b2e3b926c003e96bec098d79bc025417a2ae281750eb9ce0d57c")
     version("09_89_01d01", sha256="028bec795bf7da56b3acdd689110fa47498e9b3c766306b96ed14076c012642a")
     version("09_81_00d00", sha256="ac58dad4ac13bb742179b509bf3aab35a8fcbecd79364444342ca2ab69664dd7")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",

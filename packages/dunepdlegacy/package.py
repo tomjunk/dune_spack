@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunepdlegacy(CMakePackage):
+class Dunepdlegacy(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/dunepdlegacy/archive/refs/tags/v1_01_05.tar.gz"
-
+    repo = "DUNE/dunepdlegacy"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -40,6 +41,7 @@ class Dunepdlegacy(CMakePackage):
 
     version("1_01_05", sha256="60876ea0041c6054dba31789806d248bb9a2e74eec76bb90ae9711b6c8b86705")
     version("1_01_00", sha256="926130733ed28753ff637e52b120dc4ee669cf0a769e0d8f7049693670ee907a")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -50,7 +52,7 @@ class Dunepdlegacy(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when='@1_01_00')
-
+    
     # FIXME: Add dependencies if required.
     depends_on("gallery")
     depends_on("art")

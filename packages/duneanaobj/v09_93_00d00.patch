@@ -1,0 +1,95 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 97be255..dbcf6c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,7 +18,7 @@ cmake_minimum_required (VERSION 3.20 FATAL_ERROR)
+ 
+ find_package(cetmodules REQUIRED)
+ project(duneanaobj LANGUAGES CXX)
+-set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 03.05.00)
++set(${PROJECT_NAME}_CMAKE_PROJECT_VERSION_STRING 03.06.01)
+ 
+ message(STATUS "\n\n  ==========================   ${PROJECT_NAME}   ==========================")
+ 
+@@ -51,12 +51,17 @@ if(DEFINED ENV{UPS_DIR})
+ 
+     # packaging utility
+ 
++    add_subdirectory(duneanaobj)
++    cet_cmake_config()
+ 
+ else()
+     find_package(ROOT)
+-    include_directories(.)
+-endif()
++    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
+-add_subdirectory(duneanaobj)
++    add_subdirectory(duneanaobj)
+ 
+-cet_cmake_config()
++    include(CetCMakeEnv)
++    cet_cmake_env()
++    cet_cmake_config()
++endif()
+diff --git a/duneanaobj/StandardRecord/Flat/CMakeLists.txt b/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+index 25d2ad8..2b593ee 100644
+--- a/duneanaobj/StandardRecord/Flat/CMakeLists.txt
++++ b/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+@@ -25,6 +25,7 @@ else()
+                 FlatRecord.cxx)
+     target_link_libraries(duneanaobj_StandardRecordFlat ${ROOT_BASIC_LIB_LIST} ROOT::TreePlayer)
+ 
++    include(GNUInstallDirs)
+     install(FILES ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Flat/FlatRecord.h ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Flat/FwdDeclare.h
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/duneanaobj)
+ 
+diff --git a/duneanaobj/StandardRecord/Proxy/CMakeLists.txt b/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+index 3ae40de..a12dc2c 100644
+--- a/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
++++ b/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+@@ -28,7 +28,7 @@ else()
+     add_library(duneanaobj_StandardRecordProxy
+                 SRProxy.cxx Instantiations.cxx)
+     target_link_libraries(duneanaobj_StandardRecordProxy ${ROOT_BASIC_LIB_LIST} ROOT::TreePlayer)
+-
++    include(GNUInstallDirs)
+     install(FILES ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Proxy/SRProxy.h ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Proxy/FwdDeclare.h
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/duneanaobj)
+ endif()
+diff --git a/duneanaobj/StandardRecord/SRMINERvA.h b/duneanaobj/StandardRecord/SRMINERvA.h
+index 216acbb..4617696 100644
+--- a/duneanaobj/StandardRecord/SRMINERvA.h
++++ b/duneanaobj/StandardRecord/SRMINERvA.h
+@@ -27,8 +27,9 @@ namespace caf
+   };
+ 
+   /// The information needed to uniquely identify a MINERvA reco object
+-  struct SRMINERvAID
++  class SRMINERvAID
+   {
++  public: 
+     int        ixn  = -1;            ///< interaction ID
+     int        idx  = -1;            ///< index in container
+   };
+diff --git a/duneanaobj/StandardRecord/classes_def.xml b/duneanaobj/StandardRecord/classes_def.xml
+index c312e3f..9ad8428 100644
+--- a/duneanaobj/StandardRecord/classes_def.xml
++++ b/duneanaobj/StandardRecord/classes_def.xml
+@@ -184,11 +184,13 @@
+    <version ClassVersion="10" checksum="764455914"/>
+   </class>
+ 
+-  <class name="caf::SRNDShowerAssn" ClassVersion="10">
++  <class name="caf::SRNDShowerAssn" ClassVersion="11">
++   <version ClassVersion="11" checksum="2148903847"/>
+    <version ClassVersion="10" checksum="3398719456"/>
+   </class>
+ 
+-  <class name="caf::SRNDTrackAssn" ClassVersion="13">
++  <class name="caf::SRNDTrackAssn" ClassVersion="14">
++   <version ClassVersion="14" checksum="2659631828"/>
+    <version ClassVersion="13" checksum="744508541"/>
+    <version ClassVersion="12" checksum="3802670637"/>
+    <version ClassVersion="11" checksum="0"/>

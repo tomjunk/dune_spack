@@ -21,16 +21,17 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 import spack.util.spack_json as sjson
 
-class Duneopdet(CMakePackage):
+class Duneopdet(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneopdet/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    url = "https://github.com/DUNE/duneopdet/archive/refs/tags/v09_92_00d00.tar.gz"
+    repo = "DUNE/duneopdet"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -39,9 +40,10 @@ class Duneopdet(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
-    version("09_89_01d01", sha256="d39bf58d4dedf985f51d8b2d272354047603fc520145b282d17c85cd7877fdbe")
+    version("09_92_00d00", sha256="6003147a6b8a0d943a9f11ceebc4ab2fbac48b9041ad78f560a7bd3ae27b4929")
     version("09_89_01d01", sha256="d39bf58d4dedf985f51d8b2d272354047603fc520145b282d17c85cd7877fdbe")
     version("09_81_00d00", sha256="ea4e39071507f9f1697ba2251481d2ff9396238a33ee38c0fe68070c2c1a9750")
+    version("develop", branch="develop", get_full_repo=True)
 
 
     variant(
@@ -54,7 +56,11 @@ class Duneopdet(CMakePackage):
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
+    def patch(self):
+        filter_file("LANGUAGES CXX", "LANGUAGES CXX C", "CMakeLists.txt")
+
     # FIXME: Add dependencies if required.
+    depends_on("duneana")
     depends_on("dunecore")
     depends_on("nlohmann-json")
     depends_on("cetmodules", type="build")

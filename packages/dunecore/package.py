@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunecore(CMakePackage):
+class Dunecore(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/dunecore/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    repo = "DUNE/dunecore"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -41,6 +42,7 @@ class Dunecore(CMakePackage):
     version("09_92_00d00", sha256="37edf3afd3be02cbd64adef1ab1c5c9c7e275d7ffcee44ffce2172451f94dbcd")
     version("09_89_01d01", sha256="cf61a68d0810103bd45a1133a969378817caf2e09be87ebcaea718ac4bd09060")
     version("09_81_00d00", sha256="4dd8f63fd791167bc55c5fba28f0a9310c2339c0cc3c70bd15e510d36d0ff972")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -51,7 +53,11 @@ class Dunecore(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
+    patch('v09_92_00d00.patch', when='@09_92_00d00')
 
+    def patch(self):
+        filter_file('LANGUAGES CXX', 'LANGUAGES CXX C', 'CMakeLists.txt')
+        filter_file(r'find_package\( nusimdata REQUIRED EXPORT \)$', 'find_package( nusimdata REQUIRED EXPORT )\nfind_package( gallery REQUIRED EXPORT )', 'CMakeLists.txt')
     depends_on("boost")
     depends_on("geant4")
     depends_on("root")
@@ -65,6 +71,7 @@ class Dunecore(CMakePackage):
     depends_on("cetlib-except")
     depends_on("cetlib")
     depends_on("clhep")
+    depends_on("critic")
     depends_on("fhicl-cpp")
     depends_on("nufinder")
     depends_on("genie")
@@ -72,6 +79,7 @@ class Dunecore(CMakePackage):
     depends_on("ifdh-art")
     depends_on("ifdhc")
     depends_on("dunepdlegacy")
+    depends_on("gallery")
     depends_on("duneutil")
     depends_on("larsoft")
     depends_on("larana")

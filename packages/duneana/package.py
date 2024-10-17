@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Duneana(CMakePackage):
+class Duneana(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/duneana/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    repo = "DUNE/duneana"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -41,6 +42,7 @@ class Duneana(CMakePackage):
     version("09_92_00d00", sha256="fc0700c36f3334f70f7b3929b868bdf530a9f71f44dc205daa052d3755e4d08f")
     version("09_89_01d01", sha256="8769e2e2dbac6e6664150acced6e276a491d78463a5e30bcaff2412cb3208da7")
     version("09_81_00d00", sha256="8c1fc6758232a9b4ba7a39924ea372d8e2698404bf4778c9b209a35d8888dcf4")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -51,10 +53,10 @@ class Duneana(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
+    patch('v09_92_00d00.patch', when='@09_92_00d00')
 
     # FIXME: Add dependencies if required.
     depends_on("duneanaobj")
-    depends_on("duneopdet")
     depends_on("dunereco")
     depends_on("nufinder")
     depends_on("larfinder")

@@ -21,15 +21,15 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
-
-class Dunesw(CMakePackage):
+class Dunesw(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/dunesw/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    repo = "DUNE/dunesw"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -42,6 +42,7 @@ class Dunesw(CMakePackage):
     version("09_89_01d01", sha256="d516d3f7c00ed99fe23de77152bad556b5a6a24e777e3e5ec7d7a4beddaff3cb")
     version("09_81_00d01", sha256="126477cb91b6fd7a69ef2753505ca8dcd5739f4f509409cbf6f93f0774574862")
     version("09_81_00d00", sha256="f32da1e3e3ac4482674dcd3559c23a8acd10bc994e95df37ac22778e63fd72cd")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -54,7 +55,6 @@ class Dunesw(CMakePackage):
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
-    depends_on("duneana")
     depends_on("dunedataprep")
     depends_on("duneexamples")
     depends_on("protoduneana")

@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Duneanaobj(CMakePackage):
+class Duneanaobj(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/duneanaobj/archive/refs/tags/v03_04_00.tar.gz"
-
+    repo = "DUNE/duneanaobj"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -41,6 +42,7 @@ class Duneanaobj(CMakePackage):
     version("03_06_00", sha256="28be5276666146e88501fe73df6907fde9552969824e8f7dc8115598c914d5da")
     version("03_04_00", sha256="3cfc96a0aae4fab7e51f501b071d9b9bfe32cfaa9bd288a3a9b159fde18b4f3b")
     version("03_03_00", sha256="4d00eaa72997b8ff6a6f59e9eedadd11806ab06c83d28064d523dfa9f00e15e5")
+    version("develop", branch="main", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -51,10 +53,12 @@ class Duneanaobj(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when="@03_03_00")
+    patch('v09_93_00d00.patch', when="@03_06_00")
+    patch('main-spack.patch', when="@develop")
     # FIXME: Add dependencies if required.
     depends_on("root")
     depends_on("canvas-root-io")
-    depends_on("py-srproxy@00.43:", when="@03_03_00")
+    depends_on("py-srproxy@00.43:", when="@03_03_00:")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
 

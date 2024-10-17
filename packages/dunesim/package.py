@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunesim(CMakePackage):
+class Dunesim(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/dunesim/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    repo = "DUNE/dunesim"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -41,6 +42,7 @@ class Dunesim(CMakePackage):
     version("09_92_00d00", sha256="281df90bd373866bf9ab9005c1308b8eb74d75109fcd6cdeca1635d4f6435a17")
     version("09_89_01d01", sha256="130c0b293e35cbf3d693ba3239642751bf87b4ad636a640bcdc137a3c66b7160")
     version("09_81_00d00", sha256="60907d1c14a16c2734757950a09834bf4627509f3f02735c26b8bee00a612d21")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -51,6 +53,7 @@ class Dunesim(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
+    patch('v09_92_00d00.patch', when='@09_92_00d00')
 
     # FIXME: Add dependencies if required.
     depends_on("art")
@@ -68,6 +71,7 @@ class Dunesim(CMakePackage):
     depends_on("lardata")
     depends_on("clhep")
     depends_on("nugen")
+    depends_on("dk2nudata")
     depends_on("geant4")
     depends_on("genie-xsec")
     depends_on("genie-phyopt")

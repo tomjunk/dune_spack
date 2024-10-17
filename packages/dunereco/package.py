@@ -21,15 +21,16 @@
 # ----------------------------------------------------------------------------
 
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunereco(CMakePackage):
+class Dunereco(CMakePackage, FnalGithubPackage):
     """FIXME: Put a proper description of your package here."""
 
     # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://www.example.com"
     url = "https://github.com/DUNE/dunereco/archive/refs/tags/v09_89_01d01.tar.gz"
-
+    repo = "DUNE/dunereco"
     # FIXME: Add a list of GitHub accounts to
     # notify when the package is updated.
     # maintainers("github_user1", "github_user2")
@@ -41,6 +42,7 @@ class Dunereco(CMakePackage):
     version("09_92_00d00", sha256="6bc62ced928ca36a5c9502bf7f9e6c341caeeaebf85614463a8c4fd676083248")
     version("09_89_01d01", sha256="f9e352729f3c30496252de67f7f1e2b579dbcfd27076e31ee7d62a29d9260dd3")
     version("09_81_00d00", sha256="a7a64f3ed8fa5abd0f85998f065634c16c3db080123afde3faeecfb7dc2ddb46")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -58,6 +60,7 @@ class Dunereco(CMakePackage):
     #depends_on("py-tensorflow")
     #depends_on("triton")
     #depends_on("protobuf")
+    depends_on("larrecodnn")
     depends_on("dunecore")
     depends_on("larfinder")
     depends_on("nufinder")
