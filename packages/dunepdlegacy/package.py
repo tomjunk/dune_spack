@@ -3,41 +3,15 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install dunepdlegacy
-#
-# You can edit this file again by typing:
-#
-#     spack edit dunepdlegacy
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
 from spack.pkg.fnal_art.fnal_github_package import *
 
 
 class Dunepdlegacy(CMakePackage, FnalGithubPackage):
-    """FIXME: Put a proper description of your package here."""
+    """Dunepdlegacy"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunepdlegacy/archive/refs/tags/v1_01_05.tar.gz"
     repo = "DUNE/dunepdlegacy"
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    version_patterns = ["09_00_00", "09.14.19"]
 
     version("1_01_05", sha256="60876ea0041c6054dba31789806d248bb9a2e74eec76bb90ae9711b6c8b86705")
     version("1_01_00", sha256="926130733ed28753ff637e52b120dc4ee669cf0a769e0d8f7049693670ee907a")
@@ -53,7 +27,6 @@ class Dunepdlegacy(CMakePackage, FnalGithubPackage):
 
     patch('v09_81_00d00.patch', when='@1_01_00')
     
-    # FIXME: Add dependencies if required.
     depends_on("gallery")
     depends_on("art")
     depends_on("artdaq-core")

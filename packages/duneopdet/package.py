@@ -3,42 +3,14 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install duneopdet
-#
-# You can edit this file again by typing:
-#
-#     spack edit duneopdet
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
 from spack.pkg.fnal_art.fnal_github_package import *
 
-import spack.util.spack_json as sjson
-
 class Duneopdet(CMakePackage, FnalGithubPackage):
-    """FIXME: Put a proper description of your package here."""
+    """Duneopdet"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneopdet/archive/refs/tags/v09_92_00d00.tar.gz"
     repo = "DUNE/duneopdet"
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
     version("09_92_00d00", sha256="6003147a6b8a0d943a9f11ceebc4ab2fbac48b9041ad78f560a7bd3ae27b4929")
     version("09_89_01d01", sha256="d39bf58d4dedf985f51d8b2d272354047603fc520145b282d17c85cd7877fdbe")
@@ -59,7 +31,6 @@ class Duneopdet(CMakePackage, FnalGithubPackage):
     def patch(self):
         filter_file("LANGUAGES CXX", "LANGUAGES CXX C", "CMakeLists.txt")
 
-    # FIXME: Add dependencies if required.
     depends_on("duneana")
     depends_on("dunecore")
     depends_on("nlohmann-json")

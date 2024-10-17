@@ -3,41 +3,15 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install dunesim
-#
-# You can edit this file again by typing:
-#
-#     spack edit dunesim
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
 from spack.pkg.fnal_art.fnal_github_package import *
 
 
 class Dunesim(CMakePackage, FnalGithubPackage):
-    """FIXME: Put a proper description of your package here."""
+    """Dunesim"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunesim/archive/refs/tags/v09_89_01d01.tar.gz"
     repo = "DUNE/dunesim"
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
     version("09_92_00d00", sha256="281df90bd373866bf9ab9005c1308b8eb74d75109fcd6cdeca1635d4f6435a17")
     version("09_89_01d01", sha256="130c0b293e35cbf3d693ba3239642751bf87b4ad636a640bcdc137a3c66b7160")
@@ -55,7 +29,6 @@ class Dunesim(CMakePackage, FnalGithubPackage):
     patch('v09_81_00d00.patch', when='@09_81_00d00')
     patch('v09_92_00d00.patch', when='@09_92_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("art")
     depends_on("art-root-io")
     depends_on("larevt")

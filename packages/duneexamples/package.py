@@ -3,41 +3,15 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install duneexamples
-#
-# You can edit this file again by typing:
-#
-#     spack edit duneexamples
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
 from spack.pkg.fnal_art.fnal_github_package import *
 
 
 class Duneexamples(CMakePackage, FnalGithubPackage):
-    """FIXME: Put a proper description of your package here."""
+    """Duneexamples"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneexamples/archive/refs/tags/v09_89_01d01.tar.gz"
     repo = "DUNE/duneexamples"
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
     version("09_92_00d00", sha256="e251ec860ae0c401cecc6c4ac985b203b625a8c1675d46a7a06309d7461598c4")
     version("09_89_01d01", sha256="fadad2d0d0f363bd9f52191ab0b6e0534f34b086098a16cafe9c93e5843cd99b")
@@ -54,7 +28,6 @@ class Duneexamples(CMakePackage, FnalGithubPackage):
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("art")
     depends_on("art-root-io")
     depends_on("canvas-root-io")
