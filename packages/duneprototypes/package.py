@@ -13,6 +13,7 @@ class Duneprototypes(CMakePackage, FnalGithubPackage):
     repo = "DUNE/duneprototypes"
     version_patterns = ["09_00_00d00", "09.14.19"]
 
+    version("v10_00_02d00", sha256="e9692f30b0a134a069d262d9dbe209ac178af60321cc4ad42a51834485d3af80")
     version("09_92_00d00", sha256="536429aa8cfb94f54cd790609128fef311a8ef9b92449e4c79a2e4459891f272")
     version("09_89_01d01", sha256="140a6a20b2ddabd70572172d57c348ea618d6b0a1bfe0ade29c767842e540fe2")
     version("09_81_00d00", sha256="99a3e4eb98bfb9c7e7adeb3eb295332b71008c5bf6749587413ec97688532c85")

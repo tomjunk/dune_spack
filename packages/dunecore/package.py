@@ -13,6 +13,7 @@ class Dunecore(CMakePackage, FnalGithubPackage):
     repo = "DUNE/dunecore"
     version_patterns = ["09_00_00d00", "09.14.19"]
 
+    version("v10_00_02d00", sha256="f5837f0c334dfb94a9768175a835cb89d7f154f1c5bf0402aaa487943a89dbac")
     version("09_92_00d00", sha256="37edf3afd3be02cbd64adef1ab1c5c9c7e275d7ffcee44ffce2172451f94dbcd")
     version("09_89_01d01", sha256="cf61a68d0810103bd45a1133a969378817caf2e09be87ebcaea718ac4bd09060")
     version("09_81_00d00", sha256="4dd8f63fd791167bc55c5fba28f0a9310c2339c0cc3c70bd15e510d36d0ff972")
