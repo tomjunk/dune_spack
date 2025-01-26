@@ -38,6 +38,7 @@ class Dunedaqdataformats(Package):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
+    version("4_4_4", sha256="4806af70ae20295547fccefb70c93785a14e6b7a0ea1d3a2b7e94e3a47044988")
     version("4_4_0", sha256="fee0e31693c9fb6747cc252592f6442303c873d4d68ffb43c94a6ca049c97a9e")
     version("4_0_0", sha256="bdc50531cae25797f940c46b95b42f8ce2f285300c972a3baabf2930aa3da51e")
 

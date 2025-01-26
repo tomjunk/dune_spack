@@ -39,7 +39,7 @@ class Duneopdet(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
-    version("09_89_01d01", sha256="d39bf58d4dedf985f51d8b2d272354047603fc520145b282d17c85cd7877fdbe")
+    version("10_00_03d00", sha256="b3b62f15d20a2db3389e1cdd4480280316f87ee915a81fd4f0d050fc9e202868")
     version("09_89_01d01", sha256="d39bf58d4dedf985f51d8b2d272354047603fc520145b282d17c85cd7877fdbe")
     version("09_81_00d00", sha256="ea4e39071507f9f1697ba2251481d2ff9396238a33ee38c0fe68070c2c1a9750")
 
@@ -52,6 +52,7 @@ class Duneopdet(CMakePackage):
         description="Use the specified C++ standard when building.",
     )
 
+    patch('v10_00_03d00.patch', when='@10_00_03d00')
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
     # FIXME: Add dependencies if required.
