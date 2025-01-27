@@ -38,6 +38,7 @@ class Dunecore(CMakePackage):
     # See https://spdx.org/licenses/ for a list.
     license("UNKNOWN")
 
+    version("10_00_03d00", sha256="853476dfd8e1c97e34e03d0bf47a393a4de2e61af3b7623a41a7004c24851647")
     version("09_92_00d00", sha256="37edf3afd3be02cbd64adef1ab1c5c9c7e275d7ffcee44ffce2172451f94dbcd")
     version("09_89_01d01", sha256="cf61a68d0810103bd45a1133a969378817caf2e09be87ebcaea718ac4bd09060")
     version("09_81_00d00", sha256="4dd8f63fd791167bc55c5fba28f0a9310c2339c0cc3c70bd15e510d36d0ff972")
