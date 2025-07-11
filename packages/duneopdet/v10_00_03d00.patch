@@ -1,0 +1,10 @@
+diff --git a/duneopdet/SolarNuUtils/CMakeLists.txt b/duneopdet/SolarNuUtils/CMakeLists.txt
+index 987a40e..998e335 100644
+--- a/duneopdet/SolarNuUtils/CMakeLists.txt
++++ b/duneopdet/SolarNuUtils/CMakeLists.txt
+@@ -20,3 +20,5 @@ cet_make_library(
+       lardataobj::RecoBase
+       art_root_io::tfile_support
+ )
++
++install_headers()

@@ -9,6 +9,7 @@ from spack.package import *
 class Dunedetdataformats(Package):
     """Dunedetdataformats"""
 
+    version("4_4_4", sha256="ae4f18a4f3c09f503a0dca5373fb9b08ad04bfc4ead323605121ff3ec76a22df")
     version("4_4_0", sha256="1312f255869f6b021df8c9a7885925192e62094f46808d3b7f6bd99d6efc0a20")
     version("4_1_0", sha256="479de5f1392b6303c258bced663b9aebd22ccd4a0aab2dd2910a9e1e295808b8")
 

@@ -13,7 +13,9 @@ class Duneanaobj(CMakePackage, FnalGithubPackage):
     repo = "DUNE/duneanaobj"
     version_patterns = ["09_00_00", "09.14.19"]
 
+    version("03_06_01", sha256="ad0647930712d5680c77c03f8d0af3a9e44f222c15c753d631ac8752ddf07e67")
     version("03_06_00", sha256="28be5276666146e88501fe73df6907fde9552969824e8f7dc8115598c914d5da")
+    version("03_05_00", sha256="00e227bccf02ef0c8faa5931b39b6f6c65ff88563e2c328e35e1c3109bcf8c63")
     version("03_04_00", sha256="3cfc96a0aae4fab7e51f501b071d9b9bfe32cfaa9bd288a3a9b159fde18b4f3b")
     version("03_03_00", sha256="4d00eaa72997b8ff6a6f59e9eedadd11806ab06c83d28064d523dfa9f00e15e5")
     version("develop", branch="main", get_full_repo=True)
@@ -26,6 +28,7 @@ class Duneanaobj(CMakePackage, FnalGithubPackage):
         description="Use the specified C++ standard when building.",
     )
 
+    patch('v03_06_01.patch', when="@03_06_01")
     patch('v09_81_00d00.patch', when="@03_03_00")
     patch('v09_93_00d00.patch', when="@03_06_00")
     patch('main-spack.patch', when="@develop")
@@ -35,7 +38,8 @@ class Duneanaobj(CMakePackage, FnalGithubPackage):
     depends_on("py-srproxy@00.43:", when="@03_03_00:")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
-
+    depends_on("py-srproxy")
+    
     def cmake_args(self):
         args = [
             self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),

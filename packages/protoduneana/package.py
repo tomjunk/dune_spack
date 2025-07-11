@@ -13,7 +13,7 @@ class Protoduneana(CMakePackage, FnalGithubPackage):
     repo = "DUNE/protoduneana"
     version_patterns = ["09_00_00d00", "09.14.19"]
 
-    version("v10_00_02d00", sha256="1e1b2aabea76646f94bdbf3d90ac97e46cc96a66bcd32cd32731e7e6c8d23f53")
+    version("10_00_03d00", sha256="e94a603f2469e9c46d140882c6b44d902eb2d8f7d81db0f1ffcaf50d052263da")
     version("09_92_00d00", sha256="27d7a23868279c61c4f63407e89fadec342eb19c4a8d55882cf8dc875d858055")
     version("09_89_01d01", sha256="50df6c272d564a6c8d158f229d500a25fff9fa262821a47876083bd3059df213")
     version("09_81_00d00", sha256="f490a31fe519217539ecd2e46194f70d179fa70a023a163d84e89d9e07f41695")

@@ -13,7 +13,7 @@ class Duneexamples(CMakePackage, FnalGithubPackage):
     repo = "DUNE/duneexamples"
     version_patterns = ["09_00_00d00", "09.14.19"]
 
-    version("v10_00_02d00", sha256="e94b2f984f18e839c6df7d0b3556591d0ae6dab36aa6dfb1d4871b1575ecf09a")
+    version("10_00_03d00", sha256="3e91fbcd0fbd6cae65f7f3e29784cfcf2ebeaeb3d5a2195964d432f9b5f7233e")
     version("09_92_00d00", sha256="e251ec860ae0c401cecc6c4ac985b203b625a8c1675d46a7a06309d7461598c4")
     version("09_89_01d01", sha256="fadad2d0d0f363bd9f52191ab0b6e0534f34b086098a16cafe9c93e5843cd99b")
     version("09_81_00d00", sha256="5ca163fe371aee48601d4ee63da447f26901a610d3bb175070aac113f93a5779")

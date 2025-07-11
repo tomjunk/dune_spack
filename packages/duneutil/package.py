@@ -13,7 +13,7 @@ class Duneutil(CMakePackage, FnalGithubPackage):
     repo = "DUNE/duneutil"
     version_patterns = ["09_00_00d00", "09.14.19"]
 
-    version("v10_00_02d00", sha256="5ca58c864a0098c17283d1f28f5a9abfe2bdcd243b02207826ee456bfbb6b6aa")
+    version("10_00_03d00", sha256="883877e913a99590a05f18d2d212cbf63d6ae3e574f094aeda4d72887c700d1d")
     version("09_92_00d00", sha256="fc0cb55678361a3488a17769cfcbe101ca1f513e8748261beb67caf86fb3974b")
     version("09_89_01d01", sha256="e7f451fb6409afb261d5ad8b1a4381e7410db338dd2c601f688cda6164f5492f")
     version("09_81_00d00", sha256="3cd857e366c7ecf1648f0f7aa76c2821ba25fe8b8d702ff47e2d7291d006a3bf")
