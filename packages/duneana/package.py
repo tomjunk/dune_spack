@@ -3,45 +3,22 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install duneana
-#
-# You can edit this file again by typing:
-#
-#     spack edit duneana
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Duneana(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+class Duneana(CMakePackage, FnalGithubPackage):
+    """Duneana"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/duneana/archive/refs/tags/v09_89_01d01.tar.gz"
+    repo = "DUNE/duneana"
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
 
     version("10_00_03d00", sha256="0db33f7a710b5a85c669d77db6a735fdbb354c70feb689051b080797d8d26712")
     version("09_92_00d00", sha256="fc0700c36f3334f70f7b3929b868bdf530a9f71f44dc205daa052d3755e4d08f")
     version("09_89_01d01", sha256="8769e2e2dbac6e6664150acced6e276a491d78463a5e30bcaff2412cb3208da7")
     version("09_81_00d00", sha256="8c1fc6758232a9b4ba7a39924ea372d8e2698404bf4778c9b209a35d8888dcf4")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -52,10 +29,9 @@ class Duneana(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
+    patch('v09_92_00d00.patch', when='@09_92_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("duneanaobj")
-    depends_on("duneopdet")
     depends_on("dunereco")
     depends_on("nufinder")
     depends_on("larfinder")

@@ -3,45 +3,21 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install dunedataprep
-#
-# You can edit this file again by typing:
-#
-#     spack edit dunedataprep
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunedataprep(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+class Dunedataprep(CMakePackage, FnalGithubPackage):
+    """Dunedataprep"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunedataprep/archive/refs/tags/v09_89_01d01.tar.gz"
-
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    repo = "DUNE/dunedataprep"
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
     version("10_00_03d00", sha256="673f451a37a0fb0884aa5f739af3bd66b15ef614e8e5c532d81c91c8c0ad65c5")
     version("09_92_00d00", sha256="6f636aa889a8b2e3b926c003e96bec098d79bc025417a2ae281750eb9ce0d57c")
     version("09_89_01d01", sha256="028bec795bf7da56b3acdd689110fa47498e9b3c766306b96ed14076c012642a")
     version("09_81_00d00", sha256="ac58dad4ac13bb742179b509bf3aab35a8fcbecd79364444342ca2ab69664dd7")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -53,7 +29,6 @@ class Dunedataprep(CMakePackage):
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("dunecore")
     depends_on("jsonnet")
     depends_on("jsoncpp")

@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5281941..dbcf6c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,12 +51,17 @@ if(DEFINED ENV{UPS_DIR})
+ 
+     # packaging utility
+ 
++    add_subdirectory(duneanaobj)
++    cet_cmake_config()
+ 
+ else()
+     find_package(ROOT)
+-    include_directories(.)
+-endif()
++    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
++    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
+-add_subdirectory(duneanaobj)
++    add_subdirectory(duneanaobj)
+ 
+-cet_cmake_config()
++    include(CetCMakeEnv)
++    cet_cmake_env()
++    cet_cmake_config()
++endif()
+diff --git a/duneanaobj/StandardRecord/Flat/CMakeLists.txt b/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+index 25d2ad8..2b593ee 100644
+--- a/duneanaobj/StandardRecord/Flat/CMakeLists.txt
++++ b/duneanaobj/StandardRecord/Flat/CMakeLists.txt
+@@ -25,6 +25,7 @@ else()
+                 FlatRecord.cxx)
+     target_link_libraries(duneanaobj_StandardRecordFlat ${ROOT_BASIC_LIB_LIST} ROOT::TreePlayer)
+ 
++    include(GNUInstallDirs)
+     install(FILES ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Flat/FlatRecord.h ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Flat/FwdDeclare.h
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/duneanaobj)
+ 
+diff --git a/duneanaobj/StandardRecord/Proxy/CMakeLists.txt b/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+index 3ae40de..a12dc2c 100644
+--- a/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
++++ b/duneanaobj/StandardRecord/Proxy/CMakeLists.txt
+@@ -28,7 +28,7 @@ else()
+     add_library(duneanaobj_StandardRecordProxy
+                 SRProxy.cxx Instantiations.cxx)
+     target_link_libraries(duneanaobj_StandardRecordProxy ${ROOT_BASIC_LIB_LIST} ROOT::TreePlayer)
+-
++    include(GNUInstallDirs)
+     install(FILES ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Proxy/SRProxy.h ${CMAKE_BINARY_DIR}/duneanaobj/StandardRecord/Proxy/FwdDeclare.h
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/duneanaobj)
+ endif()

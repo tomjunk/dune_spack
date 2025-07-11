@@ -3,45 +3,21 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install dunesim
-#
-# You can edit this file again by typing:
-#
-#     spack edit dunesim
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunesim(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+class Dunesim(CMakePackage, FnalGithubPackage):
+    """Dunesim"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunesim/archive/refs/tags/v09_89_01d01.tar.gz"
-
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    repo = "DUNE/dunesim"
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
     version("10_00_03d00", sha256="9a62b3c10eada40b443c512cd59d7f30458f7906d1c719da21795932a3b612ae")
     version("09_92_00d00", sha256="281df90bd373866bf9ab9005c1308b8eb74d75109fcd6cdeca1635d4f6435a17")
     version("09_89_01d01", sha256="130c0b293e35cbf3d693ba3239642751bf87b4ad636a640bcdc137a3c66b7160")
     version("09_81_00d00", sha256="60907d1c14a16c2734757950a09834bf4627509f3f02735c26b8bee00a612d21")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -52,8 +28,8 @@ class Dunesim(CMakePackage):
     )
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
+    patch('v09_92_00d00.patch', when='@09_92_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("art")
     depends_on("art-root-io")
     depends_on("larevt")
@@ -69,6 +45,7 @@ class Dunesim(CMakePackage):
     depends_on("lardata")
     depends_on("clhep")
     depends_on("nugen")
+    depends_on("dk2nudata")
     depends_on("geant4")
     depends_on("genie-xsec")
     depends_on("genie-phyopt")

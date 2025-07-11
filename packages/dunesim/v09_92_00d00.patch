@@ -1,0 +1,72 @@
+diff --git a/dunesim/EventGenerator/CMakeLists.txt b/dunesim/EventGenerator/CMakeLists.txt
+index 6a60009..3cdef9c 100644
+--- a/dunesim/EventGenerator/CMakeLists.txt
++++ b/dunesim/EventGenerator/CMakeLists.txt
+@@ -19,6 +19,7 @@ art_make( BASENAME_ONLY
+                         lardataobj::RecoBase
+                         lardata::Utilities
+                         nusimdata::SimulationBase
++			dk2nu::Tree
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+                         art::Utilities canvas::canvas
+diff --git a/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt b/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt
+index c70f007..ca7fdf0 100644
+--- a/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt
++++ b/dunesim/EventGenerator/CORSIKAprotodunedp/CMakeLists.txt
+@@ -7,6 +7,7 @@ art_make(
+                         nurandom::RandomUtils_NuRandomService_service
+                         larsim::Simulation lardataobj::Simulation
+                         nusimdata::SimulationBase
++			dk2nu::Tree
+                         nugen::EventGeneratorBase_GENIE
+                         ROOT::Core
+                         art::Persistency_Common
+diff --git a/dunesim/EventGenerator/MUSUN/CMakeLists.txt b/dunesim/EventGenerator/MUSUN/CMakeLists.txt
+index 7cd66c1..fc24b51 100644
+--- a/dunesim/EventGenerator/MUSUN/CMakeLists.txt
++++ b/dunesim/EventGenerator/MUSUN/CMakeLists.txt
+@@ -4,6 +4,7 @@ art_make(
+                         larcore::Geometry_Geometry_service
+                         larcorealg::Geometry
+                         larsim::Simulation lardataobj::Simulation
++			dk2nu::Tree
+                         nusimdata::SimulationBase
+                         ROOT::Core
+                         art::Persistency_Common
+diff --git a/dunesim/EventGenerator/NEUT/CMakeLists.txt b/dunesim/EventGenerator/NEUT/CMakeLists.txt
+index e2e7fb4..50b0ff9 100644
+--- a/dunesim/EventGenerator/NEUT/CMakeLists.txt
++++ b/dunesim/EventGenerator/NEUT/CMakeLists.txt
+@@ -4,6 +4,7 @@ art_make(
+                         larcore::Geometry_Geometry_service
+ 			larcorealg::Geometry
+                         nurandom::RandomUtils_NuRandomService_service
++			dk2nu::Tree
+                         nugen::EventGeneratorBase_GENIE
+                         larsim::Simulation lardataobj::Simulation
+                         nusimdata::SimulationBase
+diff --git a/dunesim/EventGenerator/NuE/CMakeLists.txt b/dunesim/EventGenerator/NuE/CMakeLists.txt
+index 59ca98f..cf70454 100644
+--- a/dunesim/EventGenerator/NuE/CMakeLists.txt
++++ b/dunesim/EventGenerator/NuE/CMakeLists.txt
+@@ -5,6 +5,7 @@ art_make(
+ 			larcorealg::Geometry
+                         nurandom::RandomUtils_NuRandomService_service
+                         larsim::Simulation lardataobj::Simulation
++			dk2nu::Tree
+                         nusimdata::SimulationBase
+                         art::Persistency_Common
+                         art::Persistency_Provenance
+diff --git a/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt b/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt
+index e397a06..74b4fb2 100644
+--- a/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt
++++ b/dunesim/EventGenerator/ProtoDUNEbeamDataProducts/CMakeLists.txt
+@@ -5,6 +5,7 @@ art_make(
+           MODULE_LIBRARIES dunesim_EventGenerator_ProtoDUNEbeamDataProducts
+           LIB_LIBRARIES lardataobj::Simulation
+           larcoreobj::headers
++	  dk2nu::Tree
+           nusimdata::SimulationBase
+           art::Framework_Services_Registry
+           art_root_io::tfile_support

@@ -3,45 +3,22 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install dunereco
-#
-# You can edit this file again by typing:
-#
-#     spack edit dunereco
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunereco(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+class Dunereco(CMakePackage, FnalGithubPackage):
+    """Dunereco"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunereco/archive/refs/tags/v09_89_01d01.tar.gz"
+    repo = "DUNE/dunereco"
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
 
     version("10_00_03d00", sha256="1c14a337a18b610accc24e5fb7816b029b7bde5e02f95e0684677e02847e3c5c")
     version("09_92_00d00", sha256="6bc62ced928ca36a5c9502bf7f9e6c341caeeaebf85614463a8c4fd676083248")
     version("09_89_01d01", sha256="f9e352729f3c30496252de67f7f1e2b579dbcfd27076e31ee7d62a29d9260dd3")
     version("09_81_00d00", sha256="a7a64f3ed8fa5abd0f85998f065634c16c3db080123afde3faeecfb7dc2ddb46")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -53,12 +30,12 @@ class Dunereco(CMakePackage):
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("hep-hpc")
     #depends_on("python")
     #depends_on("py-tensorflow")
     #depends_on("triton")
     #depends_on("protobuf")
+    depends_on("larrecodnn")
     depends_on("dunecore")
     depends_on("larfinder")
     depends_on("nufinder")

@@ -3,45 +3,21 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install protoduneana
-#
-# You can edit this file again by typing:
-#
-#     spack edit protoduneana
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Protoduneana(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+class Protoduneana(CMakePackage, FnalGithubPackage):
+    """Protoduneana"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/protoduneana/archive/refs/tags/v09_89_01d01.tar.gz"
-
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
+    repo = "DUNE/protoduneana"
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
     version("10_00_03d00", sha256="e94a603f2469e9c46d140882c6b44d902eb2d8f7d81db0f1ffcaf50d052263da")
     version("09_92_00d00", sha256="27d7a23868279c61c4f63407e89fadec342eb19c4a8d55882cf8dc875d858055")
     version("09_89_01d01", sha256="50df6c272d564a6c8d158f229d500a25fff9fa262821a47876083bd3059df213")
     version("09_81_00d00", sha256="f490a31fe519217539ecd2e46194f70d179fa70a023a163d84e89d9e07f41695")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",

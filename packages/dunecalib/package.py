@@ -3,44 +3,21 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-# ----------------------------------------------------------------------------
-# If you submit this package back to Spack as a pull request,
-# please first remove this boilerplate and all FIXME comments.
-#
-# This is a template package file for Spack.  We've put "FIXME"
-# next to all the things you'll want to change. Once you've handled
-# them, you can save this file and test your package like this:
-#
-#     spack install dunecalib
-#
-# You can edit this file again by typing:
-#
-#     spack edit dunecalib
-#
-# See the Spack documentation for more information on packaging.
-# ----------------------------------------------------------------------------
-
 from spack.package import *
+from spack.pkg.fnal_art.fnal_github_package import *
 
 
-class Dunecalib(CMakePackage):
-    """FIXME: Put a proper description of your package here."""
+class Dunecalib(CMakePackage, FnalGithubPackage):
+    """Dunecalib"""
 
-    # FIXME: Add a proper url for your package's homepage here.
-    homepage = "https://www.example.com"
-    url = "https://github.com/DUNE/dunecalib/archive/refs/tags/v09_81_00d00.tar.gz"
+    repo = "DUNE/dunecalib"
+    version_patterns = ["09_00_00d00", "09.14.19"]
 
-    # FIXME: Add a list of GitHub accounts to
-    # notify when the package is updated.
-    # maintainers("github_user1", "github_user2")
-
-    # FIXME: Add the SPDX identifier of the project's license below.
-    # See https://spdx.org/licenses/ for a list.
-    license("UNKNOWN")
 
     version("10_00_03d00", sha256="9e83970562ee11e07cc3da6c322c8773d73ea466e9ab5c33ab67c44172077404")
     version("09_92_00d00", sha256="56749441ad39915e7a3cb807b57f5bc619f2a7806e374cc6f83c73610b369a06")
     version("09_81_00d00", sha256="2bdd7f71f6a0596b3bbb34b2956e6a01274773bde9697965dd887ada36f8801a")
+    version("develop", branch="develop", get_full_repo=True)
 
     variant(
         "cxxstd",
@@ -52,7 +29,6 @@ class Dunecalib(CMakePackage):
 
     patch('v09_81_00d00.patch', when='@09_81_00d00')
 
-    # FIXME: Add dependencies if required.
     depends_on("dunecore")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
