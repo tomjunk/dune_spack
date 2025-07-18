@@ -35,7 +35,8 @@ class Dunedataprep(CMakePackage, FnalGithubPackage):
     depends_on("wirecell")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
-
+    depends_on("root+spectrum")
+    
     def cmake_args(self):
         args = [
             self.define_from_variant("CMAKE_CXX_STANDARD", "cxxstd"),
