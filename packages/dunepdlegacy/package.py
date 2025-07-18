@@ -33,6 +33,7 @@ class Dunepdlegacy(CMakePackage, FnalGithubPackage):
     depends_on("art")
     depends_on("artdaq-core")
     depends_on("cetlib")
+    depends_on("nufinder")
     depends_on("messagefacility")
     depends_on("cetmodules", type="build")
     depends_on("cmake", type="build")
